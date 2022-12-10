@@ -1,0 +1,61 @@
+/**
+ * Modal.
+ */
+
+// Popup
+body.folded {
+    .hd-pop-up {
+        left: 36px;
+        width: calc( 100% - 36px );
+    }
+}
+
+.hd-pop-up {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 160px;
+    padding: 10px;
+    width: calc( 100% - 160px );
+    height: 100vh;
+    background: rgba(244, 244, 244, 0.8);
+    z-index: 999999;
+
+    &[data-state="visible"] {
+        display: flex;
+    }
+
+    @media ( max-width: 960px ) {
+        left: 36px;
+        width: calc( 100% - 30px );
+    }
+
+    @media ( max-width: 782px ) {
+        left: 0;
+        width: 100%;
+    }
+}
+
+// Modal
+.hd-modal__card {
+    width: 100%;
+    max-width: 550px;
+
+    &--sm {
+        max-width: 470px;
+    }
+
+    &--lg {
+        max-width: 700px;
+    }
+}
+
+// Prompt Loader.
+.hd-prompt-loader {
+
+    &__panel {
+        min-width: 220px;
+    }
+}

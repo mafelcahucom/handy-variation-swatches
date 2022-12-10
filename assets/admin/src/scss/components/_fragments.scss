@@ -1,0 +1,77 @@
+/**
+ * Fragments.
+ */
+.hd {
+
+	// Circle Icon
+	&-circle-icon {
+		width: 36px;
+		height: 36px;
+		fill: $clr-black;
+		background-color: $clr-gray;
+		border-radius: 50%;
+
+		@include flex-center;
+
+		svg {
+			width: 20px;
+		}
+	}
+
+	// Message
+	&-message {
+		padding: 30px;
+		display: flex;
+		color: $clr-white;
+		background-color: $clr-blue;
+		border-radius: $br-radius;
+		box-shadow: $shadow-1;
+
+		img {
+			min-width: 100px;
+			max-width: 100px;
+			margin-right: 30px;
+		}
+	}
+
+	// Loader
+	&-loader {
+		height: 20px;
+
+		&::before {
+			content: "";
+			width: 20px;
+			height: 20px;
+			border: 3px solid $clr-white;
+			border-bottom-color: transparent;
+			border-radius: 50%;
+			display: inline-block;
+			box-sizing: border-box;
+			animation: rotation 1s linear infinite;
+		}
+
+		&--black {
+
+			&::before {
+				border-color: rgba(0,0,0,0.2);
+				border-bottom-color: #050506;
+			}
+		}
+	}
+
+	@include media-sm {
+
+		&-message {
+			flex-direction: column;
+			align-items: center;
+			text-align: center;
+
+			img {
+				margin-right: 0;
+				margin-bottom: 20px;
+				max-width: 80px;
+				min-width: 80px;
+			}
+		}
+	}
+}

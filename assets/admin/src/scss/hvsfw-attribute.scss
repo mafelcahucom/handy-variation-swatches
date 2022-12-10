@@ -1,0 +1,73 @@
+div.form-field {
+
+	select,
+	input[type="text"],
+	input[type="number"] {
+		width: 100%;
+		min-width: 100%;
+	}
+}
+
+.woocommerce table.form-table select {
+	height: 30px;
+}
+
+.hvsfw-field {
+	display: none;
+
+	&[data-state="show"] {
+		display: block;
+	}
+
+	.button.wp-picker-clear {
+		display: none;
+	}
+
+	.hvsfw-field__two-col {
+		display: flex;
+
+		.hvsfw-field__col {
+			width: 50%;
+
+			&:first-child {
+				margin-right: 5px;
+			}
+
+			&:last-child {
+				margin-left: 5px;
+			}
+		}
+
+		.wp-picker-container,
+		.wp-picker-container .wp-color-result.button {
+			margin: 0;
+			width: 100%;
+		}
+	}
+	
+	&__add {
+
+		input,
+		select {
+			width: 100%;
+			min-width: 100%;
+		}
+	}
+
+	&__edit {
+
+		.hvsfw-field__two-col {
+			width: 400px;
+
+			input,
+			select {
+				width: 100% !important;
+				min-width: 100% !important;
+			}
+
+			@media ( max-width: 782px ) {
+				width: 100%;
+			}
+		}
+	}
+}

@@ -1,0 +1,94 @@
+/**
+ * Buttons.
+ */
+.hd {
+
+	&-btn {
+		position: relative;
+		display: inline-block;
+		padding: 11px 23px;
+		width: fit-content;
+		min-width: 150px;
+		color: $clr-white;
+		font-weight: 600 !important;
+		background-color: $clr-blue;
+		border-radius: $br-radius;
+		border: 0;
+
+		&[data-state="loading"] {
+			color: transparent;
+
+			.hd-loader {
+				display: block;
+			}
+		}
+
+		&:hover,
+		&:focus {
+			background-color: $clr-dark-blue;
+
+			@include transition;
+		}
+
+		.hd-loader {
+			display: none;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		}
+
+		&--fit {
+			min-width: 0px;
+		}
+
+		&--default {
+			color: $clr-black;
+			background-color: $clr-gray;
+
+			&:hover,
+			&:focus {
+				background-color: $clr-dark-gray;
+			}
+		}
+
+		&--white {
+			color: $clr-blue !important;
+			background-color: $clr-white;
+
+			&:hover,
+			&:focus {
+				background-color: #e2eefd;
+			}
+		}
+	}
+
+	&-btn-circle {
+		width: 40px;
+		height: 40px;
+		fill: $clr-black;
+		background-color: $clr-gray;
+		border: 0;
+		border-radius: 50%;
+
+		@include flex-center;
+
+		svg {
+			width: 20px;
+		}
+
+		&:hover,
+		&:focus {
+			background-color: $clr-dark-gray;
+
+			@include transition;
+		}
+	}
+}
+
+// Link button.
+a.hd-btn {
+	display: flex;
+	justify-content: center;
+	color: $clr-white;
+}

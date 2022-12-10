@@ -1,0 +1,93 @@
+/**
+ * Defaults.
+ */
+.hd-app {
+	color: $clr-black;
+	font-size: 14px;
+	font-family: Roboto, sans-serif;
+
+	*,
+	*::before,
+	*::after {
+		box-sizing: border-box;
+	}
+
+	body,
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6,
+	p,
+	span,
+	label,
+	figure,
+	picture {
+		margin: 0;
+		letter-spacing: 0.5px;
+	}
+
+	img,
+	picture {
+		display: block;
+		max-width: 100%;
+		height: auto;
+	}
+
+	input,
+	button,
+	textarea,
+	select {
+		font: inherit;
+		letter-spacing: 0.5px;
+	}
+
+	a,
+	button {
+		cursor: pointer;
+
+		&[data-state="loading"] {
+			cursor: wait;
+		}
+
+		&[data-state="disabled"] {
+			cursor: not-allowed;
+		}
+	}
+
+	a {
+		color: $clr-black;
+		text-decoration: none;
+		letter-spacing: 0.5px;
+		outline: none !important;
+		box-shadow: none !important;
+
+		&:hover,
+		&:focus {
+			color: $clr-blue;
+
+			@include transition;
+		}
+	}
+
+	button > * {
+		pointer-events: none;
+	}
+}
+
+#wpcontent {
+	padding-left: 0;
+	background: #f0f2f5;
+}
+
+.wrap {
+	margin: 0;
+}
+
+@media only screen and ( max-width: 782px ) {
+
+	.auto-fold #wpcontent {
+		padding-left: 0;
+	}
+}

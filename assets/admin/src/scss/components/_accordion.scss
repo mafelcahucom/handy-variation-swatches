@@ -1,0 +1,29 @@
+/**
+ * Accordions.
+ */
+.hd-accordion {
+
+	&__body {
+		overflow: hidden;
+		transition: max-height 200ms ease-out;
+
+		&[data-state="close"] {
+			max-height: 0;
+		}
+	}
+
+	.hd-btn-circle {
+
+		svg {
+			transition: all 400ms ease-in-out;
+		}
+
+		&[data-state="close"] {
+			transform: rotate(0deg);
+		}
+
+		&[data-state="open"] {
+			transform: rotate(180deg);
+		}
+	}
+}
