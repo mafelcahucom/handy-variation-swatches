@@ -9,19 +9,7 @@
 
 use HVSFW\Admin\Inc\Helper;
 
-defined( 'ABSPATH' ) || exit; 
-
-/** 
- * $args = [
- *     'value'   => (array) The value of the attribute configurations from _hsvfw_attribute.
- *     'default' => (array) The default value for the attribute fields.
- * ]
- **/
-
-if ( ! isset( $args['value'] ) || ! isset( $args['default'] ) ) {
-    return;
-}
-
+defined( 'ABSPATH' ) || exit;
 ?>
 <hr>
 <h2>Variation Swatch Settings.</h2>
@@ -54,7 +42,7 @@ if ( ! isset( $args['value'] ) || ! isset( $args['default'] ) ) {
 </div>
 <div class="form-field hvsfw-field hvsfw-field__add" data-field="size" data-state="hide">
     <label for="hvsfw_size">Size</label>
-    <input type="number" name="hvsfw_size" id="hvsfw_size" min="0" placeholder="40">
+    <input type="text" name="hvsfw_size" id="hvsfw_size" placeholder="40px" value="40px">
     <p class="description">The size or width & height of this variation swatch attribute.</p>
 </div>
 <div class="form-field hvsfw-field hvsfw-field__add" data-field="dimension" data-state="hide">
@@ -62,11 +50,11 @@ if ( ! isset( $args['value'] ) || ! isset( $args['default'] ) ) {
     <div class="hvsfw-field__two-col">
         <div class="hvsfw-field__col">
             <p class="description">Width</p>
-            <input type="number" name="hvsfw_width" id="hvsfw_width" min="0" placeholder="40">
+            <input type="text" name="hvsfw_width" id="hvsfw_width" placeholder="40px" value="40px">
         </div>
         <div class="hvsfw-field__col">
             <p class="description">Height</p>
-            <input type="number" name="hvsfw_height" id="hvsfw_height" min="0" placeholder="40">
+            <input type="text" name="hvsfw_height" id="hvsfw_height" placeholder="40px" value="40px">
         </div>
     </div>
     <p class="description">The width and height of this variation swatch attribute.</p>
@@ -76,7 +64,7 @@ if ( ! isset( $args['value'] ) || ! isset( $args['default'] ) ) {
     <div class="hvsfw-field__two-col">
         <div class="hvsfw-field__col">
             <p class="description">Size</p>
-            <input type="number" name="hvsfw_font_size" id="hvsfw_font_size" min="0" placeholder="14">
+            <input type="text" name="hvsfw_font_size" id="hvsfw_font_size" placeholder="14px" value="14px">
         </div>
         <div class="hvsfw-field__col">
             <p class="description">Weight</p>
@@ -100,11 +88,11 @@ if ( ! isset( $args['value'] ) || ! isset( $args['default'] ) ) {
     <div class="hvsfw-field__two-col">
         <div class="hvsfw-field__col">
             <p class="description">Color</p>
-            <input type="hidden" name="hvsfw_font_color" id="hvsfw_font_color" class="hvsfw-color-picker" value="#bada55">
+            <input type="hidden" name="hvsfw_font_color" id="hvsfw_font_color" class="hvsfw-color-picker" value="#000000">
         </div>
         <div class="hvsfw-field__col">
             <p class="description">Active Color</p>
-            <input type="hidden" name="hvsfw_font_hover_color" id="hvsfw_font_hover_color" class="hvsfw-color-picker" value="#bada55">
+            <input type="hidden" name="hvsfw_font_hover_color" id="hvsfw_font_hover_color" class="hvsfw-color-picker" value="#0071f2">
         </div>
     </div>
     <p class="description">The text color of this variation swatch attribute.</p>
@@ -114,11 +102,11 @@ if ( ! isset( $args['value'] ) || ! isset( $args['default'] ) ) {
     <div class="hvsfw-field__two-col">
         <div class="hvsfw-field__col">
             <p class="description">Color</p>
-            <input type="hidden" name="hvsfw_bg_color" id="hvsfw_bg_color" class="hvsfw-color-picker" value="#bada55">
+            <input type="hidden" name="hvsfw_background_color" id="hvsfw_background_color" class="hvsfw-color-picker" value="#ffffff">
         </div>
         <div class="hvsfw-field__col">
             <p class="description">Active Color</p>
-            <input type="hidden" name="hvsfw_bg_hover_color" id="hvsfw_bg_hover_color" class="hvsfw-color-picker" value="#bada55">
+            <input type="hidden" name="hvsfw_background_hover_color" id="hvsfw_background_hover_color" class="hvsfw-color-picker" value="#ffffff">
         </div>
     </div>
     <p class="description">The background color of this variation swatch attribute.</p>
@@ -128,21 +116,21 @@ if ( ! isset( $args['value'] ) || ! isset( $args['default'] ) ) {
     <div class="hvsfw-field__two-col">
         <div class="hvsfw-field__col">
             <p class="description">Top</p>
-            <input type="number" name="hvsfw_padding_top" id="hvsfw_padding_top" min="0" placeholder="5">
+            <input type="text" name="hvsfw_padding_top" id="hvsfw_padding_top" placeholder="5px" value="5px">
         </div>
         <div class="hvsfw-field__col">
             <p class="description">Bottom</p>
-            <input type="number" name="hvsfw_padding_bottom" id="hvsfw_padding_bottom" min="0" placeholder="5">
+            <input type="text" name="hvsfw_padding_bottom" id="hvsfw_padding_bottom" placeholder="5px" value="5px">
         </div>
     </div>
     <div class="hvsfw-field__two-col">
         <div class="hvsfw-field__col">
             <p class="description">Left</p>
-            <input type="number" name="hvsfw_padding_left" id="hvsfw_padding_left" min="0" placeholder="5">
+            <input type="text" name="hvsfw_padding_left" id="hvsfw_padding_left" placeholder="5px" value="5px">
         </div>
         <div class="hvsfw-field__col">
             <p class="description">Right</p>
-            <input type="number" name="hvsfw_padding_right" id="hvsfw_padding_right" min="0" placeholder="5">
+            <input type="text" name="hvsfw_padding_right" id="hvsfw_padding_right" placeholder="5px" value="5px">
         </div>
     </div>
     <p class="description">The padding of this variation swatch attribute.</p>
@@ -167,23 +155,23 @@ if ( ! isset( $args['value'] ) || ! isset( $args['default'] ) ) {
         </div>
         <div class="hvsfw-field__col">
             <p class="description">Width</p>
-            <input type="number" name="hvsfw_border_width" id="hvsfw_border_width" min="0" placeholder="1">
+            <input type="text" name="hvsfw_border_width" id="hvsfw_border_width" placeholder="1px" value="1px">
         </div>
     </div>
     <div class="hvsfw-field__two-col">
         <div class="hvsfw-field__col">
             <p class="description">Color</p>
-            <input type="hidden" name="hvsfw_border_color" id="hvsfw_border_color" class="hvsfw-color-picker" value="#bada55">
+            <input type="hidden" name="hvsfw_border_color" id="hvsfw_border_color" class="hvsfw-color-picker" value="#000000">
         </div>
         <div class="hvsfw-field__col">
             <p class="description">Active Color</p>
-            <input type="hidden" name="hvsfw_border_hover_color" id="hvsfw_border_hover_color" class="hvsfw-color-picker" value="#bada55">
+            <input type="hidden" name="hvsfw_border_hover_color" id="hvsfw_border_hover_color" class="hvsfw-color-picker" value="#0071f2">
         </div>
     </div>
     <p class="description">The border of this variation swatch attribute.</p>
 </div>
 <div class="form-field hvsfw-field hvsfw-field__add" data-field="borderRadius" data-state="hide">
     <label for="hvsfw_size">Border Radius</label>
-    <input type="number" name="hvsfw_border_radius" id="hvsfw_border_radius" min="0" placeholder="0">
+    <input type="text" name="hvsfw_border_radius" id="hvsfw_border_radius" placeholder="0px" value="0px">
     <p class="description">The border radius of this variation swatch attribute.</p>
 </div>

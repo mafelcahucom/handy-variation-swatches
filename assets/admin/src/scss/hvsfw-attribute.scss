@@ -15,10 +15,6 @@ div.form-field {
 .hvsfw-field {
 	display: none;
 
-	&[data-state="show"] {
-		display: block;
-	}
-
 	.button.wp-picker-clear {
 		display: none;
 	}
@@ -47,6 +43,10 @@ div.form-field {
 	
 	&__add {
 
+		&[data-state="show"] {
+			display: block;
+		}
+
 		input,
 		select {
 			width: 100%;
@@ -55,6 +55,10 @@ div.form-field {
 	}
 
 	&__edit {
+
+		&[data-state="show"] {
+			display: table-row;
+		}
 
 		.hvsfw-field__two-col {
 			width: 400px;

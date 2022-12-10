@@ -124,27 +124,27 @@ hvsfw.form = {
             size: [
                 {
                     id: 'hvsfw_size',
-                    type: 'number',
-                    default: 40
+                    type: 'size',
+                    default: '40px'
                 }
             ],
             dimension: [
                 {
                     id: 'hvsfw_width',
-                    type: 'number',
-                    default: 40
+                    type: 'size',
+                    default: '40px'
                 },
                 {
                     id: 'hvsfw_height',
-                    type: 'number',
-                    default: 40
+                    type: 'size',
+                    default: '40px'
                 }
             ],
             font: [
                 {
                     id: 'hvsfw_font_size',
-                    type: 'number',
-                    default: 14
+                    type: 'size',
+                    default: '14px'
                 },
                 {
                     id: 'hvsfw_font_weight',
@@ -179,23 +179,23 @@ hvsfw.form = {
             padding: [
                 {
                     id: 'hvsfw_padding_top',
-                    type: 'number',
-                    default: 5
+                    type: 'text',
+                    default: '5px'
                 },
                 {
                     id: 'hvsfw_padding_bottom',
-                    type: 'number',
-                    default: 5
+                    type: 'text',
+                    default: '5px'
                 },
                 {
                     id: 'hvsfw_padding_left',
-                    type: 'number',
-                    default: 5
+                    type: 'text',
+                    default: '5px'
                 },
                 {
                     id: 'hvsfw_padding_right',
-                    type: 'number',
-                    default: 5
+                    type: 'text',
+                    default: '5px'
                 }
             ],
             border: [
@@ -206,8 +206,8 @@ hvsfw.form = {
                 },
                 {
                     id: 'hvsfw_border_width',
-                    type: 'number',
-                    default: 1
+                    type: 'size',
+                    default: '1px'
                 },
                 {
                     id: 'hvsfw_border_color',
@@ -223,8 +223,8 @@ hvsfw.form = {
             borderRadius: [
                 {
                     id: 'hvsfw_border_radius',
-                    type: 'number',
-                    default: 1
+                    type: 'size',
+                    default: '0px'
                 }
             ]
         };
@@ -291,7 +291,7 @@ hvsfw.form = {
         }
 
         switch ( field.type ) {
-            case 'number':
+            case 'size':
                 fieldElem.value = field.default;
                 break;
             case 'select':

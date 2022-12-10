@@ -461,7 +461,7 @@ final class FieldValidation {
 
                 // Get the number only.
                 $number = filter_var( $args['value'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION );
-                if ( ! empty( $number ) || $number == 0 ) {
+                if ( ! empty( $number ) || $number === 0 ) {
                     $output = [
                         'success' => true,
                         'value'   => $number . $unit
