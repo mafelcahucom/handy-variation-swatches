@@ -36,7 +36,7 @@ final class Component {
      * @return HTMLElement
      */
     public static function get_logo() {
-        return '<img class="hd-logo" src="'. Helper::get_asset_src( 'images/logo.svg' ) .'" alt="Handy Itemized Product Variation" title="Handy Itemized Product Variation">';
+        return '<img class="hd-logo" src="'. Helper::get_asset_src( 'images/logo.svg' ) .'" alt="Handy Variation Swatches" title="Handy Variation Swatches">';
     }
 
     /**

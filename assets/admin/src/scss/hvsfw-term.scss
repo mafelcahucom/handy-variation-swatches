@@ -1,0 +1,32 @@
+.hvsfw-color-picker {
+
+	&[data-count="1"] {
+
+		.hvsfw-color-picker__delete-btn[data-item="1"] {
+			display: none;
+		}
+	}
+
+	&__list {
+		margin-bottom: 10px;
+	}
+
+	&__item {
+		display: flex;
+		padding: 5px 0px;
+
+		.hvsfw-col__left {
+			margin-right: 10px;
+		}
+	}
+
+	.button {
+		min-height: 28px;
+    	line-height: 26px;
+	}
+
+	.wp-picker-container,
+	.wp-picker-container .wp-color-result.button {
+		margin: 0;
+	}
+}

@@ -433,6 +433,57 @@ final class Helper {
     }
 
     /**
+     * Return the swatch settings from _hvsfw_swatch_attribute_setting 
+     * option by attribute id.
+     *
+     * @since 1.0.0
+     * 
+     * @param  integer  $attribute_id  The attribute id.
+     * @return array
+     */
+    public static function get_swatch_settings( $attribute_id ) {
+        if ( empty( $attribute_id ) ) {
+            return;
+        }
+
+        return get_option( "_hvsfw_swatch_attribute_setting_$attribute_id" );
+    }
+
+    /**
+     * Return the id of a product attribute taxonomy id by taxonomy slug.
+     *
+     * @since 1.0.0
+     * 
+     * @param  string  $taxonomy_slug  The taxonomy slug.
+     * @return integer
+     */
+    public static function get_attribute_taxonomy_id( $taxonomy_slug ) {
+        if ( empty( $taxonomy_slug ) || ! taxonomy_exists( $taxonomy_slug ) ) {
+            return;
+        }
+
+        global $wpdb;
+        $table     = $wpdb->prefix . 'woocommerce_attribute_taxonomies';
+        $attr_name = sanitize_text_field( substr( $taxonomy_slug, 3 ) );
+        $result    = $wpdb->get_var( $wpdb->prepare(
+            "
+            SELECT
+                attribute_id
+            FROM
+                $table
+            WHERE
+                attribute_name = %s
+            ",
+            $attr_name
+        ) );
+
+        return ( is_null( $result ) ? 0 : $result );
+    }
+
+
+    
+
+    /**
      * DELETE IN PRODUCTION.
      * @param  [type] $log [description]
      * @return [type]      [description]
@@ -444,6 +495,20 @@ final class Helper {
             } else {
                 error_log($log);
             }
+        }
+    }
+
+    // DELETE IN PROD.
+    public static function log_attribute_data() {
+        $ids = get_option( '_hvsfw_swatch_attribute_ids' );
+        self::log( $ids );
+        if ( empty( $ids ) ) {
+            return;
+        }
+
+        foreach ( $ids as $id ) {
+            self::log( "ID : $id" );
+            self::log( get_option( "_hvsfw_swatch_attribute_setting_$id" ) );
         }
     }
 }

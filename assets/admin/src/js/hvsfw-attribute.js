@@ -351,9 +351,7 @@ hvsfw.form = {
             return;
         }
 
-        jQuery( '.hvsfw-color-picker' ).wpColorPicker({
-            mode: 'hsl'
-        });
+        jQuery( '.hvsfw-color-picker' ).wpColorPicker();
     },
 
     /**
@@ -366,10 +364,20 @@ hvsfw.form = {
             const target = e.target;
             const type = target.value;
             const styleElem = document.getElementById( 'hvsfw_style' );
-            if ( ! styleElem || ! [ 'button', 'color', 'image' ].includes( type ) ) {
+            if ( ! styleElem || ! [ 'select', 'button', 'color', 'image' ].includes( type ) ) {
                 return;
             }
 
+
+            const fields = hvsfw.form.getAllFields();
+            if ( type === 'select' ) {
+                fields.push( 'style' );
+                hvsfw.form.setAllFieldState( fields, 'hide' );
+                return;
+            }
+
+            
+            hvsfw.form.setAllFieldState( [ 'style' ], 'show' );
             const style = styleElem.value;
             if ( ! [ 'default', 'custom' ].includes( style ) ) {
                 return;
@@ -378,8 +386,6 @@ hvsfw.form = {
             if ( style === 'default' ) {
                 return;
             }
-
-            const fields = hvsfw.form.getAllFields();
 
             hvsfw.form.setAllFieldState( fields, 'hide' );
 

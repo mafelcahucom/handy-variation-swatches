@@ -1,5 +1,5 @@
 <?php
-namespace HVSFW\Admin;
+namespace HVSFW\Admin\Variation;
 
 use HVSFW\Inc\Traits\Singleton;
 use HVSFW\Admin\Inc\Helper;
@@ -7,13 +7,13 @@ use HVSFW\Admin\Inc\Helper;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Attribute.
+ * Attribute Meta.
  *
  * @since 	1.0.0
  * @version 1.0.0
  * @author Mafel John Cahucom
  */
-final class Attribute {
+final class AttributeMeta {
 
 	/**
 	 * Inherit Singleton.
@@ -41,6 +41,7 @@ final class Attribute {
         // Deleting the swatch form data.
         add_action( 'woocommerce_attribute_deleted', [ $this, 'delete_attribute_swatch_setting' ] );
 
+        //Helper::log_attribute_data();
     }
 
     /**
@@ -91,7 +92,7 @@ final class Attribute {
             'type'                    => [
                 'type'    => 'select',
                 'default' => 'button',
-                'choices' => [ 'button', 'color', 'image' ]
+                'choices' => [ 'select', 'button', 'color', 'image' ]
             ],
             'style'                   => [
                 'type'    => 'select',
@@ -225,7 +226,7 @@ final class Attribute {
     }
 
     /**
-     * Render the product attribute swatch setting in adding and edit attribute page.
+     * Render the product attribute swatch setting form in adding and edit attribute page.
      *
      * @since 1.0.0
      */
@@ -239,7 +240,7 @@ final class Attribute {
         }
 
         $form_type = ( $id === 0 ? 'add' : 'edit' );
-        echo Helper::render_view( "attribute/swatch-setting-form-$form_type", [
+        echo Helper::render_view( "variation/attribute/swatch-setting-form-$form_type", [
             'setting' => $setting,
             'default' => $default
         ]);

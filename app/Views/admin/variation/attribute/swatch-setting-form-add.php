@@ -1,6 +1,6 @@
 <?php
 /**
- * Views > Admin > Attribute > Swatch Setting Form Add.
+ * Views > Admin > Variation > Attribute > Swatch Setting Form Add.
  *
  * @since   1.0.0
  * @version 1.0.0
@@ -17,13 +17,14 @@ defined( 'ABSPATH' ) || exit;
 <div class="form-field hvsfw-field hvsfw-field__add" data-field="type" data-state="show">
     <label for="hvsfw_type">Swatch Type</label>
     <select name="hvsfw_type" id="hvsfw_type">
+        <option value="select">Select</option>
         <option value="button">Button</option>
         <option value="color">Color</option>
         <option value="image">Image</option>
     </select>
     <p class="description">Select your preferred representation of this variation swatch attribute in the front-end.</p>
 </div>
-<div class="form-field hvsfw-field hvsfw-field__add" data-field="style" data-state="show">
+<div class="form-field hvsfw-field hvsfw-field__add" data-field="style" data-state="hide">
     <label for="hvsfw_style">Style (Design)</label>
     <select name="hvsfw_style" id="hvsfw_style">
         <option value="default">Default</option>

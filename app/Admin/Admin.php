@@ -6,7 +6,8 @@ use HVSFW\Admin\Inc\Helper;
 use HVSFW\Admin\Inc\Component;
 use HVSFW\Admin\Tab\Setting\SettingTab;
 use HVSFW\Admin\Tab\ImporterExporter\ImporterExporterTab;
-use HVSFW\Admin\Attribute;
+use HVSFW\Admin\Variation\AttributeMeta;
+use HVSFW\Admin\Variation\TermMeta;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -141,7 +142,8 @@ final class Admin {
         return [
             SettingTab::class,
             ImporterExporterTab::class,
-            Attribute::class
+            AttributeMeta::class,
+            TermMeta::class
         ];
     }
 
