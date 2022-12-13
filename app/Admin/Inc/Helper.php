@@ -323,6 +323,55 @@ final class Helper {
     }
 
     /**
+     * Return the product placeholder image source.
+     *
+     * @since 1.0.0
+     * 
+     * @param  string  $size  Registered image sizes.
+     * @return string
+     */
+    public static function get_product_thumbnail_placeholer_src( $size = 'full' ) {
+        $source = wc_placeholder_img_src( $size );
+        if ( empty( $source ) ) {
+            $source = self::get_asset_src( 'images/thumbnail-placeholder.webp' );
+        }
+
+        return $source;
+    }
+
+    /**
+     * Return the swatch image source and details.
+     *
+     * @since 1.0.0
+     * 
+     * @param  integer  $term_id  The target term id.
+     * @return array
+     */
+    public static function get_swatch_image( $term_id ) {
+        $image = [
+            'src'   => self::get_product_thumbnail_placeholer_src(),
+            'alt'   => 'WooCommerce Placeholder',
+            'title' => 'WooCommerce Placeholder'
+        ];
+
+        $attachment_id = get_term_meta( $term_id, '_hvsfw_image', true );
+        if ( empty( $attachment_id ) ) {
+            return $image;
+        }
+
+        $source = wp_get_attachment_image_src( $attachment_id, 'full' );
+        if ( empty( $source ) ) {
+            return $image;
+        }
+
+        return [
+            'src'   => $source[0],
+            'alt'   => get_the_title( $attachment_id ), 
+            'title' => get_the_title( $attachment_id )
+        ];
+    }
+
+    /**
      * Unset items in array by value.
      *
      * @since 1.0.0

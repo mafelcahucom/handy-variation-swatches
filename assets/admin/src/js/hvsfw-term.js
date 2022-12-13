@@ -59,21 +59,6 @@ hvsfw.fn = {
         elems.forEach( function( elem ) {
             elem.setAttribute( attribute, value );
         } );
-    },
-
-    /**
-     * Remove a specific item in an array.
-     *
-     * @since 1.0.0
-     * 
-     * @param  {array} array Containing the array to be filtered.
-     * @param  {mixed} item  The item to be removed in array.
-     * @return {array} The filtered array.
-     */
-    removeArrayItem( array, item ) {
-        return array.filter( function( value ) {
-            return value !== item;
-        });
     }
 };
 
@@ -114,9 +99,9 @@ hvsfw.colorPicker = {
             return;
         }
 
-        this.setOnLoad();
-        this.addNew();
-        this.delete();
+        this.setColorPicker();
+        this.addNewField();
+        this.deleteField();
     },
 
     /**
@@ -164,53 +149,69 @@ hvsfw.colorPicker = {
      * Set the color picker.
      *
      * @since 1.0.0
-     * 
-     * @param {integer} id The id of the color picker or the item number.
      */
-    setColorPicker( id ) {
-        if ( ! id ) {
-            return;
-        }
+    setColorPicker( action = 'set' ) {
+        const selector = '.hvsfw-color-picker__input';
+        jQuery( selector ).wpColorPicker();
 
-        jQuery( `.hvsfw-color-picker-input[data-item="${ id }"]` ).wpColorPicker();
+        if ( action === 'reset' ) {
+            jQuery( selector ).iris( 'color', '#ffffff' );
+        }
     },
 
     /**
-     * Return the current total count of color picker fields.
+     * Set the count of items.
      *
      * @since 1.0.0
-     * 
-     * @return {integer} The total count of color picker fields.
      */
-    getTotalItem() {
+    setCount() {
         const parentElem = hvsfw.colorPicker.parentElem;
-        const totalItems = parseInt( parentElem.getAttribute( 'data-count' ) );
+        const listElem = hvsfw.colorPicker.listElem;
 
-        return ( isNaN( totalItems ) ? 0 : totalItems );
+        parentElem.setAttribute( 'data-count', listElem.childElementCount );
+    },
+
+    /**
+     * Set to default or reset color picker.
+     *
+     * @since 1.0.0
+     */
+    setToDefault() {
+        const parentElem = hvsfw.colorPicker.parentElem;
+        const listElem = hvsfw.colorPicker.listElem;
+        const itemElems = listElem.querySelectorAll( '.hvsfw-color-picker__item' );
+        if ( itemElems.length === 0 ) {
+            return;
+        }
+
+        if ( itemElems.length > 1 ) {
+            itemElems.forEach( function( itemElem, index ) {
+                if ( index !== 0 ) {
+                    itemElem.remove();
+                }
+            });
+        }
+
+        this.setCount();
+        this.setColorPicker( 'reset' );
     },
 
     /**
      * Returns the new created color picker component element.
      *
      * @since 1.0.0
-     * 
-     * @param  {integer} id  Contains the color picker id or item number. 
+     *
      * @return {HTMLElement} Color picker component.
      */
-    fieldComponent( id ) {
-        if ( ! id ) {
-            return;
-        }
-
+    field() {
         const element = document.createElement( 'div' );
         element.className = 'hvsfw-color-picker__item';
-        element.setAttribute( 'data-item', id );
         element.innerHTML = `
             <div class="hvsfw-col__left">
-                <input type="text" name="hvsfw_colors[]" class="hvsfw-color-picker-input" data-item="${ id }" value="#ffffff">
+                <input type="hidden" name="hvsfw_colors[]" class="hvsfw-color-picker__input" value="#ffffff">
             </div>
             <div class="hvsfw-col__right">
-                <button type="button" class="hvsfw-js-color-picker-delete-btn hvsfw-color-picker__delete-btn button" data-item="${ id }">Delete</button>
+                <button type="button" class="hvsfw-js-color-picker-delete-btn hvsfw-color-picker__delete-btn button">Delete</button>
             </div>
         `;
 
@@ -218,50 +219,267 @@ hvsfw.colorPicker = {
     },
 
     /**
-     * Set the color picker field on load.
+     * Add new color picker field.
      *
      * @since 1.0.0
      */
-    setOnLoad() {
-        const totalItems = hvsfw.colorPicker.getTotalItem();
-
-        for( let i = 1; i <= totalItems; i++ ) {
-            hvsfw.colorPicker.setColorPicker( i );
-        }
-    },
-
-    /**
-     * Add new color picker input field.
-     *
-     * @since 1.0.0
-     */
-    addNew() {
+    addNewField() {
         hvsfw.fn.eventListener( 'click', '.hvsfw-js-color-picker-add-btn', function( e ) {
             e.preventDefault();
             const parentElem = hvsfw.colorPicker.parentElem;
             const listElem = hvsfw.colorPicker.listElem;
-            const totalItems = hvsfw.colorPicker.getTotalItem() + 1;
-            const fieldComponent = hvsfw.colorPicker.fieldComponent( totalItems );
+            const newColorPickerField = hvsfw.colorPicker.field();
 
-            parentElem.setAttribute( 'data-count', totalItems );
-            listElem.appendChild( fieldComponent );
-            hvsfw.colorPicker.setColorPicker( totalItems );
+            listElem.appendChild( newColorPickerField );
+
+            hvsfw.colorPicker.setColorPicker();
+            hvsfw.colorPicker.setCount();
         });
     },
 
     /**
-     * Delete a certain color picker.
+     * Delete a certain color picker field.
      *
      * @since 1.0.0
      */
-    delete() {
+    deleteField() {
         hvsfw.fn.eventListener( 'click', '.hvsfw-js-color-picker-delete-btn', function( e ) {
             e.preventDefault();
             const target = e.target;
-            const item = target.getAttribute( 'data-item' );
-            const itemElem = target.closest( `.hvsfw-color-picker__item[data-item="${ item }"]` );
+            const itemElem = target.closest( '.hvsfw-color-picker__item' );
             if ( itemElem ) {
                 itemElem.remove();
+                hvsfw.colorPicker.setCount();
+            }
+        });
+    }
+};
+
+
+/**
+ * Holds the image swatch setting form.
+ *
+ * @since 1.0.0
+ * 
+ * @type {Object}
+ */
+hvsfw.imagePicker = {
+
+    /**
+     * Holds the image previewer element.
+     *
+     * @since 1.0.0
+     * 
+     * @type {Object}
+     */
+    imageElem: null,
+
+    /**
+     * Holds the input element.
+     *
+     * @since 1.0.0
+     * 
+     * @type {Object}
+     */
+    inputElem: null,
+
+    /**
+     * Holds the remove button element.
+     *
+     * @since 1.0.0
+     * 
+     * @type {Object}
+     */
+    removeBtnElem: null,
+
+    /**
+     * Initialize.
+     *
+     * @since 1.0.0
+     */
+    init() {
+        if ( ! this.constructor() ) {
+            return;
+        }
+
+        this.uploadImage();
+        this.removeImage();
+    },
+
+    /**
+     * Constructor.
+     *
+     * @since 1.0.0
+     */
+    constructor() {
+        // Set all element property.
+        if ( ! this.setElementProperties() ) {
+            return false;
+        }
+
+        return true;
+    },
+
+    /**
+     * Set all element property values.
+     *
+     * @since 1.0.0
+     *
+     * @return {boolean} Check if all property element has a value.
+     */
+    setElementProperties() {
+        // Set imageElem property.
+        const imageElem = document.getElementById( 'hvsfw-image-picker-img' );
+        if ( ! imageElem ) {
+            return false;
+        }
+
+        hvsfw.imagePicker.imageElem = imageElem;
+
+        // Set inputElem property.
+        const inputElem = document.getElementById( 'hvsfw-image-picker-input' );
+        if ( ! inputElem ) {
+            return false;
+        }
+
+        hvsfw.imagePicker.inputElem = inputElem;
+
+        // Set removeBtnElem property.
+        const removeBtnElem = document.getElementById( 'hvsfw-js-image-picker-remove-btn' );
+        if ( ! removeBtnElem ) {
+            return false;
+        }
+
+        hvsfw.imagePicker.removeBtnElem = removeBtnElem;
+
+        return true;
+    },
+
+    /**
+     * Set to default or reset image picker.
+     *
+     * @since 1.0.0
+     */
+    setToDefault() {
+        const imageElem = hvsfw.imagePicker.imageElem;
+        const inputElem = hvsfw.imagePicker.inputElem;
+        const removeBtnElem = hvsfw.imagePicker.removeBtnElem;
+        const imagePlaceholder = imageElem.getAttribute( 'data-default' );
+
+        inputElem.value = 0;
+
+        imageElem.setAttribute( 'src', imagePlaceholder );
+        imageElem.setAttribute( 'alt', 'WooCommerce Placeholder' );
+        imageElem.setAttribute( 'title', 'WooCommerce Placeholder' );
+
+        removeBtnElem.setAttribute( 'data-state', 'disabled' );
+    },
+
+    /**
+     * Upload or select image from media library.
+     *
+     * @since 1.0.0
+     */
+    uploadImage() {
+        hvsfw.fn.eventListener( 'click', '#hvsfw-js-image-picker-select-btn', function( e ) {
+            e.preventDefault();
+            const target = e.target;
+            const state = target.getAttribute( 'data-state' );
+            if ( state !== 'default' ) {
+                return;
+            }
+
+            const imageElem = hvsfw.imagePicker.imageElem;
+            const inputElem = hvsfw.imagePicker.inputElem;
+            const removeBtnElem = hvsfw.imagePicker.removeBtnElem;
+
+            const uploader = wp.media({
+                title: 'Select Image',
+                library: {
+                    type: 'image'
+                },
+                button: {
+                    text: 'Use Image'
+                },
+                multiple: false
+            });
+
+            uploader.open();
+            uploader.on( 'select', function() {
+                const attachment = uploader.state().get('selection').toJSON();
+
+                inputElem.value = attachment[0].id;
+
+                imageElem.setAttribute( 'src', attachment[0].url );
+                imageElem.setAttribute( 'alt', attachment[0].alt );
+                imageElem.setAttribute( 'title', attachment[0].title );
+
+                removeBtnElem.setAttribute( 'data-state', 'default' );
+            });
+        });
+    },
+
+    /**
+     * Remove or delete the current image selected.
+     *
+     * @since 1.0.0
+     */
+    removeImage() {
+        hvsfw.fn.eventListener( 'click', '#hvsfw-js-image-picker-remove-btn', function( e ) {
+            e.preventDefault();
+            const target = e.target;
+            const state = target.getAttribute( 'data-state' );
+            if ( state === 'default' ) {
+                hvsfw.imagePicker.setToDefault();
+            }
+        });
+    }
+};
+
+/**
+ * Holds the ajax event catcher.
+ *
+ * @since 1.0.0
+ * 
+ * @type {Object}
+ */
+hvsfw.ajax = {
+
+    /**
+     * Initialize.
+     *
+     * @since 1.0.0
+     */
+    init() {
+        this.onSuccess();
+    },
+
+    /**
+     * Catch ajax on success events.
+     *
+     * @since 1.0.0
+     */
+    onSuccess() {
+        jQuery( document ).ajaxSuccess( function ( event, request, options ) {
+            const params = options.data.split( '&' );
+            const keys = {};
+            params.forEach( function( param ) {
+                param = param.split( '=' );
+                keys[ param[0] ] = param[1];
+            });
+
+            // Reset forms.
+            if ( keys.action === 'add-tag' ) {
+
+                // Color picker.
+                if ( 'hvsfw_colors' in keys ) {
+                    hvsfw.colorPicker.setToDefault();
+                }
+                
+                // Image picker.
+                if ( 'hvsfw_image' in keys ) {
+                    hvsfw.imagePicker.setToDefault();
+                }
             }
         });
     }
@@ -294,4 +512,6 @@ hvsfw.domReady = {
 
 hvsfw.domReady.execute( function() {
     hvsfw.colorPicker.init(); // Handle the color swatch setting form events.
+    hvsfw.imagePicker.init(); // Handle the image swatch setting form events.
+    hvsfw.ajax.init(); // Handle the ajax events catcher.
 } );

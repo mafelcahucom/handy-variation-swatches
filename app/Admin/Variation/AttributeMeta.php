@@ -30,18 +30,16 @@ final class AttributeMeta {
         add_action( 'admin_enqueue_scripts', [ $this, 'register_styles' ] );
         add_action( 'admin_enqueue_scripts', [ $this, 'register_scripts' ] );
         
-        // Render swatch form in adding and edit attribute.
+        // Render attribute swatch form in adding and edit.
         add_action( 'woocommerce_after_add_attribute_fields', [ $this, 'attribute_swatch_setting_form' ] );
         add_action( 'woocommerce_after_edit_attribute_fields', [ $this, 'attribute_swatch_setting_form' ] );
 
-        // Saving the swatch form data.
+        // Saving the attribute swatch form data.
         add_action( 'woocommerce_attribute_added', [ $this, 'save_attribute_swatch_setting' ] );
         add_action( 'woocommerce_attribute_updated', [ $this, 'save_attribute_swatch_setting' ] );
 
         // Deleting the swatch form data.
         add_action( 'woocommerce_attribute_deleted', [ $this, 'delete_attribute_swatch_setting' ] );
-
-        //Helper::log_attribute_data();
     }
 
     /**
