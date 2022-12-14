@@ -14,17 +14,7 @@ defined( 'ABSPATH' ) || exit;
 <hr>
 <h2>Variation Swatch Settings.</h2>
 <p class="description">Configure the settings for this variation swatch attribute. For more additional configuration, click <a class="hvsfw-card__setting" href="<?php echo esc_url( Helper::get_root_url() ); ?>" target="_blank" title="Go To Settings" aria-label="Go To Settings">here</a>.</p>
-<div class="form-field hvsfw-field hvsfw-field__add" data-field="type" data-state="show">
-    <label for="hvsfw_type">Swatch Type</label>
-    <select name="hvsfw_type" id="hvsfw_type">
-        <option value="select">Select</option>
-        <option value="button">Button</option>
-        <option value="color">Color</option>
-        <option value="image">Image</option>
-    </select>
-    <p class="description">Select your preferred representation of this variation swatch attribute in the front-end.</p>
-</div>
-<div class="form-field hvsfw-field hvsfw-field__add" data-field="style" data-state="hide">
+<div id="hvsfw-form-field-style" class="form-field hvsfw-field hvsfw-field__add" data-field="style" data-state="hide">
     <label for="hvsfw_style">Style (Design)</label>
     <select name="hvsfw_style" id="hvsfw_style">
         <option value="default">Default</option>

@@ -49,9 +49,12 @@ final class TermMeta {
         add_action( $this->taxonomy . '_add_form_fields', [ $this, 'add_term_swatch_setting_form' ] );
         add_action( $this->taxonomy . '_edit_form_fields', [ $this, 'edit_term_swatch_setting_form' ], 10 );
 
-       // Saving the term swatch form data.
+        // Saving the term swatch form data.
         add_action( 'created_' . $this->taxonomy, [ $this, 'save_term_swatch_setting' ] );
         add_action( 'edited_' . $this->taxonomy, [ $this, 'save_term_swatch_setting' ] );
+
+        // Adding the swatch type column in term list.
+        add_filter( 'manage_edit-'. $this->taxonomy .'_columns', [ $this, 'add_swatch_type_column' ] );
 
     }
 
@@ -64,6 +67,18 @@ final class TermMeta {
      */
     private function is_correct_page() {
         return ( isset( $_GET['taxonomy'] ) && isset( $_GET['post_type'] ) && $_GET['post_type'] === 'product' );
+    }
+
+    /**
+     * Return the swatch settings.
+     *
+     * @since 1.0.0
+     * 
+     * @return array.
+     */
+    private function get_settings() {
+        $attribute_id = wc_attribute_taxonomy_id_by_name( $this->taxonomy );
+        return Helper::get_swatch_settings( $attribute_id );
     }
 
     /**
@@ -115,8 +130,7 @@ final class TermMeta {
      * @param string  $taxonomy_slug  The taxonomy slug.
      */
     public function add_term_swatch_setting_form( $taxonomy_slug ) {
-        $attribute_id = Helper::get_attribute_taxonomy_id( $this->taxonomy );
-        $settings     = Helper::get_swatch_settings( $attribute_id );
+        $settings = $this->get_settings();
         if ( empty( $settings ) ) {
             return;
         }
@@ -137,8 +151,7 @@ final class TermMeta {
      * @param object  $term  The current term editing.
      */
     public function edit_term_swatch_setting_form( $term ) {
-        $attribute_id = Helper::get_attribute_taxonomy_id( $this->taxonomy );
-        $settings     = Helper::get_swatch_settings( $attribute_id );
+        $settings = $this->get_settings();
         if ( empty( $settings ) ) {
             return;
         }
@@ -165,18 +178,20 @@ final class TermMeta {
             return;
         }
 
-        $meta = [];
+        $settings = $this->get_settings();
+        if ( empty( $settings ) ) {
+            return;
+        }
 
         // Save color.
         if ( isset( $_POST['hvsfw_colors'] ) ) {
             $colors = $_POST['hvsfw_colors'];
-            if ( empty( $colors ) || ! is_array( $colors ) ) {
+            if ( empty( $colors ) || ! is_array( $colors ) || $settings['type'] !== 'color' ) {
                 return;
             }
 
-            $meta['key'] = '_hvsfw_colors';
             foreach ( $colors as $color ) {
-                $meta['value'][] = Helper::validate_color([
+                $meta_value[] = Helper::validate_color([
                     'value'   => $color,
                     'default' => '#ffffff'
                 ]);
@@ -185,10 +200,37 @@ final class TermMeta {
         
         // Saving image.
         if ( isset( $_POST['hvsfw_image'] ) ) {
-            $meta['key']   = '_hvsfw_image';
-            $meta['value'] = sanitize_text_field( $_POST['hvsfw_image'] );
+            if ( is_array( $_POST['hvsfw_image'] ) || $settings['type'] !== 'image' ) {
+                return;
+            }
+
+            $meta_value = sanitize_text_field( $_POST['hvsfw_image'] );
         }
 
-        update_term_meta( $term_id, $meta['key'], $meta['value'] );
+        update_term_meta( $term_id, '_hvsfw_value', $meta_value );
+    }
+
+    /**
+     * Adding the swatch type column in term list.
+     *
+     * @param array  $columns  Containg the current list of columns.
+     *
+     * @return array
+     */
+    public function add_swatch_type_column( $columns ) {
+        global $taxnow;
+        if ( $taxnow !== $this->taxonomy ) {
+            return $columns;
+        }
+
+        $settings = $this->get_settings();
+        if ( ! in_array( $settings['type'], [ 'color', 'image' ] ) ) {
+            return $columns;
+        }
+
+        $new_column                      = [];
+        $new_column[ $settings['type'] ] = ucfirst( $settings['type'] );
+      
+        return array_merge( array_slice( $columns, 0, 1 ), $new_column, array_slice( $columns, 1 ) );
     }
 }

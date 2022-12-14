@@ -15,10 +15,6 @@ div.form-field {
 .hvsfw-field {
 	display: none;
 
-	.button.wp-picker-clear {
-		display: none;
-	}
-
 	.hvsfw-field__two-col {
 		display: flex;
 
@@ -73,5 +69,13 @@ div.form-field {
 				width: 100%;
 			}
 		}
+	}
+
+	.wp-picker-holder {
+		position: absolute;
+	}
+
+	.button.wp-picker-clear {
+		display: none;
 	}
 }

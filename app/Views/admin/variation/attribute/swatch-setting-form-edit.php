@@ -88,21 +88,7 @@ if ( $settings['style'] === 'custom' ) {
         <p class="description">Configure the settings for this variation swatch attribute. For more additional configuration, click <a class="hvsfw-card__setting" href="<?php echo esc_url( Helper::get_root_url() ); ?>">here</a>.</p>
     </td>
 </tr>
-<tr class="form-field hvsfw-field hvsfw-field__edit" data-field="type" data-state="show">
-    <th scope="row" valign="top">
-        <label for="hvsfw_type">Swatch Type</label>
-    </th>
-    <td>
-        <select name="hvsfw_type" id="hvsfw_type">
-            <option value="select" <?php selected( $settings['type'], 'select' ); ?>>Select</option>
-            <option value="button" <?php selected( $settings['type'], 'button' ); ?>>Button</option>
-            <option value="color" <?php selected( $settings['type'], 'color' ); ?>>Color</option>
-            <option value="image" <?php selected( $settings['type'], 'image' ); ?>>Image</option>
-        </select>
-        <p class="description">Select your preferred representation of this variation swatch attribute in the front-end.</p>
-    </td>
-</tr>
-<tr class="form-field hvsfw-field hvsfw-field__edit" data-field="style" data-state="<?php echo $states['style']; ?>">
+<tr id="hvsfw-form-field-style" class="form-field hvsfw-field hvsfw-field__edit" data-field="style" data-state="<?php echo $states['style']; ?>">
     <th scope="row" valign="top">
         <label for="hvsfw_style">Style (Design)</label>
     </th>

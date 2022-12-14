@@ -29,6 +29,9 @@ final class AttributeMeta {
         // Register styles and scripts.
         add_action( 'admin_enqueue_scripts', [ $this, 'register_styles' ] );
         add_action( 'admin_enqueue_scripts', [ $this, 'register_scripts' ] );
+
+        // Render attribute type selector.
+        add_filter( 'product_attributes_type_selector', [ $this, 'attribute_type_selector_field' ], 10, 1 );
         
         // Render attribute swatch form in adding and edit.
         add_action( 'woocommerce_after_add_attribute_fields', [ $this, 'attribute_swatch_setting_form' ] );
@@ -38,7 +41,7 @@ final class AttributeMeta {
         add_action( 'woocommerce_attribute_added', [ $this, 'save_attribute_swatch_setting' ] );
         add_action( 'woocommerce_attribute_updated', [ $this, 'save_attribute_swatch_setting' ] );
 
-        // Deleting the swatch form data.
+        // Deleting the attribute swatch form data.
         add_action( 'woocommerce_attribute_deleted', [ $this, 'delete_attribute_swatch_setting' ] );
     }
 
@@ -73,8 +76,8 @@ final class AttributeMeta {
         }
 
         $dependency = [ 'jquery', 'wp-color-picker' ];
-
         wp_register_script( 'hvsfw-attribute-js', Helper::get_asset_src( 'js/hvsfw-attribute.min.js' ), $dependency, '1.0.0', true );
+
         wp_enqueue_script( 'hvsfw-attribute-js' );
     }
 
@@ -89,7 +92,7 @@ final class AttributeMeta {
         return [
             'type'                    => [
                 'type'    => 'select',
-                'default' => 'button',
+                'default' => 'select',
                 'choices' => [ 'select', 'button', 'color', 'image' ]
             ],
             'style'                   => [
@@ -120,7 +123,7 @@ final class AttributeMeta {
             ],
             'font_weight'             => [
                 'type'    => 'select',
-                'default' => 'solid',
+                'default' => '500',
                 'choices' => Helper::get_font_weight_choices( 'value' )
             ],
             'font_color'              => [
@@ -187,7 +190,7 @@ final class AttributeMeta {
      * 
      * @param  integer  $id  The attribute id to be inserted.
      */
-    public function update_option_attribute_id( $id ) {
+    private function update_option_attribute_id( $id ) {
         if ( empty( $id ) ) {
             return;
         }
@@ -209,7 +212,7 @@ final class AttributeMeta {
      * 
      * @param  integer  $id  The attribute id to be deleted.
      */
-    public function delete_option_attribute_id( $id ) {
+    private function delete_option_attribute_id( $id ) {
         if ( empty( $id ) ) {
             return;
         }
@@ -221,6 +224,29 @@ final class AttributeMeta {
             $unsetted_ids = Helper::array_unset_by_value( $ids, [ $id ] );
             update_option( '_hvsfw_swatch_attribute_ids', $unsetted_ids );
         }
+    }
+
+    /**
+     * Render the attribute type selector field.
+     *
+     * @since 1.0.0
+     *
+     * @param  array  $types  Containing the current attribute types.
+     * 
+     * @return array
+     */
+    public function attribute_type_selector_field( $types ) {
+        $screen = get_current_screen();
+        if ( isset( $screen->id ) && $screen->id === 'product_page_product_attributes' ) {
+            $types = [
+                'select' => 'Select',
+                'button' => 'Button',
+                'color'  => 'Color',
+                'image'  => 'Image'
+            ];
+        }
+
+        return $types;
     }
 
     /**
@@ -257,8 +283,8 @@ final class AttributeMeta {
         $field_schema    = $this->get_swatch_setting_field_schema();
         foreach ( $field_schema as $key => $field ) {
             $validated_value[ $key ] = $field['default'];
-            
-            $post_key = 'hvsfw_'. $key;
+                       
+            $post_key = ( $key === 'type' ? "attribute_type" : "hvsfw_$key" );
             if ( isset( $_POST[ $post_key ] ) ) {
                 switch ( $field['type'] ) {
                     case 'size':
@@ -322,6 +348,16 @@ final class AttributeMeta {
             }
         }
 
+        // Delete term metas of this attribute if type has changed.
+        $current_setting = Helper::get_swatch_settings( $id );
+        if ( ! empty( $current_setting ) ) {
+            $is_changed     = ( $current_setting['type'] !== $validated_value['type'] );
+            $in_color_image = in_array( $current_setting['type'], [ 'color', 'image' ] );
+            if ( $is_changed && $in_color_image ) {
+                $this->delete_term_meta_associate_by_attribute( $id );
+            }
+        }
+
         // Saving swatch attribute settings in wp_options.
         update_option( "_hvsfw_swatch_attribute_setting_$id", $validated_value );
 
@@ -337,10 +373,34 @@ final class AttributeMeta {
      * @param  integer  $id  Added attribute ID.
      */
     public function delete_attribute_swatch_setting( $id ) {
-        // Delete swatch attribute setting.
         delete_option( "_hvsfw_swatch_attribute_setting_$id" );
 
-        // Delete the id of the attribute.
         $this->delete_option_attribute_id( $id );
+    }
+
+    /**
+     * Delete all the term metas that are associate with attrbute.
+     *
+     * @since 1.0.0
+     *
+     * @param  integer  $attribute_id  The target attribute id.
+     */
+    private function delete_term_meta_associate_by_attribute( $attribute_id ) {
+        if ( empty( $attribute_id ) ) {
+            return;
+        }
+
+        $taxonomy = wc_attribute_taxonomy_name_by_id( $attribute_id );
+        $terms    = get_terms([
+            'taxonomy'   => $taxonomy,
+            'hide_empty' => false
+        ]);
+
+        if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
+            foreach ( $terms as $term ) {
+                delete_term_meta( $term->term_id, '_hvsfw_value' );
+            }
+        }
+        
     }
 }

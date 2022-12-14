@@ -21,8 +21,8 @@ if ( ! isset( $args['term_id'] ) ) {
     return;
 }
 
-$colors = get_term_meta( $args['term_id'], '_hvsfw_colors', true );
-$colors = ( ! empty( $colors ) ? $colors : [ '#ffffff' ] );
+$colors = get_term_meta( $args['term_id'], '_hvsfw_value', true );
+$colors = ( ! empty( $colors ) && is_array( $colors ) ? $colors : [ '#ffffff' ] );
 ?>
 
 <tr class="form-field">

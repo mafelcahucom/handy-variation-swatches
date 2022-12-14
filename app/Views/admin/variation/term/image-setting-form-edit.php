@@ -21,8 +21,8 @@ if ( ! isset( $args['term_id'] ) ) {
     return;
 }
 
-$attachment_id = get_term_meta( $args['term_id'], '_hvsfw_image', true );
-$attachment_id = ( ! empty( $attachment_id ) ? $attachment_id : 0 );
+$attachment_id = get_term_meta( $args['term_id'], '_hvsfw_value', true );
+$attachment_id = ( ! empty( $attachment_id ) && ! is_array( $attachment_id ) ? $attachment_id : 0 );
 $image         = Helper::get_swatch_image( $args['term_id'] );
 $placeholder   = Helper::get_product_thumbnail_placeholer_src();
 ?>

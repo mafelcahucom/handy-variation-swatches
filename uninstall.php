@@ -27,6 +27,32 @@ if ( ! function_exists( 'hvsfw_uninstall' ) ) {
          * @since 1.0.0
          */
         delete_option( '_hvsfw_plugin_version' );
+
+        /**
+         * Deleting option _hvsfw_swatch_attribute_setting_.
+         *
+         * @since 1.0.0
+         */
+        $attribute_ids = get_option( '_hvsfw_swatch_attribute_ids' );
+        if ( ! empty( $attribute_ids ) ) {
+            foreach ( $attribute_ids as $attribute_id ) {
+                delete_option( "_hvsfw_swatch_attribute_setting_$attribute_id" );
+            }
+        }
+
+        /**
+         * Deleting option _hvsfw_swatch_attribute_ids.
+         *
+         * @since 1.0.0
+         */
+        delete_option( '_hvsfw_swatch_attribute_ids' );
+
+
+        /**
+         * ############
+         * MAKE A QUERY WHERE TO DELETE ALL TERM META BY KEYWORD.
+         * ############
+         */
     }
     hvsfw_uninstall();
 }

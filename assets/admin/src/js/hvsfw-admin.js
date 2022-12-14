@@ -94,9 +94,9 @@ hvsfw.fn = {
 	 * Set the text of an element based on selector.
 	 *
 	 * @since 1.0.0
-	 * 
-	 * @param {string} selector  The target element selector.
-	 * @param {string} text 	  The text to be inserted in the element.
+	 *
+	 * @param {string} selector The target element selector.
+	 * @param {string} text     The text to be inserted in the element.
 	 */
 	setText( selector, text ) {
 		if ( ! selector || ! text ) {
@@ -107,7 +107,7 @@ hvsfw.fn = {
 		if ( elems.length > 0 ) {
 			elems.forEach( function( elem ) {
 				elem.textContent = text;
-			});
+			} );
 		}
 	},
 
@@ -139,22 +139,22 @@ hvsfw.fn = {
 	 * Create a text file from the text of the appended element.
 	 *
 	 * @since 1.0.0
-	 * 
-	 * @param  {string}  filename  Will be used as name for the .txt file.
-	 * @param  {string}  content   The content of the .txt file.
+	 *
+	 * @param {string} filename Will be used as name for the .txt file.
+	 * @param {string} content  The content of the .txt file.
 	 */
 	createTextFile( filename, content ) {
 		if ( ! filename || ! content ) {
 			return;
 		}
 
-		const element = document.createElement('a');
+		const element = document.createElement( 'a' );
 		element.setAttribute( 'href', 'data:text/plain;charset=utf-8,' + encodeURIComponent( content ) );
 		element.setAttribute( 'download', filename );
 		element.style.display = 'none';
-		document.body.appendChild(element);
+		document.body.appendChild( element );
 		element.click();
-		document.body.removeChild(element);
+		document.body.removeChild( element );
 	},
 };
 
@@ -286,7 +286,7 @@ hvsfw.toaster = {
  * Prompt Components.
  *
  * @since 1.0.0
- * 
+ *
  * @type {Object}
  */
 hvsfw.prompt = {
@@ -295,9 +295,9 @@ hvsfw.prompt = {
 	 * Show or hide screen loader, and also can set the title.
 	 *
 	 * @since 1.0.0
-	 * 
-	 * @param  {string}  visibility  The visibility state of the screen loader.
-	 * @param  {strong}  title       The title or message of the screen loader.
+	 *
+	 * @param {string} visibility The visibility state of the screen loader.
+	 * @param {strong} title      The title or message of the screen loader.
 	 */
 	loader( visibility, title = 'Please Wait...' ) {
 		if ( ! visibility ) {
@@ -314,20 +314,20 @@ hvsfw.prompt = {
 	 * Prompt Modal Dialog.
 	 *
 	 * @since 1.0.0
-	 * 
-	 * @param  {Object}  args  Contains all the parameters for showing modal dialog.
-	 * @param  {string}  args.title  The title of the modal dialog.
-	 * @param  {string}  args.message  The message of the modal dialog.
-	 * @param  {string}  args.yes 	   The yes button label.
-	 * @param  {string}  args.no 	   The no button label.
+	 *
+	 * @param {Object} args         Contains all the parameters for showing modal dialog.
+	 * @param {string} args.title   The title of the modal dialog.
+	 * @param {string} args.message The message of the modal dialog.
+	 * @param {string} args.yes     The yes button label.
+	 * @param {string} args.no      The no button label.
 	 * @return {Promise}
 	 */
 	dialog( args = {} ) {
-		const prompt = document.getElementById('hd-js-prompt-dialog');
+		const prompt = document.getElementById( 'hd-js-prompt-dialog' );
 		if ( ! prompt ) {
 			return;
 		}
-	
+
 		hvsfw.fn.setText( '#hd-js-prompt-dialog-title', ( args.title ? args.title : 'Title' ) );
 		hvsfw.fn.setText( '#hd-js-prompt-dialog-message', ( args.message ? args.message : 'Message' ) );
 		hvsfw.fn.setText( '#hd-js-prompt-dialog-no-btn', ( args.no ? args.no : 'No' ) );
@@ -338,18 +338,18 @@ hvsfw.prompt = {
 			hvsfw.fn.eventListener( 'click', '#hd-js-prompt-dialog-no-btn', function( e ) {
 				hvsfw.fn.setAttribute( '#hd-js-prompt-dialog', 'data-state', 'hide' );
 				resolve( false );
-			});
+			} );
 
 			hvsfw.fn.eventListener( 'click', '#hd-js-prompt-dialog-yes-btn', function( e ) {
 				hvsfw.fn.setAttribute( '#hd-js-prompt-dialog', 'data-state', 'hide' );
 				resolve( true );
-			});
+			} );
 
 			hvsfw.fn.eventListener( 'click', '#hd-js-prompt-dialog-close-btn', function( e ) {
 				hvsfw.fn.setAttribute( '#hd-js-prompt-dialog', 'data-state', 'hide' );
 				resolve( false );
-			});
-		});
+			} );
+		} );
 	},
 
 	/**
@@ -384,18 +384,18 @@ hvsfw.prompt = {
 			{
 				error: 'INVALID_FILE_TYPE',
 				title: 'Invalid File Type',
-				content: 'Invalid file type. Please make sure the file type is .txt.'
+				content: 'Invalid file type. Please make sure the file type is .txt.',
 			},
 			{
 				error: 'CORRUPTED_SETTING_FILE',
 				title: 'Corrupted Setting File',
-				content: 'The setting text file is corrupted or missing data or containing an invalid data. Please check and try again.' 
+				content: 'The setting text file is corrupted or missing data or containing an invalid data. Please check and try again.',
 			},
 			{
 				error: 'ERROR_READING_FILE',
 				title: 'Error Reading File',
-				content: 'Error in reading the file. Please contact your developer and try again.' 
-			}
+				content: 'Error in reading the file. Please contact your developer and try again.',
+			},
 		];
 
 		const errorDetail = errors.find( function( value ) {
@@ -835,15 +835,15 @@ hvsfw.formField = {
 		hvsfw.fn.eventListener( 'change', '.hd-js-file-field-input', function( e ) {
 			const target = e.target;
 			const files = target.files;
-			const parentElem = target.closest('.hd-file-field');
-			const labelElem = parentElem.querySelector('.hd-js-file-field-label');
+			const parentElem = target.closest( '.hd-file-field' );
+			const labelElem = parentElem.querySelector( '.hd-js-file-field-label' );
 			if ( ! files.length === 0 || ! parentElem || ! labelElem ) {
 				return;
 			}
 
-			labelElem.textContent = files[0].name;
-		});
-	}
+			labelElem.textContent = files[ 0 ].name;
+		} );
+	},
 };
 
 /**
@@ -1006,7 +1006,7 @@ hvsfw.setting = {
  * Importer & Exporter Tab.
  *
  * @since 1.0.0
- * 
+ *
  * @type {Object}
  */
 hvsfw.importerExporter = {
@@ -1030,7 +1030,7 @@ hvsfw.importerExporter = {
 	export() {
 		hvsfw.fn.eventListener( 'click', '#hvsfw-js-export-file-btn', async function( e ) {
 			const target = e.target;
-			const state = target.getAttribute('data-state');
+			const state = target.getAttribute( 'data-state' );
 			if ( state !== 'default' ) {
 				return;
 			}
@@ -1038,25 +1038,25 @@ hvsfw.importerExporter = {
 			hvsfw.prompt.loader( 'visible', 'Exporting Settings...' );
 			target.setAttribute( 'data-state', 'loading' );
 
-			const res = await hvsfw.fn.fetch({
+			const res = await hvsfw.fn.fetch( {
 				nonce: hvsfwLocal.tab.importerExporter.nonce.exportSettings,
-				action: 'hvsfw_export_settings'
-			});
+				action: 'hvsfw_export_settings',
+			} );
 
 			if ( res.success === true ) {
 				hvsfw.fn.createTextFile( 'handy-itemized-variation-for-woocommerce-settings.txt', res.data.settings );
-				hvsfw.toaster.show({
+				hvsfw.toaster.show( {
 					color: 'success',
 					title: 'Settings Successfully Exported',
-					content: 'Itemized variation settings has successfully exported.'
-				});
+					content: 'Itemized variation settings has successfully exported.',
+				} );
 			} else {
 				hvsfw.prompt.errorMessage( res.data.error );
 			}
 
 			hvsfw.prompt.loader( 'hide' );
 			target.setAttribute( 'data-state', 'default' );
-		});
+		} );
 	},
 
 	/**
@@ -1064,14 +1064,14 @@ hvsfw.importerExporter = {
 	 * the encrypted settings.
 	 *
 	 * @since 1.0.0
-	 * 
+	 *
 	 * @return 1.0.0
 	 */
 	import() {
 		hvsfw.fn.eventListener( 'click', '#hvsfw-js-import-file-btn', async function( e ) {
 			const target = e.target;
-			const state = target.getAttribute('data-state');
-			const fileUploaderElem = document.getElementById('hvsfw-js-file-field-input');
+			const state = target.getAttribute( 'data-state' );
+			const fileUploaderElem = document.getElementById( 'hvsfw-js-file-field-input' );
 			if ( state !== 'default' ) {
 				return;
 			}
@@ -1081,18 +1081,18 @@ hvsfw.importerExporter = {
 				return;
 			}
 
-			const isContinueImporting = await hvsfw.prompt.dialog({
+			const isContinueImporting = await hvsfw.prompt.dialog( {
 				title: 'Import Settings',
 				message: 'Are you sure you want to import settings? This process will override the current settings and cannot be undone.',
 				yes: 'Continue',
-				no: 'Cancel'
-			});
-			
+				no: 'Cancel',
+			} );
+
 			if ( isContinueImporting === false ) {
 				return;
 			}
 
-			const file = files[0];
+			const file = files[ 0 ];
 			if ( file.type !== 'text/plain' ) {
 				hvsfw.prompt.errorMessage( 'INVALID_FILE_TYPE' );
 				return;
@@ -1105,31 +1105,31 @@ hvsfw.importerExporter = {
 				target.setAttribute( 'data-state', 'loading' );
 
 				const fileContent = reader.result;
-				const res = await hvsfw.fn.fetch({
+				const res = await hvsfw.fn.fetch( {
 					nonce: hvsfwLocal.tab.importerExporter.nonce.importSettings,
 					action: 'hvsfw_import_settings',
-					settings: fileContent
-				});
+					settings: fileContent,
+				} );
 
 				if ( res.success === true ) {
-					hvsfw.toaster.show({
+					hvsfw.toaster.show( {
 						color: 'success',
 						title: 'Settings Successfully Imported',
-						content: 'Itemized variation settings has successfully imported.'
-					});
+						content: 'Itemized variation settings has successfully imported.',
+					} );
 				} else {
 					hvsfw.prompt.errorMessage( res.data.error );
 				}
 
 				hvsfw.prompt.loader( 'hide' );
 				target.setAttribute( 'data-state', 'default' );
-			}
+			};
 
 			reader.onerror = function() {
 				hvsfw.prompt.errorMessage( 'ERROR_READING_FILE' );
-			}
-		});
-	}
+			};
+		} );
+	},
 };
 
 /**
