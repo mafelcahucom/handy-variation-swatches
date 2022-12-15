@@ -67,7 +67,7 @@ hvsfw.fn = {
 	 * @since 1.0.0
 	 *
 	 * @param {Array} array Containing the array to be filtered.
-	 * @param {mixed} item  The item to be removed in array.
+	 * @param {Array} item  The item to be removed in array.
 	 * @return {Array} The filtered array.
 	 */
 	removeArrayItem( array, item ) {

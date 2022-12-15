@@ -56,6 +56,8 @@ final class TermMeta {
         // Adding the swatch type column in term list.
         add_filter( 'manage_edit-'. $this->taxonomy .'_columns', [ $this, 'add_swatch_type_column' ] );
 
+        // Render the swatch component in swatch type column.
+        add_action( 'manage_'. $this->taxonomy .'_custom_column', [ $this, 'render_swatch_type_component' ], 10, 3 );
     }
 
     /**
@@ -228,9 +230,35 @@ final class TermMeta {
             return $columns;
         }
 
-        $new_column                      = [];
-        $new_column[ $settings['type'] ] = ucfirst( $settings['type'] );
+        $new_column = [];
+        $new_column[ 'hvsfw_' . $settings['type'] ] = ucfirst( $settings['type'] );
       
         return array_merge( array_slice( $columns, 0, 1 ), $new_column, array_slice( $columns, 1 ) );
+    }
+
+    /**
+     * Render the swatch component in swatch type column.
+     *
+     * @since 1.0.0
+     * 
+     * @param  string   $string       The custom column output.
+     * @param  string   $column_name  The name of the column.
+     * @param  integer  $term_id      The term ID.
+     * @return HTMLElement
+     */
+    public function render_swatch_type_component( $string, $column_name, $term_id ) {
+        global $taxnow;
+        if ( $taxnow !== $this->taxonomy ) {
+            return $string;
+        }
+
+        if ( ! in_array( $column_name, [ 'hvsfw_color', 'hvsfw_image' ] ) ) {
+            return $string;
+        }
+
+        $type = str_replace( 'hvsfw_', '', $column_name );
+        echo Helper::render_view( "variation/term/preview/$type-swatch", [
+            'term_id' => $term_id
+        ]);
     }
 }

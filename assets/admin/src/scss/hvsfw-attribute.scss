@@ -1,3 +1,4 @@
+// Form Field.
 div.form-field {
 
 	select,
@@ -12,6 +13,7 @@ div.form-field {
 	height: 30px;
 }
 
+// Custom Field.
 .hvsfw-field {
 	display: none;
 
@@ -36,7 +38,7 @@ div.form-field {
 			width: 100%;
 		}
 	}
-	
+
 	&__add {
 
 		&[data-state="show"] {

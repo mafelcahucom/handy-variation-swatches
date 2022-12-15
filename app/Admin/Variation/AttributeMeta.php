@@ -401,6 +401,5 @@ final class AttributeMeta {
                 delete_term_meta( $term->term_id, '_hvsfw_value' );
             }
         }
-        
     }
 }
