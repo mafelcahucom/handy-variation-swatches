@@ -2,6 +2,7 @@
 namespace HVSFW\Admin\Variation;
 
 use HVSFW\Inc\Traits\Singleton;
+use HVSFW\Inc\Utility;
 use HVSFW\Admin\Inc\Helper;
 
 defined( 'ABSPATH' ) || exit;
@@ -49,9 +50,17 @@ final class TermMeta {
         add_action( $this->taxonomy . '_add_form_fields', [ $this, 'add_term_swatch_setting_form' ] );
         add_action( $this->taxonomy . '_edit_form_fields', [ $this, 'edit_term_swatch_setting_form' ], 10 );
 
+        // Render tooltip swatch setting form data in adding and edit.
+        add_action( $this->taxonomy . '_add_form_fields', [ $this, 'add_tooltip_swatch_setting_form' ] );
+        add_action( $this->taxonomy . '_edit_form_fields', [ $this, 'edit_tooltip_swatch_setting_form' ] );
+
         // Saving the term swatch form data.
         add_action( 'created_' . $this->taxonomy, [ $this, 'save_term_swatch_setting' ] );
         add_action( 'edited_' . $this->taxonomy, [ $this, 'save_term_swatch_setting' ] );
+
+        // Saving the tooltip swatch form data.
+        add_action( 'created_' . $this->taxonomy, [ $this, 'save_tooltip_swatch_setting' ] );
+        add_action( 'edited_' . $this->taxonomy, [ $this, 'save_tooltip_swatch_setting' ] );
 
         // Adding the swatch type column in term list.
         add_filter( 'manage_edit-'. $this->taxonomy .'_columns', [ $this, 'add_swatch_type_column' ] );
@@ -80,7 +89,7 @@ final class TermMeta {
      */
     private function get_settings() {
         $attribute_id = wc_attribute_taxonomy_id_by_name( $this->taxonomy );
-        return Helper::get_swatch_settings( $attribute_id );
+        return Utility::get_swatch_settings( $attribute_id );
     }
 
     /**
@@ -169,6 +178,42 @@ final class TermMeta {
     }
 
     /**
+     * Render the tooltip swatch setting form in adding attribute terms page.
+     *
+     * @since 1.0.0
+     *
+     * @param string  $taxonomy_slug  The taxonomy slug.
+     */
+    public function add_tooltip_swatch_setting_form( $taxonomy_slug ) {
+        $settings = $this->get_settings();
+        if ( empty( $settings ) ) {
+            return;
+        }
+
+        echo Helper::render_view( 'variation/term/tooltip-setting-form-add', [
+            'type' => $settings['type']
+        ]);
+    }
+
+    /**
+     * Render the tooltip swatch setting form in editing attribute terms page.
+     *
+     * @since 1.0.0
+     * 
+     * @param object  $term  The current term editing.
+     */
+    public function edit_tooltip_swatch_setting_form( $term ) {
+        $settings = $this->get_settings();
+        if ( empty( $settings ) ) {
+            return;
+        }
+
+        echo Helper::render_view( 'variation/term/tooltip-setting-form-edit', [
+            'term_id' => $term->term_id
+        ]);
+    }
+
+    /**
      * Saving the term swatch setting during adding and editing term.
      *
      * @since 1.0.0
@@ -176,7 +221,7 @@ final class TermMeta {
      * @param  integer  $term_id  The target term id.
      */
     public function save_term_swatch_setting( $term_id ) {
-        if ( ! isset( $_POST['hvsfw_colors'] ) && ! isset( $_POST['hvsfw_image'] ) ) {
+        if ( ! isset( $_POST['hvsfw_color_swatch'] ) && ! isset( $_POST['hvsfw_image_swatch'] ) ) {
             return;
         }
 
@@ -186,8 +231,8 @@ final class TermMeta {
         }
 
         // Save color.
-        if ( isset( $_POST['hvsfw_colors'] ) ) {
-            $colors = $_POST['hvsfw_colors'];
+        if ( isset( $_POST['hvsfw_color_swatch'] ) ) {
+            $colors = $_POST['hvsfw_color_swatch'];
             if ( empty( $colors ) || ! is_array( $colors ) || $settings['type'] !== 'color' ) {
                 return;
             }
@@ -201,15 +246,56 @@ final class TermMeta {
         }
         
         // Saving image.
-        if ( isset( $_POST['hvsfw_image'] ) ) {
-            if ( is_array( $_POST['hvsfw_image'] ) || $settings['type'] !== 'image' ) {
+        if ( isset( $_POST['hvsfw_image_swatch'] ) ) {
+            if ( is_array( $_POST['hvsfw_image_swatch'] ) || $settings['type'] !== 'image' ) {
                 return;
             }
 
-            $meta_value = sanitize_text_field( $_POST['hvsfw_image'] );
+            $meta_value = sanitize_text_field( $_POST['hvsfw_image_swatch'] );
+            $meta_value = ( is_numeric( $meta_value ) ? $meta_value : 0 );
         }
 
         update_term_meta( $term_id, '_hvsfw_value', $meta_value );
+    }
+
+    /**
+     * Saving the tooltip swatch setting during adding and editing term.
+     *
+     * @since 1.0.0
+     * 
+     * @param  integer  $term_id  The target term id.
+     */
+    public function save_tooltip_swatch_setting( $term_id ) {
+        if ( ! isset( $_POST['hvsfw_tooltip_type'] ) ) {
+            return;
+        }
+
+        $meta_value['type'] = Helper::validate_select([
+            'value'   => $_POST['hvsfw_tooltip_type'],
+            'default' => 'none',
+            'choices' => [ 'none', 'text', 'html', 'image' ]
+        ]);
+
+        $meta_value['content'] = '';
+        switch ( $meta_value['type'] ) {
+            case 'text':
+                if ( isset( $_POST['hvsfw_tooltip_text'] ) ) {
+                    $meta_value['content'] = sanitize_text_field( $_POST['hvsfw_tooltip_text'] );
+                }
+                break;
+            case 'html':
+                if ( isset( $_POST['hvsfw_tooltip_html'] ) ) {
+                    $meta_value['content'] = wp_kses_post( $_POST['hvsfw_tooltip_html'] );
+                }
+                break;
+            case 'image':
+                if ( isset( $_POST['hvsfw_tooltip_image'] ) ) {
+                    $meta_value['content'] = sanitize_text_field( $_POST['hvsfw_tooltip_image'] );
+                }
+                break;
+        }
+
+        update_term_meta( $term_id, '_hvsfw_tooltip', $meta_value );
     }
 
     /**

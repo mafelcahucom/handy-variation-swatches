@@ -323,23 +323,6 @@ final class Helper {
     }
 
     /**
-     * Return the product placeholder image source.
-     *
-     * @since 1.0.0
-     * 
-     * @param  string  $size  Registered image sizes.
-     * @return string
-     */
-    public static function get_product_thumbnail_placeholer_src( $size = 'full' ) {
-        $source = wc_placeholder_img_src( $size );
-        if ( empty( $source ) ) {
-            $source = self::get_asset_src( 'images/thumbnail-placeholder.webp' );
-        }
-
-        return $source;
-    }
-
-    /**
      * Unset items in array by value.
      *
      * @since 1.0.0
@@ -447,98 +430,7 @@ final class Helper {
         }
 
         return $output;
-    }
-
-    /**
-     * Return the swatch settings from _hvsfw_swatch_attribute_setting 
-     * option by attribute id and field name.
-     *
-     * @since 1.0.0
-     * 
-     * @param  integer  $attribute_id  The attribute id.
-     * @param  string   $field         The field to be return.
-     * @return mixed
-     */
-    public static function get_swatch_settings( $attribute_id, $field = '' ) {
-        if ( empty( $attribute_id ) ) {
-            return;
-        }
-
-        $settings = get_option( "_hvsfw_swatch_attribute_setting_$attribute_id" );
-        if ( $field !== '' && ! empty( $settings ) ) {
-            return ( isset( $settings[ $field ] ) ? $settings[ $field ] : null );
-        }
-
-        return $settings;
-    }
-
-    /**
-     * Return the swatch image source and details.
-     *
-     * @since 1.0.0
-     * 
-     * @param  integer  $term_id  The target term id.
-     * @return array
-     */
-    public static function get_swatch_image( $term_id ) {
-        $image = [
-            'src'   => self::get_product_thumbnail_placeholer_src(),
-            'alt'   => 'WooCommerce Placeholder',
-            'title' => 'WooCommerce Placeholder'
-        ];
-
-        $attachment_id = get_term_meta( $term_id, '_hvsfw_value', true );
-        if ( empty( $attachment_id ) ) {
-            return $image;
-        }
-
-        $source = wp_get_attachment_image_src( $attachment_id, 'full' );
-        if ( empty( $source ) ) {
-            return $image;
-        }
-
-        return [
-            'src'   => $source[0],
-            'alt'   => get_the_title( $attachment_id ), 
-            'title' => get_the_title( $attachment_id )
-        ];
-    }
-
-    /**
-     * TO BE DELETED.
-     * Return the id of a product attribute taxonomy id from
-     * woocommerce_attribute_taxonomies by taxonomy slug.
-     *
-     * @since 1.0.0
-     * 
-     * @param  string  $taxonomy_slug  The taxonomy slug.
-     * @return integer
-     */
-    public static function get_attribute_taxonomy_id( $taxonomy_slug ) {
-        if ( empty( $taxonomy_slug ) || ! taxonomy_exists( $taxonomy_slug ) ) {
-            return;
-        }
-
-        global $wpdb;
-        $table     = $wpdb->prefix . 'woocommerce_attribute_taxonomies';
-        $attr_name = sanitize_text_field( substr( $taxonomy_slug, 3 ) );
-        $result    = $wpdb->get_var( $wpdb->prepare(
-            "
-            SELECT
-                attribute_id
-            FROM
-                $table
-            WHERE
-                attribute_name = %s
-            ",
-            $attr_name
-        ) );
-
-        return ( is_null( $result ) ? 0 : $result );
-    }
-
-
-    
+    } 
 
     /**
      * DELETE IN PRODUCTION.

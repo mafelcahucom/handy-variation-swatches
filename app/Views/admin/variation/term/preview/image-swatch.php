@@ -7,7 +7,7 @@
  * @author  Mafel John Cahucom 
  */
 
-use HVSFW\Admin\Inc\Helper;
+use HVSFW\Inc\Utility;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -21,9 +21,9 @@ if ( ! isset( $args['term_id'] ) ) {
     return;
 }
 
-$image         = Helper::get_swatch_image( $args['term_id'] );
+$image = Utility::get_swatch_image_by_term_id( $args['term_id'] );
 ?>
 
 <div class="hvsfw-preview hvsfw-preview__image">
-    <img class="hvsfw-preview__image__img" src="<?php echo esc_url( $image['src'] ); ?>" alt="<?php echo esc_url( $image['alt'] ); ?>" title="<?php echo esc_url( $image['title'] ); ?>">
+    <img class="hvsfw-preview__image__img" src="<?php echo esc_url( $image['src'] ); ?>" alt="<?php echo esc_attr( $image['alt'] ); ?>" title="<?php echo esc_attr( $image['title'] ); ?>">
 </div>

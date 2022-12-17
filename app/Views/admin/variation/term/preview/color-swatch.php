@@ -7,6 +7,8 @@
  * @author  Mafel John Cahucom 
  */
 
+use HVSFW\Inc\Utility;
+
 defined( 'ABSPATH' ) || exit;
 
 /** 
@@ -19,13 +21,7 @@ if ( ! isset( $args['term_id'] ) ) {
     return;
 }
 
-$colors 	= get_term_meta( $args['term_id'], '_hvsfw_value', true );
-$colors 	= ( ! empty( $colors ) && is_array( $colors ) ? $colors : [ '#ffffff' ] );
-$cell_width = ( 100 / count( $colors ) ) . '%';
+$colors = Utility::get_swatch_color( $args['term_id'] );
 ?>
 
-<div class="hvsfw-preview hvsfw-preview__color">
-	<?php foreach ( $colors as $color ): ?>
-		<div class="hvsfw-preview__color__cell" style="width: <?php echo $cell_width; ?>; background-color: <?php echo esc_url( $color ); ?>;"></div>
-	<?php endforeach; ?>
-</div>
+<div class="hvsfw-preview hvsfw-preview__color" style="background: <?php echo Utility::get_linear_color( $colors ); ?>;"></div>
