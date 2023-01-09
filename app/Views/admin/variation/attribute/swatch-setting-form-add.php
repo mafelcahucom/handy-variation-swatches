@@ -12,31 +12,31 @@ use HVSFW\Admin\Inc\Helper;
 defined( 'ABSPATH' ) || exit;
 ?>
 <hr>
-<h2>Variation Swatch Settings.</h2>
+<h2>Variation Swatch Settings.sadasd</h2>
 <p class="description">Configure the settings for this variation swatch attribute. For more additional configuration, click <a class="hvsfw-card__setting" href="<?php echo esc_url( Helper::get_root_url() ); ?>" target="_blank" title="Go To Settings" aria-label="Go To Settings">here</a>.</p>
-<div id="hvsfw-form-field-style" class="form-field hvsfw-field hvsfw-field__add" data-field="style" data-state="hide">
+<div id="hvsfw-form-field-style" class="form-field hvsfw-field hvsfw-field__add" data-group-field="hvsfw_style" data-visible="no">
     <label for="hvsfw_style">Style (Design)</label>
-    <select name="hvsfw_style" id="hvsfw_style">
+    <select name="hvsfw_style" id="hvsfw_style" data-prefix="hvsfw">
         <option value="default">Default</option>
         <option value="custom">Custom</option>
     </select>
     <p class="description">Select whether to use the default style from main settings or assign a custom style in this variation swatch attribute.</p>
 </div>
-<div class="form-field hvsfw-field hvsfw-field__add" data-field="shape" data-state="hide">
+<div class="form-field hvsfw-field hvsfw-field__add" data-group-field="hvsfw_shape" data-visible="no">
     <label for="hvsfw_shape">Shape</label>
-    <select name="hvsfw_shape" id="hvsfw_shape">
+    <select name="hvsfw_shape" id="hvsfw_shape" data-prefix="hvsfw">
         <option value="square">Square</option>
         <option value="circle">Circle</option>
         <option value="custom">Custom</option>
     </select>
     <p class="description">Select your preferred shape of this variation swatch attribute.</p>
 </div>
-<div class="form-field hvsfw-field hvsfw-field__add" data-field="size" data-state="hide">
+<div class="form-field hvsfw-field hvsfw-field__add" data-group-field="hvsfw_size" data-visible="no">
     <label for="hvsfw_size">Size</label>
     <input type="text" name="hvsfw_size" id="hvsfw_size" placeholder="40px" value="40px">
     <p class="description">The size or width & height of this variation swatch attribute.</p>
 </div>
-<div class="form-field hvsfw-field hvsfw-field__add" data-field="dimension" data-state="hide">
+<div class="form-field hvsfw-field hvsfw-field__add" data-group-field="hvsfw_dimension" data-visible="no">
     <label for="hvsfw_width">Size</label>
     <div class="hvsfw-field__two-col">
         <div class="hvsfw-field__col">
@@ -50,7 +50,7 @@ defined( 'ABSPATH' ) || exit;
     </div>
     <p class="description">The width and height of this variation swatch attribute.</p>
 </div>
-<div class="form-field hvsfw-field hvsfw-field__add" data-field="font" data-state="hide">
+<div class="form-field hvsfw-field hvsfw-field__add" data-group-field="hvsfw_font" data-visible="no">
     <label for="hvsfw_font_size">Font</label>
     <div class="hvsfw-field__two-col">
         <div class="hvsfw-field__col">
@@ -60,21 +60,17 @@ defined( 'ABSPATH' ) || exit;
         <div class="hvsfw-field__col">
             <p class="description">Weight</p>
             <select name="hvsfw_font_weight" id="hvsfw_font_weight">
-                <option value="100">100</option>
-                <option value="200">200</option>
-                <option value="300">300</option>
-                <option value="400">400</option>
-                <option value="500">500</option>
-                <option value="600">600</option>
-                <option value="700">700</option>
-                <option value="800">800</option>
-                <option value="900">900</option>
+                <?php foreach ( Helper::get_font_weight_choices() as $value ): ?>
+                    <option value="<?php echo $value['value']; ?>">
+                        <?php echo $value['label']; ?>
+                    </option>
+                <?php endforeach; ?>
             </select>
         </div>
     </div>
     <p class="description">The font size and weight of this variation swatch attribute.</p>
 </div>
-<div class="form-field hvsfw-field hvsfw-field__add" data-field="textColor" data-state="hide">
+<div class="form-field hvsfw-field hvsfw-field__add" data-group-field="hvsfw_text_color" data-visible="no">
     <label>Text Color</label>
     <div class="hvsfw-field__two-col">
         <div class="hvsfw-field__col">
@@ -88,7 +84,7 @@ defined( 'ABSPATH' ) || exit;
     </div>
     <p class="description">The text color of this variation swatch attribute.</p>
 </div>
-<div class="form-field hvsfw-field hvsfw-field__add" data-field="backgroundColor" data-state="hide">
+<div class="form-field hvsfw-field hvsfw-field__add" data-group-field="hvsfw_background_color" data-visible="no">
     <label>Background Color</label>
     <div class="hvsfw-field__two-col">
         <div class="hvsfw-field__col">
@@ -102,7 +98,7 @@ defined( 'ABSPATH' ) || exit;
     </div>
     <p class="description">The background color of this variation swatch attribute.</p>
 </div>
-<div class="form-field hvsfw-field hvsfw-field__add" data-field="padding" data-state="hide">
+<div class="form-field hvsfw-field hvsfw-field__add" data-group-field="hvsfw_padding" data-visible="no">
     <label for="hvsfw_padding_top">Padding</label>
     <div class="hvsfw-field__two-col">
         <div class="hvsfw-field__col">
@@ -126,22 +122,17 @@ defined( 'ABSPATH' ) || exit;
     </div>
     <p class="description">The padding of this variation swatch attribute.</p>
 </div>
-<div class="form-field hvsfw-field hvsfw-field__add" data-field="border" data-state="hide">
+<div class="form-field hvsfw-field hvsfw-field__add" data-group-field="hvsfw_border" data-visible="no">
     <label for="hvsfw_border_style">Border</label>
     <div class="hvsfw-field__two-col">
         <div class="hvsfw-field__col">
             <p class="description">Style</p>
             <select name="hvsfw_border_style" id="hvsfw_border_style">
-                <option value="dotted">Dotted</option>
-                <option value="dashed">Dashed</option>
-                <option value="solid">Solid</option>
-                <option value="double">Double</option>
-                <option value="groove">Groove</option>
-                <option value="ridge">Ridge</option>
-                <option value="inset">Inset</option>
-                <option value="outset">Outset</option>
-                <option value="none">None</option>
-                <option value="hidden">Hidden</option>
+                <?php foreach ( Helper::get_border_style_choices() as $value ): ?>
+                    <option value="<?php echo $value['value']; ?>">
+                        <?php echo $value['label']; ?>
+                    </option>
+                <?php endforeach; ?>
             </select>
         </div>
         <div class="hvsfw-field__col">
@@ -161,7 +152,7 @@ defined( 'ABSPATH' ) || exit;
     </div>
     <p class="description">The border of this variation swatch attribute.</p>
 </div>
-<div class="form-field hvsfw-field hvsfw-field__add" data-field="borderRadius" data-state="hide">
+<div class="form-field hvsfw-field hvsfw-field__add" data-group-field="hvsfw_border_radius" data-visible="no">
     <label for="hvsfw_size">Border Radius</label>
     <input type="text" name="hvsfw_border_radius" id="hvsfw_border_radius" placeholder="0px" value="0px">
     <p class="description">The border radius of this variation swatch attribute.</p>

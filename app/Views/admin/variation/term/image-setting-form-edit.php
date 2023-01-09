@@ -24,7 +24,15 @@ if ( ! isset( $args['term_id'] ) ) {
 
 <tr class="form-field">
     <th scope="row" valign="top">
-        <label>Image Swatch</label>
+        <label for="hvsfw_type">Image Swatch</label>
+    </th>
+    <td>
+        <p class="description">Configure the settings for this image swatch. For more additional configuration, click <a class="hvsfw-card__setting" href="<?php echo esc_url( Helper::get_root_url() ); ?>" target="_blank" title="Go To Settings" aria-label="Go To Settings">here</a>.</p>
+    </td>
+</tr>
+<tr class="form-field">
+    <th scope="row" valign="top">
+        <label>Image</label>
     </th>
     <td>
         <?php
@@ -34,6 +42,21 @@ if ( ! isset( $args['term_id'] ) ) {
                 'term_id' => $args['term_id']
             ]);
         ?>
-        <p class="description">Select the image for this image swatch. For more additional configuration, click <a class="hvsfw-card__setting" href="<?php echo esc_url( Helper::get_root_url() ); ?>" target="_blank" title="Go To Settings" aria-label="Go To Settings">here</a>.</p>
+        <p class="description">Select an image for this image swatch.</p>
+    </td>
+</tr>
+<tr class="form-field hvsfw-field">
+    <th scope="row" valign="top">
+        <label>Image Size</label>
+    </th>
+    <td>
+        <?php
+            echo Helper::render_view( 'variation/field/image-size-selector-field', [
+                'id'      => 'hvsfw-image-size-swatch',
+                'name'    => 'hvsfw_image_size_swatch',
+                'term_id' => $args['term_id']
+            ]);
+        ?>
+        <p class="description">Select an image size for this image swatch to override the default image size.</p>
     </td>
 </tr>

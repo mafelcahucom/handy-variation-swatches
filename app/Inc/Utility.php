@@ -56,6 +56,24 @@ final class Utility {
     }
 
     /**
+     * Return the product swatch value from _hvsfw_value post meta by product id.
+     *
+     * @since 1.0.0
+     *
+     * @param integer  $product_id  The target product id.
+     * 
+     * @return array
+     */
+    public static function get_product_swatch_value( $product_id ) {
+        if ( empty( $product_id ) ) {
+            return []; 
+        }
+
+        $value = get_post_meta( $product_id, '_hvsfw_value' );
+        return ( ! empty( $value ) && is_array( $value ) ? $value : [] );
+    }
+
+    /**
      * Return the swatch settings from _hvsfw_swatch_attribute_setting 
      * option by attribute id and field name.
      *
@@ -133,6 +151,24 @@ final class Utility {
 
         $image = get_term_meta( $term_id, '_hvsfw_value', true );
         return ( ! empty( $image ) && ! is_array( $image ) ? $image : 0 );
+    }
+
+    /**
+     * Return the image swatch size value by term id.
+     *
+     * @since 1.0.0
+     * 
+     * @param  integer  $term_id  The target term id.
+     * @return string
+     */
+    public static function get_swatch_image_size( $term_id ) {
+        $default = 'thumbnail';
+        if ( empty( $term_id ) ) {
+            return $default;
+        }
+
+        $size = get_term_meta( $term_id, '_hvsfw_image_size', true );
+        return ( ! empty( $size ) ? $size : $default );
     }
 
     /**
@@ -224,6 +260,55 @@ final class Utility {
         return "repeating-linear-gradient( $value )";
     }
 
+    /**
+     * Return the filtered product attributes used in variation.
+     *
+     * @since 1.0.0
+     *
+     * @param  object  $product  The product object.
+     * @return array
+     */
+    public static function get_attributes( $product ) {
+        if ( empty( $product ) || $product->get_type() !== 'variable' ) {
+            return;
+        }
+
+        $attributes = array_filter( $product->get_attributes(), function( $attribute ) {
+            return ( $attribute->get_visible() && $attribute->get_variation() );
+        });
+
+        return $attributes;
+    }
+
+    /**
+     * Return the attribute type by attribute id.
+     *
+     * @since 1.0.0
+     * 
+     * @param  integer  $attribute_id  The ID of the attribute.
+     * @return string
+     */
+    public static function get_attribute_type_by_id( $attribute_id ) {
+        if ( empty( $attribute_id ) ) {
+            return;
+        }
+
+        global $wpdb;
+        $table  = $wpdb->prefix . 'woocommerce_attribute_taxonomies';
+        $result = $wpdb->get_var( $wpdb->prepare(
+            "
+            SELECT
+                attribute_type
+            FROM
+                $table
+            WHERE
+                attribute_id = %d
+            ",
+            $attribute_id
+        ));
+
+        return ( $result !== null ? $result : '' );
+    }
 
     /**
      * DELETE IN PRODUCTION.

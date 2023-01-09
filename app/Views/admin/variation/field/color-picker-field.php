@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /** 
  * $args = [
  *     'id'		 => (string)  The id of the image input.
- *     'name'	 => (string)  The of the image input.
+ *     'name'	 => (string)  The name of the image input.
  *     'term_id' => (integer) The id of the term.
  *     'default' => (array)   The default colors.
  * ]

@@ -14,11 +14,12 @@ defined( 'ABSPATH' ) || exit;
 
 /** 
  * $args = [
+ *     'type'    => (string)  The attribute swatch type.
  *     'term_id' => (integer) The term ID of the current term editing.
  * ]
  **/
 
-if ( ! isset( $args['term_id'] ) ) {
+if ( ! isset( $args['type'] ) || ! isset( $args['term_id'] ) ) {
     return;
 }
 
@@ -41,10 +42,21 @@ if ( $tooltip['type'] === 'image' && ! empty( $tooltip['content'] ) ) {
     $content['image'] = ( is_numeric( $tooltip['content'] ) ? $tooltip['content'] : 0 );
 }
 
-$states['text']  = ( $tooltip['type'] === 'text' ? 'show' : 'hide' );
-$states['html']  = ( $tooltip['type'] === 'html' ? 'show' : 'hide' );
-$states['image'] = ( $tooltip['type'] === 'image' ? 'show' : 'hide' );
+$visible['text']  = ( $tooltip['type'] === 'text' ? 'yes' : 'no' );
+$visible['html']  = ( $tooltip['type'] === 'html' ? 'yes' : 'no' );
+$visible['image'] = ( $tooltip['type'] === 'image' ? 'yes' : 'no' );
 ?>
+
+<?php if ( $args['type'] === 'button' ): ?>
+    <tr class="form-field">
+        <th scope="row" valign="top">
+            <label for="hvsfw_type">Button Swatch</label>
+        </th>
+        <td>
+            <p class="description">Configure the settings for this button swatch. For more additional configuration, click <a class="hvsfw-card__setting" href="<?php echo esc_url( Helper::get_root_url() ); ?>" target="_blank" title="Go To Settings" aria-label="Go To Settings">here</a>.</p>
+        </td>
+    </tr>
+<?php endif; ?>
 
 <tr class="form-field hvsfw-field">
     <th scope="row" valign="top">
@@ -60,7 +72,7 @@ $states['image'] = ( $tooltip['type'] === 'image' ? 'show' : 'hide' );
         <p class="description">Select your preferred tooltip content type.</p>
     </td>
 </tr>
-<tr class="form-field hvsfw-field hvsfw-field__tooltip" data-type="text" data-state="<?php echo $states['text']; ?>">
+<tr class="form-field hvsfw-field hvsfw-field__tooltip" data-type="text" data-visible="<?php echo $visible['text']; ?>">
     <th scope="row" valign="top">
         <label>Tooltip Content (Text)</label>
     </th>
@@ -69,7 +81,7 @@ $states['image'] = ( $tooltip['type'] === 'image' ? 'show' : 'hide' );
         <p class="description">Write the tooltip text content. Term name is the default value.</p>
     </td>
 </tr>
-<tr class="form-field hvsfw-field hvsfw-field__tooltip" data-type="html" data-state="<?php echo $states['html']; ?>">
+<tr class="form-field hvsfw-field hvsfw-field__tooltip" data-type="html" data-visible="<?php echo $visible['html']; ?>">
     <th scope="row" valign="top">
         <label>Tooltip Content (HTML)</label>
     </th>
@@ -80,7 +92,7 @@ $states['image'] = ( $tooltip['type'] === 'image' ? 'show' : 'hide' );
         <p class="description">Write the tooltip html markup content. Term name is the default value.</p>
     </td>
 </tr>
-<tr class="form-field hvsfw-field hvsfw-field__tooltip" data-type="image" data-state="<?php echo $states['image']; ?>">
+<tr class="form-field hvsfw-field hvsfw-field__tooltip" data-type="image" data-visible="<?php echo $visible['image']; ?>">
     <th scope="row" valign="top">
         <label>Tooltip Content (Image)</label>
     </th>

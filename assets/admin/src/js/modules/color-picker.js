@@ -6,7 +6,7 @@
  * @type {Object}
  * @author Mafel John Cahucom
  */
-const colorPickerModule = {
+const colorPicker = {
 
 	/**
 	 * Initialize.
@@ -109,8 +109,8 @@ const colorPickerModule = {
 				} );
 			}
 
-			colorPickerModule.setCount( colorPickerElem );
-			colorPickerModule.setColorPicker( 'reset', colorPickerElem );
+			colorPicker.setCount( colorPickerElem );
+			colorPicker.setColorPicker( 'reset', colorPickerElem );
 		} );
 	},
 
@@ -170,12 +170,12 @@ const colorPickerModule = {
 				return;
 			}
 
-			const newColorPickerField = colorPickerModule.field( inputName );
+			const newColorPickerField = colorPicker.field( inputName );
 			if ( newColorPickerField ) {
 				listElem.appendChild( newColorPickerField );
 
-				colorPickerModule.setColorPicker( 'set', parentElem );
-				colorPickerModule.setCount( parentElem );
+				colorPicker.setColorPicker( 'set', parentElem );
+				colorPicker.setCount( parentElem );
 			}
 		} );
 	},
@@ -193,10 +193,10 @@ const colorPickerModule = {
 			const itemElem = target.closest( '.hvsfw-color-picker__item' );
 			if ( parentElem && itemElem ) {
 				itemElem.remove();
-				colorPickerModule.setCount( parentElem );
+				colorPicker.setCount( parentElem );
 			}
 		} );
 	},
 };
 
-export default colorPickerModule;
+export default colorPicker;

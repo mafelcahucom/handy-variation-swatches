@@ -13,29 +13,25 @@
 // Tooltip.
 .hvsfw-field__tooltip {
 
-	&[data-state="show"] {
-		display: block;
-	}
-
-	&[data-state="hide"] {
+	&[data-visible="no"] {
 		display: none;
 	}
 }
 
 tr.hvsfw-field__tooltip {
 
-	&[data-state="show"] {
-		display: table-row;
+	&[data-visible="no"] {
+		display: none;
 	}
-} 
+}
 
 
 // Previewer.
 .hvsfw-preview {
 
 	*,
-	*:before,
-	*:after {
+	*::before,
+	*::after {
 		box-sizing: border-box;
 	}
 
@@ -83,7 +79,7 @@ tr.hvsfw-field__tooltip {
 		td.column-hvsfw_color:first-child {
 			display: none;
 
-			&:before {
+			&::before {
 				content: "" !important;
 			}
 		}
@@ -91,7 +87,7 @@ tr.hvsfw-field__tooltip {
 		td.column-hvsfw_image:first-child {
 			display: none;
 
-			&:before {
+			&::before {
 				content: "" !important;
 			}
 		}

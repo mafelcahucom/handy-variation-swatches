@@ -2,6 +2,7 @@
 namespace HVSFW\Admin\Variation;
 
 use HVSFW\Inc\Traits\Singleton;
+use HVSFW\Inc\Utility;
 use HVSFW\Admin\Inc\Helper;
 
 defined( 'ABSPATH' ) || exit;
@@ -82,151 +83,6 @@ final class AttributeMeta {
     }
 
     /**
-     * Return the swatch setting field schema.
-     *
-     * @since 1.0.0
-     * 
-     * @return array
-     */
-    private function get_swatch_setting_field_schema() {
-        return [
-            'type'                    => [
-                'type'    => 'select',
-                'default' => 'select',
-                'choices' => [ 'select', 'button', 'color', 'image' ]
-            ],
-            'style'                   => [
-                'type'    => 'select',
-                'default' => 'default',
-                'choices' => [ 'default', 'custom' ]
-            ],
-            'shape'                   => [
-                'type'    => 'select',
-                'default' => 'square',
-                'choices' => [ 'square', 'circle', 'custom' ]
-            ],
-            'size'                    => [
-                'type'    => 'size',
-                'default' => '40px',
-            ],
-            'width'                   => [
-                'type'    => 'size',
-                'default' => '40px',
-            ],
-            'height'                  => [
-                'type'    => 'size',
-                'default' => '40px',
-            ],
-            'font_size'               => [
-                'type'    => 'size',
-                'default' => '14px',
-            ],
-            'font_weight'             => [
-                'type'    => 'select',
-                'default' => '500',
-                'choices' => Helper::get_font_weight_choices( 'value' )
-            ],
-            'font_color'              => [
-                'type'    => 'color',
-                'default' => '#000000'
-            ],
-            'font_hover_color'        => [
-                'type'    => 'color',
-                'default' => '#0071f2'
-            ],
-            'background_color'        => [
-                'type'    => 'color',
-                'default' => '#ffffff'
-            ],
-            'background_hover_color'  => [
-                'type'    => 'color',
-                'default' => '#ffffff'
-            ],
-            'padding_top'             => [
-                'type'    => 'size',
-                'default' => '5px',
-            ],
-            'padding_bottom'          => [
-                'type'    => 'size',
-                'default' => '5px',
-            ],
-            'padding_left'            => [
-                'type'    => 'size',
-                'default' => '5px',
-            ],
-            'padding_right'           => [
-                'type'    => 'size',
-                'default' => '5px',
-            ],
-            'border_style'            => [
-                'type'    => 'select',
-                'default' => 'solid',
-                'choices' => Helper::get_border_style_choices( 'value' )
-            ],
-            'border_width'            => [
-                'type'    => 'size',
-                'default' => '1px',
-            ],
-            'border_color'            => [
-                'type'    => 'color',
-                'default' => '#000000'
-            ],
-            'border_hover_color'      => [
-                'type'    => 'color',
-                'default' => '#0071f2'
-            ],
-            'border_radius'           => [
-                'type'    => 'size',
-                'default' => '0px',
-            ],
-        ];
-    }
-
-    /**
-     * Update or add a new attribute id in _hvsfw_swatch_attribute_ids
-     * in the wp_options table.
-     *
-     * @since 1.0.0
-     * 
-     * @param  integer  $id  The attribute id to be inserted.
-     */
-    private function update_option_attribute_id( $id ) {
-        if ( empty( $id ) ) {
-            return;
-        }
-
-        $ids = get_option( '_hvsfw_swatch_attribute_ids' );
-        $ids = ( ! empty( $ids ) ? $ids : [] );
-
-        if ( ! in_array( $id, $ids ) ) {
-            $ids[] = $id;
-            update_option( '_hvsfw_swatch_attribute_ids', $ids );
-        }
-    }
-
-    /**
-     * Delete a certain attribute id in _hvsfw_swatch_attribute_ids
-     * in the wp_options table.
-     *
-     * @since 1.0.0
-     * 
-     * @param  integer  $id  The attribute id to be deleted.
-     */
-    private function delete_option_attribute_id( $id ) {
-        if ( empty( $id ) ) {
-            return;
-        }
-
-        $ids = get_option( '_hvsfw_swatch_attribute_ids' );
-        $ids = ( ! empty( $ids ) ? $ids : [] );
-
-        if ( ! empty( $ids ) ) {
-            $unsetted_ids = Helper::array_unset_by_value( $ids, [ $id ] );
-            update_option( '_hvsfw_swatch_attribute_ids', $unsetted_ids );
-        }
-    }
-
-    /**
      * Render the attribute type selector field.
      *
      * @since 1.0.0
@@ -259,7 +115,7 @@ final class AttributeMeta {
         $setting = ( $id !== 0 ? get_option( "_hvsfw_swatch_attribute_setting_$id" ) : [] );
 
         $default = [];
-        foreach ( $this->get_swatch_setting_field_schema() as $key => $field ) {
+        foreach ( Helper::get_swatch_setting_schema() as $key => $field ) {
             $default[ $key ] = $field['default'];
         }
 
@@ -280,7 +136,7 @@ final class AttributeMeta {
     public function save_attribute_swatch_setting( $id ) {
         // Validating the fields value from $_POST.
         $validated_value = [];
-        $field_schema    = $this->get_swatch_setting_field_schema();
+        $field_schema    = Helper::get_swatch_setting_schema();
         foreach ( $field_schema as $key => $field ) {
             $validated_value[ $key ] = $field['default'];
                        
@@ -311,37 +167,40 @@ final class AttributeMeta {
         }
 
         // Setting the necessary fields.
+        $remove         = [];
         $fields_to_save = [ 'type', 'style' ];
-        if ( $validated_value['style'] === 'custom' ) {
-            // Swatch button.
-            if ( $validated_value['type'] === 'button' ) {
-                $remove = [ 'size', 'border_radius' ];
-                if ( $validated_value['shape'] === 'custom' ) {
-                    unset( $remove[1] );
+        if ( $validated_value['type'] !== 'select' ) {
+            if ( $validated_value['style'] === 'custom' ) {
+                // Swatch button.
+                if ( $validated_value['type'] === 'button' ) {
+                    $remove = [ 'size', 'border_radius' ];
+                    if ( $validated_value['shape'] === 'custom' ) {
+                        unset( $remove[1] );
+                    }
                 }
-            }
 
-            // Swatch color and image.
-            if ( in_array( $validated_value['type'], [ 'color', 'image' ] ) ) {
-                $remove = [
-                    'width', 'height', 'font_size', 'font_weight', 'font_color', 'font_hover_color',
-                    'background_color', 'background_hover_color', 'padding_top', 'padding_bottom',
-                    'padding_left', 'padding_right', 'border_radius'
-                ];
+                // Swatch color and image.
+                if ( in_array( $validated_value['type'], [ 'color', 'image' ] ) ) {
+                    $remove = [
+                        'width', 'height', 'font_size', 'font_weight', 'font_color', 'font_hover_color',
+                        'background_color', 'background_hover_color', 'padding_top', 'padding_bottom',
+                        'padding_left', 'padding_right', 'border_radius'
+                    ];
 
-                if ( $validated_value['shape'] === 'custom' ) {
-                    unset( $remove[0] );
-                    unset( $remove[1] );
-                    unset( $remove[12] );
-                    $remove[] = 'size';
+                    if ( $validated_value['shape'] === 'custom' ) {
+                        unset( $remove[0] );
+                        unset( $remove[1] );
+                        unset( $remove[12] );
+                        $remove[] = 'size';
+                    }
                 }
-            }
 
-            $field_keys     = array_keys( $validated_value );
-            $fields_to_save = Helper::array_unset_by_value( $field_keys, $remove );
+                $field_keys     = array_keys( $validated_value );
+                $fields_to_save = Helper::array_unset_by_value( $field_keys, $remove );
+            }
         }
 
-        // Unsetting the unnecessary fields.
+        // Unset the unnecessary fields.
         foreach ( $validated_value as $key => $value ) {
             if ( ! in_array( $key, $fields_to_save ) ) {
                 unset( $validated_value[ $key ] );
@@ -349,7 +208,7 @@ final class AttributeMeta {
         }
 
         // Delete term metas of this attribute if type has changed.
-        $current_setting = Helper::get_swatch_settings( $id );
+        $current_setting = Utility::get_swatch_settings( $id );
         if ( ! empty( $current_setting ) ) {
             $is_changed     = ( $current_setting['type'] !== $validated_value['type'] );
             $in_color_image = in_array( $current_setting['type'], [ 'color', 'image' ] );
@@ -360,9 +219,6 @@ final class AttributeMeta {
 
         // Saving swatch attribute settings in wp_options.
         update_option( "_hvsfw_swatch_attribute_setting_$id", $validated_value );
-
-        // Adding the newly added attribute id to attribute ids in wp_options.
-        $this->update_option_attribute_id( $id );
     }
 
     /**
@@ -374,8 +230,6 @@ final class AttributeMeta {
      */
     public function delete_attribute_swatch_setting( $id ) {
         delete_option( "_hvsfw_swatch_attribute_setting_$id" );
-
-        $this->delete_option_attribute_id( $id );
     }
 
     /**

@@ -323,6 +323,173 @@ final class Helper {
     }
 
     /**
+     * Return the swatch setting field schema.
+     *
+     * @since 1.0.0
+     * 
+     * @return array
+     */
+    public static function get_swatch_setting_schema() {
+        return [
+            'type'                    => [
+                'type'    => 'select',
+                'default' => 'select',
+                'choices' => [ 'select', 'button', 'color', 'image' ]
+            ],
+            'style'                   => [
+                'type'    => 'select',
+                'default' => 'default',
+                'choices' => [ 'default', 'custom' ]
+            ],
+            'shape'                   => [
+                'type'    => 'select',
+                'default' => 'square',
+                'choices' => [ 'square', 'circle', 'custom' ]
+            ],
+            'size'                    => [
+                'type'    => 'size',
+                'default' => '40px',
+            ],
+            'width'                   => [
+                'type'    => 'size',
+                'default' => '40px',
+            ],
+            'height'                  => [
+                'type'    => 'size',
+                'default' => '40px',
+            ],
+            'font_size'               => [
+                'type'    => 'size',
+                'default' => '14px',
+            ],
+            'font_weight'             => [
+                'type'    => 'select',
+                'default' => '500',
+                'choices' => self::get_font_weight_choices( 'value' )
+            ],
+            'font_color'              => [
+                'type'    => 'color',
+                'default' => '#000000'
+            ],
+            'font_hover_color'        => [
+                'type'    => 'color',
+                'default' => '#0071f2'
+            ],
+            'background_color'        => [
+                'type'    => 'color',
+                'default' => '#ffffff'
+            ],
+            'background_hover_color'  => [
+                'type'    => 'color',
+                'default' => '#ffffff'
+            ],
+            'padding_top'             => [
+                'type'    => 'size',
+                'default' => '5px',
+            ],
+            'padding_bottom'          => [
+                'type'    => 'size',
+                'default' => '5px',
+            ],
+            'padding_left'            => [
+                'type'    => 'size',
+                'default' => '5px',
+            ],
+            'padding_right'           => [
+                'type'    => 'size',
+                'default' => '5px',
+            ],
+            'border_style'            => [
+                'type'    => 'select',
+                'default' => 'solid',
+                'choices' => self::get_border_style_choices( 'value' )
+            ],
+            'border_width'            => [
+                'type'    => 'size',
+                'default' => '1px',
+            ],
+            'border_color'            => [
+                'type'    => 'color',
+                'default' => '#000000'
+            ],
+            'border_hover_color'      => [
+                'type'    => 'color',
+                'default' => '#0071f2'
+            ],
+            'border_radius'           => [
+                'type'    => 'size',
+                'default' => '0px',
+            ],
+        ];
+    }
+
+    /**
+     * Return the visibility state of each setting group field.
+     *
+     * @since 1.0.0
+     * 
+     * @param  array  $settings  Containg the current value of the swatch setting.
+     * @return array
+     */
+    public static function get_swatch_setting_group_field_visibility( $settings ) {
+        if ( empty( $settings ) ) {
+            return;
+        }
+
+        $visible = [
+            'style'            => 'no',
+            'shape'            => 'no',
+            'size'             => 'no',
+            'dimension'        => 'no',
+            'font'             => 'no',
+            'text_color'       => 'no',
+            'background_color' => 'no',
+            'padding'          => 'no',
+            'border'           => 'no',
+            'border_radius'    => 'no'
+        ];
+
+        // Style.
+        if ( ! in_array( $settings['type'], [ 'default', 'select', 'assorted' ] ) ) {
+            $visible['style'] = 'yes';
+
+            if ( $settings['style'] === 'custom' ) {
+                $is_color_image = in_array( $settings['type'], [ 'color', 'image' ] );
+
+                // Shape, Border.
+                $visible['shape']  = 'yes';
+                $visible['border'] = 'yes';
+
+                // Size.
+                if ( $is_color_image && $settings['shape'] !== 'custom' ) {
+                    $visible['size'] = 'yes';
+                }
+
+                // Dimension.
+                $visible['dimension'] = 'yes';
+                if ( $is_color_image && $settings['shape'] !== 'custom' ) {
+                    $visible['dimension'] = 'no';
+                }
+
+                // Font, Text Color, Background Color, Padding.
+                if ( $settings['type'] === 'button' ) {
+                    $visible['font']             = 'yes';
+                    $visible['text_color']       = 'yes';
+                    $visible['background_color'] = 'yes';
+                    $visible['padding']          = 'yes';
+                }
+
+                // Border Radius.
+                if ( $settings['shape'] === 'custom' ) {
+                    $visible['border_radius'] = 'yes';
+                }
+            }
+        }
+
+        return $visible;
+    }
+
+    /**
      * Unset items in array by value.
      *
      * @since 1.0.0
@@ -343,6 +510,31 @@ final class Helper {
         }
 
         return array_values( $array );
+    }
+
+    /**
+     * Check if the an array has unset keys.
+     *
+     * @since 1.0.0
+     * 
+     * @param  array  $array  Containg the array to be check.
+     * @param  array  $keys   Containg the array keys use as reference.
+     * @return boolean
+     */
+    public static function has_array_unset( $array, $keys ) {
+        if ( empty( $array ) || empty( $keys ) ) {
+            return;
+        }
+  
+        $has_unset = false;
+        foreach ( $keys as $key ) {
+            if ( ! isset( $array[ $key ] ) ) {
+                $has_unset = true;
+                break;
+            }
+        }
+
+        return $has_unset;
     }
 
     /**
@@ -430,7 +622,34 @@ final class Helper {
         }
 
         return $output;
-    } 
+    }
+
+    /**
+     * Returns the registered image sizes.
+     *
+     * @since 1.0.0
+     * 
+     * @return array
+     */
+    public static function get_image_sizes() {
+        $sizes = wp_get_registered_image_subsizes();
+        if ( empty( $sizes ) ) {
+            return;
+        }
+
+        $images = [];
+        foreach ( $sizes as $key => $value ) {
+            $exploded    = explode( '_', $key );
+            $imploded    = implode( ' ', $exploded );
+            $dimension   = '(' . $value['width'] . ' x ' . $value['height'] . ')';
+            $label       = ucwords( $imploded ) . ' ' . $dimension;
+
+            $images[ $key ]['label'] = $label;
+            $images[ $key ]['value'] = $key;
+        }
+
+        return $images;
+    }
 
     /**
      * DELETE IN PRODUCTION.

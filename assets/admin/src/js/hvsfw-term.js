@@ -284,7 +284,7 @@ hvsfw.tooltip = {
 			imagePickerModule.setToDefault( imagePickerElem );
 		}
 
-		hvsfw.fn.setAttribute( '.hvsfw-field__tooltip', 'data-state', 'hide' );
+		hvsfw.fn.setAttribute( '.hvsfw-field__tooltip', 'data-visible', 'no' );
 		hvsfw.fn.setValue( '#hvsfw_tooltip_text', '' );
 		hvsfw.fn.setValue( '#hvsfw_tooltip_html', '' );
 
@@ -307,7 +307,7 @@ hvsfw.tooltip = {
 			}
 
 			hvsfw.tooltip.setToDefault();
-			hvsfw.fn.setAttribute( `.hvsfw-field__tooltip[data-type="${ type }"]`, 'data-state', 'show' );
+			hvsfw.fn.setAttribute( `.hvsfw-field__tooltip[data-type="${ type }"]`, 'data-visible', 'yes' );
 		} );
 	},
 };

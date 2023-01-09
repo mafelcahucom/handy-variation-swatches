@@ -15,7 +15,6 @@ div.form-field {
 
 // Custom Field.
 .hvsfw-field {
-	display: none;
 
 	.hvsfw-field__two-col {
 		display: flex;
@@ -41,8 +40,8 @@ div.form-field {
 
 	&__add {
 
-		&[data-state="show"] {
-			display: block;
+		&[data-visible="no"] {
+			display: none;
 		}
 
 		input,
@@ -54,8 +53,8 @@ div.form-field {
 
 	&__edit {
 
-		&[data-state="show"] {
-			display: table-row;
+		&[data-visible="no"] {
+			display: none;
 		}
 
 		.hvsfw-field__two-col {

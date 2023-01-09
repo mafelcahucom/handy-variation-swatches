@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 
 /** 
  * $args = [
- *     'type' => (setting) The attribute swatch type.
+ *     'type' => (string) The attribute swatch type.
  * ]
  **/
 
@@ -29,6 +29,11 @@ $placeholder = Utility::get_product_thumbnail_placeholer_src();
 	<hr/>
 <?php endif; ?>
 
+<?php if ( $args['type'] === 'button' ): ?>
+	<h2>Button Swatch.</h2>
+	<p class="description">Configure the settings for this button swatch. For more additional configuration, click <a class="hvsfw-card__setting" href="<?php echo esc_url( Helper::get_root_url() ); ?>" target="_blank" title="Go To Settings" aria-label="Go To Settings">here</a>.</p>
+<?php endif; ?>
+
 <div class="form-field hvsfw-field">
 	<label for="hvsfw_tooltip_type">Tooltip</label>
 	<select name="hvsfw_tooltip_type" id="hvsfw_tooltip_type">
@@ -39,17 +44,17 @@ $placeholder = Utility::get_product_thumbnail_placeholer_src();
 	</select>
 	<p class="description">Select your preferred tooltip content type.</p>
 </div>
-<div class="form-field hvsfw-field hvsfw-field__tooltip" data-type="text" data-state="hide">
+<div class="form-field hvsfw-field hvsfw-field__tooltip" data-type="text" data-visible="no">
 	<label for="hvsfw_tooltip_text">Tooltip Content (Text)</label>
 	<input type="text" name="hvsfw_tooltip_text" id="hvsfw_tooltip_text" value="">
 	<p class="description">Write the tooltip text content. Term name is the default value.</p>
 </div>
-<div class="form-field hvsfw-field hvsfw-field__tooltip" data-type="html" data-state="hide">
+<div class="form-field hvsfw-field hvsfw-field__tooltip" data-type="html" data-visible="no">
 	<label for="hvsfw_tooltip_html">Tooltip Content (HTML)</label>
 	<textarea name="hvsfw_tooltip_html" id="hvsfw_tooltip_html" rows="5"></textarea>
 	<p class="description">Write the tooltip html markup content. Term name is the default value.</p>
 </div>
-<div class="form-field hvsfw-field hvsfw-field__tooltip" data-type="image" data-state="hide">
+<div class="form-field hvsfw-field hvsfw-field__tooltip" data-type="image" data-visible="no">
 	<label for="hvsfw_tooltip_image">Tooltip Content (Image)</label>
 	<?php
 		echo Helper::render_view( 'variation/field/image-picker-field', [

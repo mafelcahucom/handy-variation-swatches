@@ -190,6 +190,10 @@ final class TermMeta {
             return;
         }
 
+        if ( ! in_array( $settings['type'], [ 'button', 'color', 'image' ] ) ) {
+            return;
+        }
+
         echo Helper::render_view( 'variation/term/tooltip-setting-form-add', [
             'type' => $settings['type']
         ]);
@@ -208,8 +212,13 @@ final class TermMeta {
             return;
         }
 
+        if ( ! in_array( $settings['type'], [ 'button', 'color', 'image' ] ) ) {
+            return;
+        }
+
         echo Helper::render_view( 'variation/term/tooltip-setting-form-edit', [
-            'term_id' => $term->term_id
+            'type'    => $settings['type'],
+            'term_id' => $term->term_id,
         ]);
     }
 
@@ -253,6 +262,15 @@ final class TermMeta {
 
             $meta_value = sanitize_text_field( $_POST['hvsfw_image_swatch'] );
             $meta_value = ( is_numeric( $meta_value ) ? $meta_value : 0 );
+
+            // Saving image size.
+            if ( isset( $_POST['hvsfw_image_size_swatch'] ) ) {
+                $image_sizes         = array_column( Helper::get_image_sizes(), 'value' );
+                $current_image_size  = sanitize_text_field( $_POST['hvsfw_image_size_swatch'] );
+                if ( in_array( $current_image_size, $image_sizes ) ) {
+                    update_term_meta( $term_id, '_hvsfw_image_size', $current_image_size );
+                }
+            }
         }
 
         update_term_meta( $term_id, '_hvsfw_value', $meta_value );

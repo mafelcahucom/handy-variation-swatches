@@ -84,7 +84,7 @@ gulp.task( 'client_css_task', clientCssTask );
  */
 var admin_js_folder = 'assets/admin/src/js/';
 var admin_js_dist   = './assets/admin/dist/js/';
-var admin_js_files  = [ 'hvsfw-admin.js', 'hvsfw-attribute.js', 'hvsfw-term.js' ];
+var admin_js_files  = [ 'hvsfw-admin.js', 'hvsfw-attribute.js', 'hvsfw-term.js', 'hvsfw-product.js' ];
 var admin_js_watch  = 'assets/admin/src/js/*.js'; 
 function adminJsTask( done ) {
 	admin_js_files.map( function( file ) {

@@ -6,7 +6,7 @@
  * @type {Object}
  * @author Mafel John Cahucom
  */
-const imagePickerModule = {
+const imagePicker = {
 
 	/**
 	 * Initialize.
@@ -144,4 +144,4 @@ const imagePickerModule = {
 	},
 };
 
-export default imagePickerModule;
+export default imagePicker;

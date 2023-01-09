@@ -28,56 +28,8 @@ foreach ( $defaults as $key => $default  ) {
     $settings[ $key ] = ( isset( $settings[ $key ] ) ? $settings[ $key ] : $default );
 }
 
-// Setting each group field state.
-$states = [
-    'style'            => 'hide',
-    'shape'            => 'hide',
-    'size'             => 'hide',
-    'dimension'        => 'hide',
-    'font'             => 'hide',
-    'text_color'       => 'hide',
-    'background_color' => 'hide',
-    'padding'          => 'hide',
-    'border'           => 'hide',
-    'border_radius'    => 'hide'
-];
-
-// Style.
-if ( $settings['type'] !== 'select' ) {
-    $states['style'] = 'show';
-}
-
-if ( $settings['style'] === 'custom' ) {
-    $is_color_image = in_array( $settings['type'], [ 'color', 'image' ] );
-
-    // Shape, Border.
-    $states['shape']  = 'show';
-    $states['border'] = 'show';
-
-    // Size.
-    if ( $is_color_image && $settings['shape'] !== 'custom' ) {
-        $states['size'] = 'show';
-    }
-
-    // Dimension.
-    $states['dimension'] = 'show';
-    if ( $is_color_image && $settings['shape'] !== 'custom' ) {
-        $states['dimension'] = 'hide';
-    }
-
-    // Font, Text Color, Background Color, Padding.
-    if ( $settings['type'] === 'button' ) {
-        $states['font']             = 'show';
-        $states['text_color']       = 'show';
-        $states['background_color'] = 'show';
-        $states['padding']          = 'show';
-    }
-
-    // Border Radius.
-    if ( $settings['shape'] === 'custom' ) {
-        $states['border_radius'] = 'show';
-    }
-}
+// Set the group field visibility.
+$field_visibility = Helper::get_swatch_setting_group_field_visibility( $settings );
 ?>
 
 <tr class="form-field">
@@ -88,24 +40,24 @@ if ( $settings['style'] === 'custom' ) {
         <p class="description">Configure the settings for this variation swatch attribute. For more additional configuration, click <a class="hvsfw-card__setting" href="<?php echo esc_url( Helper::get_root_url() ); ?>">here</a>.</p>
     </td>
 </tr>
-<tr id="hvsfw-form-field-style" class="form-field hvsfw-field hvsfw-field__edit" data-field="style" data-state="<?php echo $states['style']; ?>">
+<tr id="hvsfw-form-field-style" class="form-field hvsfw-field hvsfw-field__edit" data-group-field="hvsfw_style" data-visible="<?php echo $field_visibility['style']; ?>">
     <th scope="row" valign="top">
         <label for="hvsfw_style">Style (Design)</label>
     </th>
     <td>
-        <select name="hvsfw_style" id="hvsfw_style">
+        <select name="hvsfw_style" id="hvsfw_style" data-prefix="hvsfw">
             <option value="default" <?php selected( $settings['style'], 'default' ); ?>>Default</option>
             <option value="custom" <?php selected( $settings['style'], 'custom' ); ?>>Custom</option>
         </select>
         <p class="description">Select whether to use the default style from main settings or assign a custom style in this variation swatch attribute.</p>
     </td>
 </tr>
-<tr class="form-field hvsfw-field hvsfw-field__edit" data-field="shape" data-state="<?php echo $states['shape']; ?>">
+<tr class="form-field hvsfw-field hvsfw-field__edit" data-group-field="hvsfw_shape" data-visible="<?php echo $field_visibility['shape']; ?>">
     <th scope="row" valign="top">
         <label for="hvsfw_shape">Shape</label>
     </th>
     <td>
-        <select name="hvsfw_shape" id="hvsfw_shape">
+        <select name="hvsfw_shape" id="hvsfw_shape" data-prefix="hvsfw">
             <option value="square" <?php selected( $settings['shape'], 'square' ); ?>>Square</option>
             <option value="circle" <?php selected( $settings['shape'], 'circle' ); ?>>Circle</option>
             <option value="custom" <?php selected( $settings['shape'], 'custom' ); ?>>Custom</option>
@@ -113,7 +65,7 @@ if ( $settings['style'] === 'custom' ) {
         <p class="description">Select your preferred shape of this variation swatch attribute.</p>
     </td>
 </tr>
-<tr class="form-field hvsfw-field hvsfw-field__edit" data-field="size" data-state="<?php echo $states['size']; ?>">
+<tr class="form-field hvsfw-field hvsfw-field__edit" data-group-field="hvsfw_size" data-visible="<?php echo $field_visibility['size']; ?>">
     <th scope="row" valign="top">
         <label for="hvsfw_size">Size</label>
     </th>
@@ -122,7 +74,7 @@ if ( $settings['style'] === 'custom' ) {
         <p class="description">The size or width & height of this variation swatch attribute.</p>
     </td>
 </tr>
-<tr class="form-field hvsfw-field hvsfw-field__edit" data-field="dimension" data-state="<?php echo $states['dimension']; ?>">
+<tr class="form-field hvsfw-field hvsfw-field__edit" data-group-field="hvsfw_dimension" data-visible="<?php echo $field_visibility['dimension']; ?>">
     <th scope="row" valign="top">
         <label for="hvsfw_width">Size</label>
     </th>
@@ -140,7 +92,7 @@ if ( $settings['style'] === 'custom' ) {
         <p class="description">The width and height of this variation swatch attribute.</p>
     </td>
 </tr>
-<tr class="form-field hvsfw-field hvsfw-field__edit" data-field="font" data-state="<?php echo $states['font']; ?>">
+<tr class="form-field hvsfw-field hvsfw-field__edit" data-group-field="hvsfw_font" data-visible="<?php echo $field_visibility['font']; ?>">
     <th scope="row" valign="top">
         <label for="hvsfw_font_size">Font</label>
     </th>
@@ -153,22 +105,18 @@ if ( $settings['style'] === 'custom' ) {
             <div class="hvsfw-field__col">
                 <p class="description">Weight</p>
                 <select name="hvsfw_font_weight" id="hvsfw_font_weight">
-                    <option value="100" <?php selected( $settings['font_weight'], '100' ); ?>>100</option>
-                    <option value="200" <?php selected( $settings['font_weight'], '200' ); ?>>200</option>
-                    <option value="300" <?php selected( $settings['font_weight'], '300' ); ?>>300</option>
-                    <option value="400" <?php selected( $settings['font_weight'], '400' ); ?>>400</option>
-                    <option value="500" <?php selected( $settings['font_weight'], '500' ); ?>>500</option>
-                    <option value="600" <?php selected( $settings['font_weight'], '600' ); ?>>600</option>
-                    <option value="700" <?php selected( $settings['font_weight'], '700' ); ?>>700</option>
-                    <option value="800" <?php selected( $settings['font_weight'], '800' ); ?>>800</option>
-                    <option value="900" <?php selected( $settings['font_weight'], '900' ); ?>>900</option>
+                    <?php foreach ( Helper::get_font_weight_choices() as $value ): ?>
+                        <option value="<?php echo $value['value']; ?>" <?php selected( $settings['font_weight'], $value['value'] ); ?>>
+                            <?php echo $value['label']; ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
             </div>
         </div>
         <p class="description">The font size and weight of this variation swatch attribute.</p>
     </td>
 </tr>
-<tr class="form-field hvsfw-field hvsfw-field__edit" data-field="textColor" data-state="<?php echo $states['text_color']; ?>">
+<tr class="form-field hvsfw-field hvsfw-field__edit" data-group-field="hvsfw_text_color" data-visible="<?php echo $field_visibility['text_color']; ?>">
     <th scope="row" valign="top">
         <label>Text Color</label>
     </th>
@@ -186,7 +134,7 @@ if ( $settings['style'] === 'custom' ) {
         <p class="description">The text color of this variation swatch attribute.</p>
     </td>
 </tr>
-<tr class="form-field hvsfw-field hvsfw-field__edit" data-field="backgroundColor" data-state="<?php echo $states['background_color']; ?>">
+<tr class="form-field hvsfw-field hvsfw-field__edit" data-group-field="hvsfw_background_color" data-visible="<?php echo $field_visibility['background_color']; ?>">
     <th scope="row" valign="top">
         <label>Background Color</label>
     </th>
@@ -194,17 +142,17 @@ if ( $settings['style'] === 'custom' ) {
         <div class="hvsfw-field__two-col">
             <div class="hvsfw-field__col">
                 <p class="description">Color</p>
-                <input type="hidden" name="hvsfw_bg_color" id="hvsfw_bg_color" class="hvsfw-color-picker" value="<?php echo esc_attr( $settings['background_color'] ); ?>">
+                <input type="hidden" name="hvsfw_background_color" id="hvsfw_background_color" class="hvsfw-color-picker" value="<?php echo esc_attr( $settings['background_color'] ); ?>">
             </div>
             <div class="hvsfw-field__col">
                 <p class="description">Active Color</p>
-                <input type="hidden" name="hvsfw_bg_hover_color" id="hvsfw_bg_hover_color" class="hvsfw-color-picker" value="<?php echo esc_attr( $settings['background_hover_color'] ); ?>">
+                <input type="hidden" name="hvsfw_background_hover_color" id="hvsfw_background_hover_color" class="hvsfw-color-picker" value="<?php echo esc_attr( $settings['background_hover_color'] ); ?>">
             </div>
         </div>
         <p class="description">The background color of this variation swatch attribute.</p>
     </td>
 </tr>
-<tr class="form-field hvsfw-field hvsfw-field__edit" data-field="padding" data-state="<?php echo $states['padding']; ?>">
+<tr class="form-field hvsfw-field hvsfw-field__edit" data-group-field="hvsfw_padding" data-visible="<?php echo $field_visibility['padding']; ?>">
     <th scope="row" valign="top">
         <label for="hvsfw_padding_top">Padding</label>
     </th>
@@ -232,7 +180,7 @@ if ( $settings['style'] === 'custom' ) {
         <p class="description">The padding of this variation swatch attribute.</p>
     </td>
 </tr>
-<tr class="form-field hvsfw-field hvsfw-field__edit" data-field="border" data-state="<?php echo $states['border']; ?>">
+<tr class="form-field hvsfw-field hvsfw-field__edit" data-group-field="hvsfw_border" data-visible="<?php echo $field_visibility['border']; ?>">
     <th scope="row" valign="top">
         <label for="hvsfw_border_style">Border</label>
     </th>
@@ -241,16 +189,11 @@ if ( $settings['style'] === 'custom' ) {
             <div class="hvsfw-field__col">
                 <p class="description">Style</p>
                 <select name="hvsfw_border_style" id="hvsfw_border_style">
-                    <option value="dotted" <?php selected( $settings['border_style'], 'dotted' ); ?>>Dotted</option>
-                    <option value="dashed" <?php selected( $settings['border_style'], 'dashed' ); ?>>Dashed</option>
-                    <option value="solid" <?php selected( $settings['border_style'], 'solid' ); ?>>Solid</option>
-                    <option value="double" <?php selected( $settings['border_style'], 'double' ); ?>>Double</option>
-                    <option value="groove" <?php selected( $settings['border_style'], 'groove' ); ?>>Groove</option>
-                    <option value="ridge" <?php selected( $settings['border_style'], 'ridge' ); ?>>Ridge</option>
-                    <option value="inset" <?php selected( $settings['border_style'], 'inset' ); ?>>Inset</option>
-                    <option value="outset" <?php selected( $settings['border_style'], 'outset' ); ?>>Outset</option>
-                    <option value="none" <?php selected( $settings['border_style'], 'none' ); ?>>None</option>
-                    <option value="hidden" <?php selected( $settings['border_style'], 'hidden' ); ?>>Hidden</option>
+                    <?php foreach ( Helper::get_border_style_choices() as $value ): ?>
+                        <option value="<?php echo $value['value']; ?>" <?php selected( $settings['border_style'], $value['value'] ); ?>>
+                            <?php echo $value['label']; ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
             </div>
             <div class="hvsfw-field__col">
@@ -271,7 +214,7 @@ if ( $settings['style'] === 'custom' ) {
         <p class="description">The border of this variation swatch attribute.</p>
     </td>
 </tr>
-<tr class="form-field hvsfw-field hvsfw-field__edit" data-field="borderRadius" data-state="<?php echo $states['border_radius']; ?>">
+<tr class="form-field hvsfw-field hvsfw-field__edit" data-group-field="hvsfw_border_radius" data-visible="<?php echo $field_visibility['border_radius']; ?>">
     <th scope="row" valign="top">
         <label for="hvsfw_size">Border Radius</label>
     </th>
