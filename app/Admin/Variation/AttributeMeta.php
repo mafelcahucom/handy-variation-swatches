@@ -4,6 +4,7 @@ namespace HVSFW\Admin\Variation;
 use HVSFW\Inc\Traits\Singleton;
 use HVSFW\Inc\Utility;
 use HVSFW\Admin\Inc\Helper;
+use HVSFW\Admin\Inc\SwatchHelper;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -115,7 +116,7 @@ final class AttributeMeta {
         $setting = ( $id !== 0 ? get_option( "_hvsfw_swatch_attribute_setting_$id" ) : [] );
 
         $default = [];
-        foreach ( Helper::get_swatch_setting_schema() as $key => $field ) {
+        foreach ( SwatchHelper::get_swatch_setting_schema() as $key => $field ) {
             $default[ $key ] = $field['default'];
         }
 
@@ -134,83 +135,16 @@ final class AttributeMeta {
      * @param  integer  $id  Added attribute ID.
      */
     public function save_attribute_swatch_setting( $id ) {
-        // Validating the fields value from $_POST.
-        $validated_value = [];
-        $field_schema    = Helper::get_swatch_setting_schema();
-        foreach ( $field_schema as $key => $field ) {
-            $validated_value[ $key ] = $field['default'];
-                       
-            $post_key = ( $key === 'type' ? "attribute_type" : "hvsfw_$key" );
-            if ( isset( $_POST[ $post_key ] ) ) {
-                switch ( $field['type'] ) {
-                    case 'size':
-                        $validated_value[ $key ] = Helper::validate_size([
-                            'value'   => $_POST[ $post_key ],
-                            'default' => $field['default'] 
-                        ]);
-                        break;
-                    case 'color':
-                        $validated_value[ $key ] = Helper::validate_color([
-                            'value'   => $_POST[ $post_key ],
-                            'default' => $field['default']
-                        ]);
-                        break;
-                    case 'select':
-                        $validated_value[ $key ] = Helper::validate_select([
-                            'value'   => $_POST[ $post_key ],
-                            'default' => $field['default'],
-                            'choices' => $field['choices']
-                        ]);
-                        break;
-                }
-            }
-        }
-
-        // Setting the necessary fields.
-        $remove         = [];
-        $fields_to_save = [ 'type', 'style' ];
-        if ( $validated_value['type'] !== 'select' ) {
-            if ( $validated_value['style'] === 'custom' ) {
-                // Swatch button.
-                if ( $validated_value['type'] === 'button' ) {
-                    $remove = [ 'size', 'border_radius' ];
-                    if ( $validated_value['shape'] === 'custom' ) {
-                        unset( $remove[1] );
-                    }
-                }
-
-                // Swatch color and image.
-                if ( in_array( $validated_value['type'], [ 'color', 'image' ] ) ) {
-                    $remove = [
-                        'width', 'height', 'font_size', 'font_weight', 'font_color', 'font_hover_color',
-                        'background_color', 'background_hover_color', 'padding_top', 'padding_bottom',
-                        'padding_left', 'padding_right', 'border_radius'
-                    ];
-
-                    if ( $validated_value['shape'] === 'custom' ) {
-                        unset( $remove[0] );
-                        unset( $remove[1] );
-                        unset( $remove[12] );
-                        $remove[] = 'size';
-                    }
-                }
-
-                $field_keys     = array_keys( $validated_value );
-                $fields_to_save = Helper::array_unset_by_value( $field_keys, $remove );
-            }
-        }
-
-        // Unset the unnecessary fields.
-        foreach ( $validated_value as $key => $value ) {
-            if ( ! in_array( $key, $fields_to_save ) ) {
-                unset( $validated_value[ $key ] );
-            }
-        }
+        // Validate the swatch setting value.
+        $validated = SwatchHelper::validate_swatch_setting_value([
+            'type'    => 'UNSET',
+            'setting' => $_POST
+        ]);
 
         // Delete term metas of this attribute if type has changed.
         $current_setting = Utility::get_swatch_settings( $id );
         if ( ! empty( $current_setting ) ) {
-            $is_changed     = ( $current_setting['type'] !== $validated_value['type'] );
+            $is_changed     = ( $current_setting['type'] !== $validated['type'] );
             $in_color_image = in_array( $current_setting['type'], [ 'color', 'image' ] );
             if ( $is_changed && $in_color_image ) {
                 $this->delete_term_meta_associate_by_attribute( $id );
@@ -218,7 +152,7 @@ final class AttributeMeta {
         }
 
         // Saving swatch attribute settings in wp_options.
-        update_option( "_hvsfw_swatch_attribute_setting_$id", $validated_value );
+        update_option( "_hvsfw_swatch_attribute_setting_$id", $validated );
     }
 
     /**

@@ -138,7 +138,7 @@ const imagePicker = {
 
 			const parentElem = target.closest( '.hvsfw-image-picker' );
 			if ( parentElem ) {
-				imagePickerModule.setToDefault( parentElem );
+				imagePicker.setToDefault( parentElem );
 			}
 		} );
 	},

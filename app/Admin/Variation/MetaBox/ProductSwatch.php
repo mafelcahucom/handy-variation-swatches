@@ -2,8 +2,10 @@
 namespace HVSFW\Admin\Variation\MetaBox;
 
 use HVSFW\Inc\Traits\Singleton;
+use HVSFW\Inc\Traits\Security;
 use HVSFW\Inc\Utility;
 use HVSFW\Admin\Inc\Helper;
+use HVSFW\Admin\Inc\SwatchHelper;
 use HVSFW\Admin\Variation\MetaBox\ProductSwatchView;
 
 defined( 'ABSPATH' ) || exit;
@@ -23,6 +25,11 @@ final class ProductSwatch {
 	use Singleton;
 
     /**
+     * Inherit Security.
+     */
+    use Security;
+
+    /**
      * Initialize.
      *
      * @since 1.0.0
@@ -38,6 +45,15 @@ final class ProductSwatch {
 
         // Add itemized variation product panel.
         add_filter( 'woocommerce_product_data_panels', [ $this, 'custom_product_panel' ] );
+
+        // Saving swatch settings event.
+        add_action( 'wp_ajax_hvsfw_save_swatch_settings', [ $this, 'save_swatch_settings' ] );
+
+        // Resetting swatch settings event.
+        add_action( 'wp_ajax_hvsfw_reset_swatch_settings', [ $this, 'reset_swatch_settings' ] );
+
+        // Setting swatch settings event./// DELETE IN PRODUCTION
+        add_action( 'wp_ajax_hvsfw_delete_swatch_settings', [ $this, 'delete_swatch_settings' ] );
     }
 
     /**
@@ -91,6 +107,20 @@ final class ProductSwatch {
         wp_register_script( 'hvsfw-product-js', Helper::get_asset_src( 'js/hvsfw-product.min.js' ), $dependency, '1.0.0', true );
 
         wp_enqueue_script( 'hvsfw-product-js' );
+
+        // Localize variables.
+        wp_localize_script( 'hvsfw-product-js', 'hvsfwLocal', [
+            'url'       => admin_url( 'admin-ajax.php' ),
+            'variation' => [
+                'product' => [
+                    'nonce' => [
+                        'saveSwatchSettings'  => wp_create_nonce( 'hvsfw_save_swatch_settings' ),
+                        'resetSwatchSettings' => wp_create_nonce( 'hvsfw_reset_swatch_settings' ),
+                        'deleteSwatchSettings' => wp_create_nonce( 'hvsfw_delete_swatch_settings' ) // DELETE IN PROD
+                    ]
+                ]
+            ]
+        ]);
     }
 
     /**
@@ -124,4 +154,269 @@ final class ProductSwatch {
         ProductSwatchView::swatches_panel( $product );
     }
 
+    /**
+     * Save swatch settings in post meta.
+     *
+     * @since 1.0.0
+     * 
+     * @return json
+     */
+    public function save_swatch_settings() {
+        if ( ! self::is_security_passed( $_POST ) ) {
+            wp_send_json_error([
+                'error' => 'SECURITY_ERROR'
+            ]);
+        }
+
+        if ( self::has_post_empty_data( $_POST, [ 'formData' ] ) ) {
+            wp_send_json_error([
+                'error' => 'MISSING_DATA_ERROR'
+            ]);
+        }
+
+        $form_data         = $this->parse_query_string( $_POST['formData'] );
+        $is_empty_post_id  = ( ! isset( $form_data['post_ID'] ) || empty( $form_data['post_ID'] ) );
+        $is_empty_swatches = ( ! isset( $form_data['_hvsfw_value'] ) || empty( $form_data['_hvsfw_value'] ) );
+        if ( $is_empty_post_id || $is_empty_swatches ) {
+            wp_send_json_error([
+                'error' => 'MISSING_DATA_ERROR'
+            ]);
+        }
+
+        $post_id  = $form_data['post_ID'];
+        $swatches = $form_data['_hvsfw_value'];
+
+        //Helper::log( $swatches );
+
+        $validated = $this->validate_swatches( $swatches );
+        Helper::log( $validated );
+        
+
+        // Helper::log( $form_data );
+        
+        update_post_meta( $post_id, '_hvsfw_swatches', $validated );
+    }
+
+    /**
+     * Reset swatch settings in post meta.
+     *
+     * @since 1.0.0
+     * 
+     * @return json
+     */
+    public function reset_swatch_settings() {
+        if ( ! self::is_security_passed( $_POST ) ) {
+            wp_send_json_error([
+                'error' => 'SECURITY_ERROR'
+            ]);
+        }
+    }
+
+    /**
+     * Delete swatch settings in post meta. /// DELETE IN PROD.
+     * @return [type] [description]
+     */
+    public function delete_swatch_settings() {
+        if ( ! self::is_security_passed( $_POST ) ) {
+            wp_send_json_error([
+                'error' => 'SECURITY_ERROR'
+            ]);
+        }
+
+        delete_post_meta( $_POST['postId'], '_hvsfw_swatches' );
+        wp_send_json_success( 'DELETED' );
+    }
+    
+    /**
+     * Parse string query into an associative array.
+     *
+     * @since 1.0.0
+     * 
+     * @param  string  $query_string   The query string to be parse.
+     * @param  string  $arg_separator  The query arguments separator.
+     * @param  string  $dec_type       The decoding type.
+     * @return array
+     */
+    private function parse_query_string( $query_string, $arg_separator = '&', $dec_type = PHP_QUERY_RFC1738 ) {
+        $result = array();
+        $parts  = explode( $arg_separator, $query_string );
+
+        foreach ( $parts as $part ) {
+            list( $param_name, $param_value ) = explode( '=', $part, 2 );
+
+            switch ( $dec_type ) {
+                case PHP_QUERY_RFC3986:
+                    $param_name  = rawurldecode( $param_name );
+                    $param_value = rawurldecode($param_value);
+                    break;
+                case PHP_QUERY_RFC1738:
+                default:
+                    $param_name  = urldecode($param_name);
+                    $param_value = urldecode($param_value);
+                    break;
+            }
+
+
+            if ( preg_match_all('/\[([^\]]*)\]/m', $param_name, $matches ) ) {
+                $param_name = substr( $param_name, 0, strpos( $param_name, '[' ) );
+                $keys       = array_merge( array( $param_name ), $matches[1] );
+            } else {
+                $keys = array( $param_name );
+            }
+
+            $target = &$result;
+            foreach ( $keys as $index ) {
+                if ( $index === '' ) {
+                    if ( isset( $target ) ) {
+                        if ( is_array( $target ) ) {
+                            $int_keys = array_filter( array_keys( $target ), 'is_int' );
+                            $index    = count( $int_keys ) ? max( $int_keys ) + 1 : 0;
+                        } else {
+                            $target = array( $target );
+                            $index  = 1;
+                        }
+                    } else {
+                        $target = array();
+                        $index  = 0;
+                    }
+                } elseif ( isset( $target[ $index ] ) && ! is_array( $target[ $index ] ) ) {
+                    $target[ $index ] = array( $target[ $index ] );
+                }
+
+                $target = &$target[$index];
+            }
+
+            if ( is_array( $target ) ) {
+                $target[] = $param_value;
+            } else {
+                $target = $param_value;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Return validated and sanitized value in each swatches.
+     *
+     * @since 1.0.0
+     * 
+     * @param  array  $swatches  Containing the swatches value.
+     * @return array
+     */
+    private function validate_swatches( $swatches ) {
+        if ( empty( $swatches ) ) {
+            return [];
+        }
+
+        //Helper::log( $swatches );
+
+        $validated = []; // Stores the validated swatch.
+        foreach ( $swatches as $attr => $swatch ) {
+
+            //Helper::log( $swatch );
+
+            // Store attribute type.
+            $validated[ $attr ]['type'] = 'select';
+            if ( isset( $swatch['type'] ) ) {
+                $validated[ $attr ]['type'] = Helper::validate_select([
+                    'value'   => $swatch['type'],
+                    'default' => 'select',
+                    'choices' => [ 'default', 'select', 'button', 'color', 'image', 'assorted' ]
+                ]);
+            }
+
+            $attribute_type = $validated[ $attr ]['type'];
+
+            // Store attribute custom.
+            $validated[ $attr ]['custom'] = 'yes';
+            if ( isset( $swatch['custom'] ) ) {
+                $validated[ $attr ]['custom'] = Helper::validate_select([
+                    'value'   => $swatch['custom'],
+                    'default' => 'yes',
+                    'choices' => [ 'yes', 'no' ]
+                ]);
+            }
+
+            // Store global style.
+            $validated[ $attr ]['style'] = [];
+            if ( in_array( $attribute_type, [ 'button', 'color', 'image' ] ) ) {
+                $validated[ $attr ]['style'] = SwatchHelper::validate_swatch_setting_value([
+                    'type'    => $attribute_type,
+                    'setting' => $swatch['style']
+                ]);
+            }
+
+            // Iterate term.
+            $validated[ $attr ]['term'] = [];
+            if ( isset( $swatch['term'] ) && ! empty( $swatch['term'] ) ) {
+                foreach ( $swatch['term'] as $key => $term ) {
+
+                    $validated[ $attr ]['term'][ $key ]['type']  = $attribute_type;
+                    $validated[ $attr ]['term'][ $key ]['style'] = [];
+                    if ( $attribute_type === 'assorted' ) {
+                        // Store term type.
+                        $validated[ $attr ]['term'][ $key ]['type'] = Helper::validate_select([
+                            'value'   => $term['type'],
+                            'default' => 'button',
+                            'choices' => [ 'button', 'color', 'image' ]
+                        ]);
+
+                        // Store term style.
+                        $validated[ $attr ]['term'][ $key ]['style'] = SwatchHelper::validate_swatch_setting_value([
+                            'type'    => $validated[ $attr ]['term'][ $key ]['type'],
+                            'setting' => $term['style']
+                        ]);
+                    }
+
+                    $term_type = $validated[ $attr ]['term'][ $key ]['type'];
+
+                    // Store value.
+                    if ( isset( $term['value'] ) ) {
+                        $term_value = $term['value'];
+
+                        // Button.
+                        if ( $term_type === 'button' ) {
+                            if ( isset( $term_value['button_label'] ) && isset( $term_value['button_default'] ) ) {
+                                $button_label = ( ! empty( $term_value['button_label'] ) ? $term_value['button_label'] : $term_value['button_default'] );
+                                $validated[ $attr ]['term'][ $key ]['value']['button_label'] = sanitize_text_field( $button_label );
+                            }
+                        }
+
+                        // Color.
+                        if ( $term_type === 'color' ) {
+                            if ( isset( $term_value['color'] ) && ! empty( $term_value['color'] ) && is_array( $term_value['color'] ) ) {
+                                foreach ( $term_value['color'] as $color ) {
+                                    $validated[ $attr ]['term'][ $key ]['value']['color'][] = Helper::validate_color([
+                                        'value'   => $color,
+                                        'default' => '#ffffff'
+                                    ]);
+                                }
+                            }
+                        }
+
+                        // Image.
+                        if ( $term_type === 'image' ) {
+                            if ( isset( $term_value['image'] ) ) {
+                                $image_id = sanitize_text_field( $term_value['image'] );
+                                $image_id = ( is_numeric( $image_id ) ? $image_id : 0 );
+                                $validated[ $attr ]['term'][ $key ]['value']['image'] = $image_id;
+                            }
+
+                            $validated[ $attr ]['term'][ $key ]['value']['image_size'] = 'thumbnail';
+                            if ( isset( $term_value['image_size'] ) ) {
+                                $validated[ $attr ]['term'][ $key ]['value']['image_size'] = Helper::validate_select([
+                                    'value'   => $term_value['image_size'],
+                                    'default' => 'thumbnail',
+                                    'choices' => array_column( Helper::get_image_sizes(), 'value' )
+                                ]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $validated;
+    }
 }

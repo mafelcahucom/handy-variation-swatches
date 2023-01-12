@@ -8,6 +8,7 @@
  */
 
 use HVSFW\Admin\Inc\Helper;
+use HVSFW\Admin\Inc\SwatchHelper;
 
 defined( 'ABSPATH' ) || exit; 
 
@@ -29,7 +30,7 @@ foreach ( $defaults as $key => $default  ) {
 }
 
 // Set the group field visibility.
-$field_visibility = Helper::get_swatch_setting_group_field_visibility( $settings );
+$field_visibility = SwatchHelper::get_swatch_setting_group_field_visibility( $settings );
 ?>
 
 <tr class="form-field">

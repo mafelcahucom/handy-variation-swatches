@@ -1,4 +1,7 @@
+import colorPickerModule from './modules/color-picker.js';
+import imagePickerModule from './modules/image-picker.js';
 import settingFieldModule from './modules/setting-field.js';
+
 
 /**
  * Namespace.
@@ -37,6 +40,59 @@ hvsfw.fn = {
 				}
 			} );
 		} );
+	},
+
+	/**
+	 * Fetch handler.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param {Object} params Containing the parameters.
+	 * @return {Object} Fetch response
+	 */
+	async fetch( params ) {
+		let result = {
+			success: false,
+			data: {
+				error: 'NETWORK_ERROR',
+			},
+		};
+
+		if ( this.isObjectEmpty( params ) ) {
+			result.data.error = 'MISSING_DATA_ERROR';
+			return result;
+		}
+
+		try {
+			const response = await fetch( hvsfwLocal.url, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+				},
+				body: new URLSearchParams( params ),
+			} );
+
+			if ( response.ok ) {
+				result = await response.json();
+				console.log( result );
+			}
+		} catch ( e ) {
+			console.log( 'error', e );
+		}
+
+		return result;
+	},
+
+	/**
+	 * Checks if the object is empty.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param {Object} object The object to be checked.
+	 * @return {boolean} Whether has empty key.
+	 */
+	isObjectEmpty( object ) {
+		return Object.keys( object ).length === 0;
 	},
 
 	/**
@@ -157,6 +213,49 @@ hvsfw.fn = {
 	},
 
 	/**
+	 * Sets the text content of target elements.
+	 *
+	 * @since 1.0.0
+	 * 
+	 * @param {string} selector The element selector.
+	 * @param {string} text     The text to be inserted in the element.
+	 */
+	setText( selector, text = '' ) {
+		if ( ! selector ) {
+			return;
+		}
+
+		const elems = document.querySelectorAll( selector );
+		if ( elems.length > 0 ) {
+			elems.forEach( function( elem ) {
+				elem.textContent = text;
+			} );
+		}
+	},
+
+	/**
+	 * Sets the children text content of target elements.
+	 *
+	 * @since 1.0.0
+	 * 
+	 * @param {object} parent   The parent element.
+	 * @param {string} selector The element selector.
+	 * @param {string} text     The text to be inserted in the element.
+	 */
+	setChildText( parent, selector, text = '' ) {
+		if ( ! parent || ! selector ) {
+			return;
+		}
+
+		const elems = parent.querySelectorAll( selector );
+		if ( elems.length > 0 ) {
+			elems.forEach( function( elem ) {
+				elem.textContent = text;
+			} );
+		}
+	},
+
+	/**
 	 * Check if parent has missing children element.
 	 *
 	 * @since 1.0.0
@@ -175,6 +274,7 @@ hvsfw.fn = {
 			const elements = parent.querySelectorAll( child );
 			if ( elements.length === 0 ) {
 				output = true;
+				console.log( elements );
 			}
 		} );
 
@@ -226,6 +326,18 @@ hvsfw.fn = {
 
 		return /^#([0-9A-F]{3}){1,2}$/i.test( color );
 	},
+
+	/**
+	 * Capitalize the first letter in a word.
+	 *
+	 * @since 1.0.0
+	 * 
+	 * @param  {string} string The string to be capitalize.
+	 * @return {string} The capitalized string.
+	 */
+	capitalizeFirstLetter( string = '' ) {
+		return string.charAt( 0 ).toUpperCase() + string.slice( 1 );
+	}
 };
 
 /**
@@ -334,7 +446,11 @@ hvsfw.form = {
 	init() {
 		this.colorPicker();
 		this.settingFieldEvents();
-		//this.onChangeAttributeType();
+		this.onChangeAttributeType();
+		this.onChangeTermType();
+		this.saveSwatchSettings();
+		this.resetSwatchSettings();
+		this.deleteSwatchSetting();
 	},
 
 	/**
@@ -348,7 +464,7 @@ hvsfw.form = {
 			return;
 		}
 
-		jQuery( '.hvsfw-color-picker' ).wpColorPicker();
+		jQuery( '.hvsfw-color-picker-style' ).wpColorPicker();
 	},
 
 	/**
@@ -373,9 +489,9 @@ hvsfw.form = {
 	onChangeAttributeType() {
 		hvsfw.fn.eventListener( 'change', '.hvsfw-field-attribute-type', function( e ) {
 			const target = e.target;
-			const value = target.value;
+			const type = target.value;
 			const validValues = [ 'default', 'select', 'button', 'color', 'image', 'assorted' ];
-			if ( ! validValues.includes( value ) ) {
+			if ( ! validValues.includes( type ) ) {
 				return;
 			}
 
@@ -395,26 +511,125 @@ hvsfw.form = {
 				return;
 			}
 
-			// Update the visibility of term control.
-			const isVisibleTermControl = ( [ 'default', 'select' ].includes( value ) ? 'no' : 'yes' );
-			const isVisibleTermSelectType = ( value === 'assorted' ? 'yes' : 'no' );
-			hvsfw.fn.setChildValue( parentElem, '.hvsfw-field-term-type', value );
-			hvsfw.fn.setChildVisibilty( parentElem, '.hvsfw-term-control', isVisibleTermControl );
-			hvsfw.fn.setChildVisibilty( parentElem, '.hvsfw-term-select-type', isVisibleTermSelectType );
-
 			// Update the visibility of global style accordion.
-			const isVisibleGlobalStyleAccordion = ( [ 'button', 'color', 'image' ].includes( value ) ? 'yes' : 'no' );
+			const isVisibleGlobalStyleAccordion = ( [ 'button', 'color', 'image' ].includes( type ) ? 'yes' : 'no' );
 			hvsfw.fn.setChildVisibilty( parentElem, '[data-accordion="global-style"]', isVisibleGlobalStyleAccordion );
 
-			// Update the child accordion state.
-			if ( isVisibleTermControl === 'no' ) {
-				const bodyElem = parentElem.querySelector( '.hvsfw-accordion__body' );
-				if ( bodyElem ) {
-					hvsfw.accordion.closeAllOpenedChild( bodyElem );
+			// Update the visibility of term controls and accordion.
+			const isTypeAssorted = ( type === 'assorted' ? 'yes' : 'no' );
+			const isVisibleTermControl = ( [ 'default', 'select' ].includes( type ) ? 'no' : 'yes' );
+			hvsfw.fn.setChildValue( parentElem, '.hvsfw-field-term-type', type );
+			hvsfw.fn.setChildVisibilty( parentElem, '.hvsfw-term-control', isVisibleTermControl );
+			hvsfw.fn.setChildVisibilty( parentElem, '.hvsfw-term-select-type', isTypeAssorted );
+			hvsfw.fn.setChildVisibilty( parentElem, '[data-accordion="style"]', isTypeAssorted );
+			hvsfw.fn.setChildValue( parentElem, '.hvsfw-field-term-type', 'button' );
+
+			// Dispatch on change event in select term type.
+			if ( type === 'assorted' ) {
+				const termTypeElems = parentElem.querySelectorAll( '.hvsfw-field-term-type' );
+				if ( termTypeElems.length > 0 ) {
+					termTypeElems.forEach( function( termTypeElem ) {
+						termTypeElem.dispatchEvent( new Event( 'change', {
+							bubbles: true
+						}));
+					});
 				}
+			}
+
+			// Close all opened child accordion.
+			const bodyElem = parentElem.querySelector( '.hvsfw-accordion__body' );
+			if ( bodyElem ) {
+				hvsfw.accordion.closeAllOpenedChild( bodyElem );
 			}
 		} );
 	},
+
+	/**
+	 * Update all the fields state that are dependent in term type field.
+	 *
+	 * @since 1.0.0
+	 */
+	onChangeTermType() {
+		hvsfw.fn.eventListener( 'change', '.hvsfw-field-term-type', function( e ) {
+			const target = e.target;
+			const type = target.value;
+			const validValues = [ 'button', 'color', 'image' ];
+			if ( ! validValues.includes( type ) ) {
+				return;
+			}
+
+			const parentElem = target.closest( '[data-accordion="term"]' );
+			if ( ! parentElem ) {
+				return;
+			}
+
+			const hasMissingChild = hvsfw.fn.hasMissingChild( parentElem, [
+				'.hvsfw-accordion__title[data-type="value"]',
+			] );
+
+			if ( hasMissingChild === true ) {
+				return;
+			}
+
+			// Set term value accordion title.
+			hvsfw.fn.setChildText( parentElem, '.hvsfw-accordion__title[data-type="value"]', hvsfw.fn.capitalizeFirstLetter( type ) );
+		});
+	},
+
+	/**
+	 * Save swatch settings ajax.
+	 *
+	 * @since 1.0.0
+	 */
+	saveSwatchSettings() {
+		hvsfw.fn.eventListener( 'click', '#hvsfw-js-save-setting-btn', async function( e ) {
+			e.preventDefault();
+			const formElem = document.getElementById( 'post' );
+			if ( ! formElem ) {
+				return;
+			}
+
+			const formData = new FormData( formElem );
+			const res = await hvsfw.fn.fetch({
+				nonce: hvsfwLocal.variation.product.nonce.saveSwatchSettings,
+				action: 'hvsfw_save_swatch_settings',
+				formData: new URLSearchParams( formData ).toString()
+			});
+		});
+	},
+
+	/**
+	 * Reset swatch settings ajax.
+	 *
+	 * @since 1.0.0
+	 */
+	resetSwatchSettings() {
+		hvsfw.fn.eventListener( 'click', '#hvsfw-js-reset-setting-btn', function( e ) {
+			e.preventDefault();
+			alert();
+		});
+	},
+
+	/**
+	 * Delete swatch setting/// DELETE IN PROD.
+	 * @return {[type]} [description]
+	 */
+	deleteSwatchSetting() {
+		hvsfw.fn.eventListener( 'click', '#hvsfw-js-delete-setting-btn', async function( e ) {
+			const target = e.target;
+			const postId = target.getAttribute( 'data-id' );
+
+			const res = await hvsfw.fn.fetch({
+				nonce: hvsfwLocal.variation.product.nonce.deleteSwatchSettings,
+				action: 'hvsfw_delete_swatch_settings',
+				postId: postId
+			});
+
+			if ( res.success === true ) {
+				alert( 'DELETED' );
+			}
+		});
+	}
 };
 
 /**
@@ -443,6 +658,8 @@ hvsfw.domReady = {
 };
 
 hvsfw.domReady.execute( function() {
+	colorPickerModule.init(); // Handle the color picker field events.
+	imagePickerModule.init(); // Handle the image picker field events.
 	hvsfw.accordion.init(); // Handle the accordion component events.
 	hvsfw.form.init(); // Handle the form component events.
 } );

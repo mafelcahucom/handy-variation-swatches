@@ -56,7 +56,7 @@ final class Utility {
     }
 
     /**
-     * Return the product swatch value from _hvsfw_value post meta by product id.
+     * Return the product swatches from _hvsfw_swatches post meta by product id.
      *
      * @since 1.0.0
      *
@@ -64,12 +64,12 @@ final class Utility {
      * 
      * @return array
      */
-    public static function get_product_swatch_value( $product_id ) {
+    public static function get_product_swatches( $product_id ) {
         if ( empty( $product_id ) ) {
             return []; 
         }
 
-        $value = get_post_meta( $product_id, '_hvsfw_value' );
+        $value = get_post_meta( $product_id, '_hvsfw_swatches', true );
         return ( ! empty( $value ) && is_array( $value ) ? $value : [] );
     }
 
