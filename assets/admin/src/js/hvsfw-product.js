@@ -1,6 +1,7 @@
 import colorPickerModule from './modules/color-picker.js';
 import imagePickerModule from './modules/image-picker.js';
 import settingFieldModule from './modules/setting-field.js';
+import tooltipFieldModule from './modules/tooltip-field.js';
 
 
 /**
@@ -446,6 +447,7 @@ hvsfw.form = {
 	init() {
 		this.colorPicker();
 		this.settingFieldEvents();
+		this.tooltipFieldEvents();
 		this.onChangeAttributeType();
 		this.onChangeTermType();
 		this.saveSwatchSettings();
@@ -468,6 +470,81 @@ hvsfw.form = {
 	},
 
 	/**
+	 * Set to default or reset color swatch picker.
+	 *
+	 * @since 1.0.0
+	 * 
+	 * @param {object} parent The accordion parent element.
+	 */
+	setColorPickerToDefault( parent ) {
+		if ( ! parent ) {
+			return;
+		}
+
+		const colorPickerElems = parent.querySelectorAll( '.hvsfw-color-picker' );
+		if ( colorPickerElems.length > 0 ) {
+			colorPickerElems.forEach( function( colorPickerElem ) {
+				colorPickerModule.setToDefault( colorPickerElem );
+			});
+		}
+	},
+
+	/**
+	 * Set to default or reset image picker.
+	 *
+	 * @since 1.0.0
+	 * 
+	 * @param {object} parent The accordion parent element.
+	 */
+	setImagePickerToDefault( parent ) {
+		if ( ! parent ) {
+			return;
+		}
+
+		const imagePickerElems = parent.querySelectorAll( '.hvsfw-image-picker' );
+		if ( imagePickerElems.length > 0 ) {
+			imagePickerElems.forEach( function( imagePickerElem ) {
+				imagePickerModule.setToDefault( imagePickerElem );
+			});
+		}
+	},
+
+	/**
+	 * Set to default or reset image size.
+	 *
+	 * @since 1.0.0
+	 * 
+	 * @param {object} parent The accordion parent element.
+	 */
+	setImageSizeToDefault( parent ) {
+		if ( ! parent ) {
+			return;
+		}
+
+		hvsfw.fn.setChildValue( parent, '.hvsfw-image-size-selector > select', 'thumbnail' )
+	},
+
+	/**
+	 * Set to default or reset button label input.
+	 *
+	 * @since 1.0.0
+	 * 
+	 * @param {object} parent The accordion parent element.
+	 */
+	setButtonLabelToDefault( parent ) {
+		if ( ! parent ) {
+			return;
+		}
+
+		const buttonLabelElems = parent.querySelectorAll( '.hvsfw-field-value-button-label' );
+		if ( buttonLabelElems.length > 0 ) {
+			buttonLabelElems.forEach( function( buttonLabelElem ) {
+				buttonLabelElem.value = buttonLabelElem.getAttribute( 'data-default' );
+			});
+		}
+	},
+
+	/**
 	 * Load the setting field events from settingFieldModule.
 	 *
 	 * @since 1.0.0
@@ -479,6 +556,15 @@ hvsfw.form = {
 			style: '.hvsfw-setting-field-style',
 			shape: '.hvsfw-setting-field-shape',
 		} );
+	},
+
+	/**
+	 * Load the tooltip field events from tooltipFieldModule.
+	 *
+	 * @since 1.0.0
+	 */
+	tooltipFieldEvents() {
+		tooltipFieldModule.init();
 	},
 
 	/**
@@ -522,10 +608,12 @@ hvsfw.form = {
 			hvsfw.fn.setChildVisibilty( parentElem, '.hvsfw-term-control', isVisibleTermControl );
 			hvsfw.fn.setChildVisibilty( parentElem, '.hvsfw-term-select-type', isTypeAssorted );
 			hvsfw.fn.setChildVisibilty( parentElem, '[data-accordion="style"]', isTypeAssorted );
-			hvsfw.fn.setChildValue( parentElem, '.hvsfw-field-term-type', 'button' );
 
 			// Dispatch on change event in select term type.
-			if ( type === 'assorted' ) {
+			if ( [ 'button', 'color', 'image', 'assorted' ].includes( type ) ) {
+				const termTypeValue = ( type === 'assorted' ? 'button' : type );
+				hvsfw.fn.setChildValue( parentElem, '.hvsfw-field-term-type', termTypeValue );
+
 				const termTypeElems = parentElem.querySelectorAll( '.hvsfw-field-term-type' );
 				if ( termTypeElems.length > 0 ) {
 					termTypeElems.forEach( function( termTypeElem ) {
@@ -565,14 +653,34 @@ hvsfw.form = {
 
 			const hasMissingChild = hvsfw.fn.hasMissingChild( parentElem, [
 				'.hvsfw-accordion__title[data-type="value"]',
+				'[data-group-field="value_button"]',
+				'[data-group-field="value_color"]',
+				'[data-group-field="value_image"]'
 			] );
 
 			if ( hasMissingChild === true ) {
 				return;
 			}
 
-			// Set term value accordion title.
+			// Update term value accordion title.
 			hvsfw.fn.setChildText( parentElem, '.hvsfw-accordion__title[data-type="value"]', hvsfw.fn.capitalizeFirstLetter( type ) );
+
+			// Update group field visibility.
+			hvsfw.fn.setChildVisibilty( parentElem, '[data-group-field="value_button"]', ( type === 'button' ? 'yes' : 'no' ) );
+			hvsfw.fn.setChildVisibilty( parentElem, '[data-group-field="value_color"]', ( type === 'color' ? 'yes' : 'no' ) );
+			hvsfw.fn.setChildVisibilty( parentElem, '[data-group-field="value_image"]', ( type === 'image' ? 'yes' : 'no' ) );
+
+			// Set button label, color, image, image size picker to default.
+			hvsfw.form.setButtonLabelToDefault( parentElem );
+			hvsfw.form.setColorPickerToDefault( parentElem );
+			hvsfw.form.setImagePickerToDefault( parentElem );
+			hvsfw.form.setImageSizeToDefault( parentElem );
+
+			// Close all opened child accordion.
+			const bodyElem = parentElem.querySelector( '.hvsfw-accordion__body' );
+			if ( bodyElem ) {
+				hvsfw.accordion.closeAllOpenedChild( bodyElem );
+			}
 		});
 	},
 

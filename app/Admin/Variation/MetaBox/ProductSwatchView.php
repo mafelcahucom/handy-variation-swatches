@@ -389,7 +389,9 @@ final class ProductSwatchView {
 
                             // Render tooltip component.
                             self::tooltip_component([
-
+                                'attr_name' => $args['attr_name'],
+                                'term_slug' => $term['slug'],
+                                'root_name' => $root_name . '[tooltip]'
                             ]);
                         ?>
                     </div>
@@ -481,7 +483,7 @@ final class ProductSwatchView {
                         <div class="hvsfw-field__col--right">
                             <div class="hvsfw-field__wrap">
                                 <div class="hvsfw-field__fluid">
-                                    <input type="text" name="<?php echo $args['root_name'] . '[button_label]'; ?>" id="<?php echo $args['root_name'] . '_button_label'; ?>" placeholder="Label" value="<?php echo esc_attr( $value_button_label ); ?>">
+                                    <input type="text" name="<?php echo $args['root_name'] . '[button_label]'; ?>" id="<?php echo $args['root_name'] . '_button_label'; ?>" class="hvsfw-field-value-button-label" placeholder="Label" value="<?php echo esc_attr( $value_button_label ); ?>" data-default="<?php echo esc_attr( $args['term_name'] ); ?>">
                                     <input type="hidden" name="<?php echo $args['root_name'] . '[button_default]' ?>" value="<?php echo esc_attr( $args['term_name'] ); ?>">
                                 </div>
                                 <?php echo wc_help_tip( 'Write the button label. Term name is the default value.' ); ?>
@@ -551,7 +553,65 @@ final class ProductSwatchView {
         <?php
     }
 
+    /**
+     * Render the attribute term tooltip component.
+     *
+     * @since 1.0.0
+     * 
+     * @param  array  $args  Containing the arguments for rendering tooltip components.
+     * $args = [
+     *     'attr_name' => (string) The attribute name or slug.
+     *     'term_slug' => (string) The term slug.
+     *     'root_name' => (string) The root name, will be used in field attribute name.
+     * ]
+     */
     private static function tooltip_component( $args = [] ) {
+        $parameters = [ 'attr_name', 'term_slug', 'root_name' ];
+        if ( Helper::has_array_unset( $args, $parameters ) ) {
+            return;
+        }
+        
+        // Set stored swatches.
+        $stored_swatches = self::$swatches;
+    
+        // Set tooltip type.
+        $tooltip_type = 'none';
+        if ( isset( $stored_swatches[ $args['attr_name'] ]['term'][ $args['term_slug'] ]['tooltip']['type'] ) ) {
+            $current_tooltip_type = $stored_swatches[ $args['attr_name'] ]['term'][ $args['term_slug'] ]['tooltip']['type'];
+            if ( ! empty( $current_tooltip_type ) ) {
+                $tooltip_type = $current_tooltip_type;
+            }
+        }
+
+        // Set tooltip content.
+        $tooltip_text  = '';
+        $tooltip_html  = '';
+        $tooltip_image = 0;
+        if ( isset( $stored_swatches[ $args['attr_name'] ]['term'][ $args['term_slug'] ]['tooltip']['content'] ) ) {
+            $current_tooltip_content = $stored_swatches[ $args['attr_name'] ]['term'][ $args['term_slug'] ]['tooltip']['content'];
+            
+            // Text.
+            if ( $tooltip_type === 'text' ) {
+                $tooltip_text = $current_tooltip_content;
+            }
+
+            // HTML.
+            if ( $tooltip_type === 'html' ) {
+                $tooltip_html = $current_tooltip_content;
+            }
+
+            // Image.
+            if ( $tooltip_type === 'image' ) {
+                if ( ! empty( $current_tooltip_content ) ) {
+                    $tooltip_image = $current_tooltip_content;
+                }
+            }
+        }
+
+        // Set group visibility.
+        $show_tooltip_text = ( $tooltip_type === 'text' ? 'yes' : 'no' );
+        $show_tooltip_html = ( $tooltip_type === 'html' ? 'yes' : 'no' );
+        $show_tooltip_image = ( $tooltip_type === 'image' ? 'yes' : 'no' );
         ?>
         <div class="hvsfw-accordion" data-accordion="tooltip">
             <div class="hvsfw-accordion__head">
@@ -562,7 +622,71 @@ final class ProductSwatchView {
             </div>
             <div class="hvsfw-accordion__body" data-state="close">
                 <div class="hvsfw-accordion__content">
-                    asdasdasd
+                    <div class="hvsfw-field" data-group-field="<?php echo $args['root_name'] . '_type'; ?>" data-visible="yes">
+                        <div class="hvsfw-field__col--left">
+                            <label for="<?php echo $args['root_name'] . '_type'; ?>" class="hvsfw-field__label">Type</label>
+                        </div>
+                        <div class="hvsfw-field__col--right">
+                            <div class="hvsfw-field__wrap">
+                                <div class="hvsfw-field__fluid">
+                                    <select name="<?php echo $args['root_name'] . '[type]'; ?>" id="<?php echo $args['root_name'] . '_type'; ?>" class="hvsfw-tooltip-field-type" data-prefix="<?php echo $args['root_name']; ?>">
+                                        <option value="none" <?php selected( $tooltip_type, 'none' ); ?>>None</option>
+                                        <option value="text" <?php selected( $tooltip_type, 'text' ); ?>>Text</option>
+                                        <option value="html" <?php selected( $tooltip_type, 'html' ); ?>>HTML</option>
+                                        <option value="image" <?php selected( $tooltip_type, 'image' ); ?>>Image</option>
+                                    </select>
+                                </div>
+                                <?php echo wc_help_tip( 'Select your preferred tooltip content type.' ); ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hvsfw-field" data-group-field="<?php echo $args['root_name'] . '_content_text'; ?>" data-visible="<?php echo $show_tooltip_text; ?>">
+                        <div class="hvsfw-field__col--left">
+                            <label for="<?php echo $args['root_name'] . '_content_text'; ?>" class="hvsfw-field__label">Content (Text)</label>
+                        </div>
+                        <div class="hvsfw-field__col--right">
+                            <div class="hvsfw-field__wrap">
+                                <div class="hvsfw-field__fluid">
+                                    <input type="text" name="<?php echo $args['root_name'] . '[content_text]'; ?>" id="<?php echo $args['root_name'] . '_content_text'; ?>" class="hvsfw-tooltip-field-content-text" value="<?php echo esc_attr( $tooltip_text ); ?>">
+                                </div>
+                                <?php echo wc_help_tip( 'Write the tooltip text content. Term name is the default value.' ); ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hvsfw-field" data-group-field="<?php echo $args['root_name'] . '_content_html'; ?>" data-visible="<?php echo $show_tooltip_html; ?>">
+                        <div class="hvsfw-field__col--left">
+                            <label for="<?php echo $args['root_name'] . '_content_html'; ?>" class="hvsfw-field__label">Content (HTML)</label>
+                        </div>
+                        <div class="hvsfw-field__col--right">
+                            <div class="hvsfw-field__wrap">
+                                <div class="hvsfw-field__fluid">
+                                    <textarea name="<?php echo $args['root_name'] . '[content_html]'; ?>" id="<?php echo $args['root_name'] . '_content_html'; ?>" class="hvsfw-tooltip-field-content-html" rows="5">
+                                        <?php echo $tooltip_html; ?>
+                                    </textarea>
+                                </div>
+                                <?php echo wc_help_tip( 'Write the tooltip html markup content. Term name is the default value.' ); ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hvsfw-field" data-group-field="<?php echo $args['root_name'] . '_content_image'; ?>" data-visible="<?php echo $show_tooltip_image; ?>">
+                        <div class="hvsfw-field__col--left">
+                            <label for="<?php echo $args['root_name'] . '_content_image'; ?>" class="hvsfw-field__label">Content (Image)</label>
+                        </div>
+                        <div class="hvsfw-field__col--right">
+                            <div class="hvsfw-field__wrap">
+                                <div class="hvsfw-field__fluid">
+                                    <?php
+                                        echo Helper::render_view( 'variation/field/image-picker-field', [
+                                            'id'            => $args['root_name'] . '_content_image',
+                                            'name'          => $args['root_name'] . '[content_image]',
+                                            'attachment_id' => $tooltip_image
+                                        ]);
+                                    ?>
+                                </div>
+                                <?php echo wc_help_tip( 'Select the image for the tooltip image content. Term name is the default value.' ); ?>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -186,7 +186,7 @@ final class ProductSwatch {
         $post_id  = $form_data['post_ID'];
         $swatches = $form_data['_hvsfw_value'];
 
-        //Helper::log( $swatches );
+        Helper::log( $swatches );
 
         $validated = $this->validate_swatches( $swatches );
         Helper::log( $validated );
@@ -412,6 +412,49 @@ final class ProductSwatch {
                                 ]);
                             }
                         }
+                    }
+
+                    // Store tooltip.
+                    if ( isset( $term['tooltip'] ) ) {
+                        $term_tooltip = $term['tooltip'];
+
+                        // Type.
+                        $validated[ $attr ]['term'][ $key ]['tooltip']['type'] = 'none';
+                        if ( isset( $term_tooltip['type'] ) ) {
+                            $validated[ $attr ]['term'][ $key ]['tooltip']['type'] = Helper::validate_select([
+                                'value'   => $term_tooltip['type'],
+                                'default' => 'none',
+                                'choices' => [ 'none', 'text', 'html', 'image' ]
+                            ]);
+                        }
+
+                        $tooltip_type    = $validated[ $attr ]['term'][ $key ]['tooltip']['type'];
+                        $tooltip_content = '';
+
+                        // Content text.
+                        if ( $tooltip_type === 'text' ) {
+                            if ( isset( $term_tooltip['content_text'] ) ) {
+                                $tooltip_content = sanitize_text_field( $term_tooltip['content_text'] );
+                            }
+                        }
+
+                        // Content html.
+                        if ( $tooltip_type === 'html' ) {
+                            if ( isset( $term_tooltip['content_html'] ) ) {
+                                $tooltip_content = wp_kses_post( $term_tooltip['content_html'] );
+                            }
+                        }
+
+                        // Content image.
+                        if ( $tooltip_type === 'image' ) {
+                            $tooltip_content = 0;
+                            if ( isset( $term_tooltip['content_image'] ) ) {
+                                $tooltip_image_id = sanitize_text_field( $term_tooltip['content_image'] );
+                                $tooltip_content  = ( is_numeric( $tooltip_image_id ) ? $tooltip_image_id : 0 );
+                            }
+                        }
+
+                        $validated[ $attr ]['term'][ $key ]['tooltip']['content'] = $tooltip_content;
                     }
                 }
             }
