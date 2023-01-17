@@ -3,7 +3,6 @@ import imagePickerModule from './modules/image-picker.js';
 import settingFieldModule from './modules/setting-field.js';
 import tooltipFieldModule from './modules/tooltip-field.js';
 
-
 /**
  * Namespace.
  *
@@ -217,7 +216,7 @@ hvsfw.fn = {
 	 * Sets the text content of target elements.
 	 *
 	 * @since 1.0.0
-	 * 
+	 *
 	 * @param {string} selector The element selector.
 	 * @param {string} text     The text to be inserted in the element.
 	 */
@@ -238,8 +237,8 @@ hvsfw.fn = {
 	 * Sets the children text content of target elements.
 	 *
 	 * @since 1.0.0
-	 * 
-	 * @param {object} parent   The parent element.
+	 *
+	 * @param {Object} parent   The parent element.
 	 * @param {string} selector The element selector.
 	 * @param {string} text     The text to be inserted in the element.
 	 */
@@ -275,7 +274,6 @@ hvsfw.fn = {
 			const elements = parent.querySelectorAll( child );
 			if ( elements.length === 0 ) {
 				output = true;
-				console.log( elements );
 			}
 		} );
 
@@ -283,62 +281,16 @@ hvsfw.fn = {
 	},
 
 	/**
-	 * Return the linear gradient color or stripe color.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param {Array}  colors Containing the list of colors.
-	 * @param {string} angle  The total angle or rotation of the background.
-	 * @return {string} The gradient background color.
-	 */
-	getLinearColor( colors, angle = '-45deg' ) {
-		if ( colors.length === 0 || ! Array.isArray( colors ) ) {
-			return '#ffffff';
-		}
-
-		let value = `${ angle }, `;
-		const count = colors.length;
-		const length = ( 100 / count );
-
-		colors.forEach( function( color, index ) {
-			index = ( index + 1 );
-			const end = ( length * index );
-			const start = ( end - length );
-
-			value += `${ color } ${ start }%, ${ color } ${ end }% `;
-			value += ( index < count ? ',' : '' );
-		} );
-
-		return `repeating-linear-gradient( ${ value } )`;
-	},
-
-	/**
-	 * Checks if the color is a valid hexa color.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param {string} color The color to be check.
-	 * @return {boolean} Validity of the color.
-	 */
-	isValidHexColor( color ) {
-		if ( ! color ) {
-			return false;
-		}
-
-		return /^#([0-9A-F]{3}){1,2}$/i.test( color );
-	},
-
-	/**
 	 * Capitalize the first letter in a word.
 	 *
 	 * @since 1.0.0
-	 * 
-	 * @param  {string} string The string to be capitalize.
+	 *
+	 * @param {string} string The string to be capitalize.
 	 * @return {string} The capitalized string.
 	 */
 	capitalizeFirstLetter( string = '' ) {
 		return string.charAt( 0 ).toUpperCase() + string.slice( 1 );
-	}
+	},
 };
 
 /**
@@ -451,8 +403,8 @@ hvsfw.form = {
 		this.onChangeAttributeType();
 		this.onChangeTermType();
 		this.saveSwatchSettings();
+		this.updateSwatchSettings();
 		this.resetSwatchSettings();
-		this.deleteSwatchSetting();
 	},
 
 	/**
@@ -473,8 +425,8 @@ hvsfw.form = {
 	 * Set to default or reset color swatch picker.
 	 *
 	 * @since 1.0.0
-	 * 
-	 * @param {object} parent The accordion parent element.
+	 *
+	 * @param {Object} parent The accordion parent element.
 	 */
 	setColorPickerToDefault( parent ) {
 		if ( ! parent ) {
@@ -485,7 +437,7 @@ hvsfw.form = {
 		if ( colorPickerElems.length > 0 ) {
 			colorPickerElems.forEach( function( colorPickerElem ) {
 				colorPickerModule.setToDefault( colorPickerElem );
-			});
+			} );
 		}
 	},
 
@@ -493,8 +445,8 @@ hvsfw.form = {
 	 * Set to default or reset image picker.
 	 *
 	 * @since 1.0.0
-	 * 
-	 * @param {object} parent The accordion parent element.
+	 *
+	 * @param {Object} parent The accordion parent element.
 	 */
 	setImagePickerToDefault( parent ) {
 		if ( ! parent ) {
@@ -505,7 +457,7 @@ hvsfw.form = {
 		if ( imagePickerElems.length > 0 ) {
 			imagePickerElems.forEach( function( imagePickerElem ) {
 				imagePickerModule.setToDefault( imagePickerElem );
-			});
+			} );
 		}
 	},
 
@@ -513,23 +465,21 @@ hvsfw.form = {
 	 * Set to default or reset image size.
 	 *
 	 * @since 1.0.0
-	 * 
-	 * @param {object} parent The accordion parent element.
+	 *
+	 * @param {Object} parent The accordion parent element.
 	 */
 	setImageSizeToDefault( parent ) {
-		if ( ! parent ) {
-			return;
+		if ( parent ) {
+			hvsfw.fn.setChildValue( parent, '.hvsfw-image-size-selector > select', 'thumbnail' );
 		}
-
-		hvsfw.fn.setChildValue( parent, '.hvsfw-image-size-selector > select', 'thumbnail' )
 	},
 
 	/**
 	 * Set to default or reset button label input.
 	 *
 	 * @since 1.0.0
-	 * 
-	 * @param {object} parent The accordion parent element.
+	 *
+	 * @param {Object} parent The accordion parent element.
 	 */
 	setButtonLabelToDefault( parent ) {
 		if ( ! parent ) {
@@ -540,7 +490,152 @@ hvsfw.form = {
 		if ( buttonLabelElems.length > 0 ) {
 			buttonLabelElems.forEach( function( buttonLabelElem ) {
 				buttonLabelElem.value = buttonLabelElem.getAttribute( 'data-default' );
-			});
+			} );
+		}
+	},
+
+	/**
+	 * Set to default or reset tooltip forms.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param {Object} parent The accordion parent element.
+	 */
+	setTooltipToDefault( parent ) {
+		if ( ! parent ) {
+			return;
+		}
+
+		const termTypeElems = parent.querySelectorAll( '.hvsfw-field-term-type' );
+		if ( termTypeElems.length === 0 ) {
+			return;
+		}
+
+		termTypeElems.forEach( function( termTypeElem ) {
+			let prefix = termTypeElem.getAttribute( 'data-prefix' );
+			prefix = prefix.replace( '[style]', '[tooltip]' );
+			if ( prefix ) {
+				tooltipFieldModule.setToDefault( 'reset', prefix );
+			}
+		} );
+	},
+
+	/**
+	 * Set the visibilty of BlockUI loader spinner visibility.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param {string} state The visibility of the loader spinner.
+	 */
+	blockLoader( state ) {
+		if ( ! state || ! [ 'show', 'hide' ].includes( state ) ) {
+			return;
+		}
+
+		const swatchPanelElem = jQuery( '#hvsfw_swatch_panel' );
+		if ( swatchPanelElem ) {
+			if ( state === 'show' ) {
+				swatchPanelElem.block( {
+					message: null,
+					overlayCSS: {
+						background: '#f3f3f3',
+						opacity: 0.5,
+					},
+				} );
+			} else {
+				swatchPanelElem.unblock();
+			}
+		}
+	},
+
+	/**
+	 * Prompt the swatch form message box.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param {Object} params         Containing the parameters needed to render notice.
+	 * @param {string} params.state   The state or status of the notice.
+	 * @param {string} params.message The message or content of the notice.
+	 */
+	promptNotice( params ) {
+		if ( ! params.state || ! params.message ) {
+			return;
+		}
+
+		const noticeElem = document.getElementById( 'hvsfw-notice' );
+		const noticeTextElem = document.getElementById( 'hvsfw-notice-text' );
+		if ( ! noticeElem || ! noticeTextElem ) {
+			return;
+		}
+
+		noticeElem.setAttribute( 'data-state', params.state );
+		noticeElem.setAttribute( 'data-visibility', 'visible' );
+		noticeTextElem.textContent = params.message;
+
+		setTimeout( function() {
+			noticeElem.setAttribute( 'data-visibility', 'hidden' );
+		}, 5000 );
+	},
+
+	/**
+	 * Prompt the swatch form error message box.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param {string} error The error name.
+	 */
+	errorNotice( error ) {
+		if ( ! error ) {
+			return;
+		}
+
+		const errors = [
+			{
+				error: 'NETWORK_ERROR',
+				title: 'Network Error',
+				content: 'The network connection is lost, there might be a problem with your network.',
+			},
+			{
+				error: 'SECURITY_ERROR',
+				title: 'Security Error',
+				content: 'A security error occur. Please try again later or contact the website administrator for help.',
+			},
+			{
+				error: 'MISSING_DATA_ERROR',
+				title: 'Missing Data',
+				content: 'There is a missing data that are required. Please check and try again.',
+			},
+			{
+				error: 'INVALID_PRODUCT_ID',
+				title: 'Invalid Product ID',
+				content: 'The product ID that you are trying to save is invalid product ID.',
+			},
+			{
+				error: 'NOT_VARIABLE_PRODUCT',
+				title: 'Not Variable Product',
+				content: 'The product that you are trying to save is not a variable product.',
+			},
+			{
+				error: 'FAILED_TO_SAVE',
+				title: 'Failed To Save',
+				content: 'Failed to save the swatch settings.',
+			},
+			{
+				error: 'FAILED_TO_RESET',
+				title: 'Failed To Reset',
+				content: 'Failed to reset the swatch settings.',
+			},
+		];
+
+		const errorDetail = errors.find( function( value ) {
+			return ( value.error === error );
+		} );
+
+		if ( errorDetail ) {
+			this.promptNotice( {
+				state: 'error',
+				message: errorDetail.content,
+			} );
 		}
 	},
 
@@ -618,9 +713,9 @@ hvsfw.form = {
 				if ( termTypeElems.length > 0 ) {
 					termTypeElems.forEach( function( termTypeElem ) {
 						termTypeElem.dispatchEvent( new Event( 'change', {
-							bubbles: true
-						}));
-					});
+							bubbles: true,
+						} ) );
+					} );
 				}
 			}
 
@@ -655,7 +750,7 @@ hvsfw.form = {
 				'.hvsfw-accordion__title[data-type="value"]',
 				'[data-group-field="value_button"]',
 				'[data-group-field="value_color"]',
-				'[data-group-field="value_image"]'
+				'[data-group-field="value_image"]',
 			] );
 
 			if ( hasMissingChild === true ) {
@@ -676,68 +771,153 @@ hvsfw.form = {
 			hvsfw.form.setImagePickerToDefault( parentElem );
 			hvsfw.form.setImageSizeToDefault( parentElem );
 
+			// Set tooltip form to default.
+			hvsfw.form.setTooltipToDefault( parentElem );
+
 			// Close all opened child accordion.
 			const bodyElem = parentElem.querySelector( '.hvsfw-accordion__body' );
 			if ( bodyElem ) {
 				hvsfw.accordion.closeAllOpenedChild( bodyElem );
 			}
-		});
+		} );
 	},
 
 	/**
-	 * Save swatch settings ajax.
+	 * Save swatch settings via AJAX.
 	 *
 	 * @since 1.0.0
 	 */
 	saveSwatchSettings() {
 		hvsfw.fn.eventListener( 'click', '#hvsfw-js-save-setting-btn', async function( e ) {
 			e.preventDefault();
+
 			const formElem = document.getElementById( 'post' );
 			if ( ! formElem ) {
 				return;
 			}
 
+			hvsfw.form.blockLoader( 'show' );
+
 			const formData = new FormData( formElem );
-			const res = await hvsfw.fn.fetch({
+			const res = await hvsfw.fn.fetch( {
 				nonce: hvsfwLocal.variation.product.nonce.saveSwatchSettings,
 				action: 'hvsfw_save_swatch_settings',
-				formData: new URLSearchParams( formData ).toString()
-			});
-		});
+				formData: new URLSearchParams( formData ).toString(),
+			} );
+
+			hvsfw.form.blockLoader( 'hide' );
+
+			if ( res.success === true ) {
+				hvsfw.form.promptNotice( {
+					state: 'success',
+					message: 'Swatch settings has been successfully saved.',
+				} );
+			} else {
+				hvsfw.form.errorNotice( res.data.error );
+			}
+		} );
 	},
 
 	/**
-	 * Reset swatch settings ajax.
+	 * Update swatch settings via AJAX.
+	 *
+	 * @since 1.0.0
+	 */
+	updateSwatchSettings() {
+		jQuery( 'body' ).on( 'reload', async function() {
+			const postIdElem = document.getElementById( 'post_ID' );
+			const swatchAttributeElem = document.getElementById( 'hvsfw-swatch-attributes' );
+			if ( ! postIdElem || ! swatchAttributeElem ) {
+				return;
+			}
+
+			const postId = parseInt( postIdElem.value );
+			if ( postId === NaN || postId === 0 ) {
+				return;
+			}
+
+			hvsfw.form.blockLoader( 'show' );
+
+			const res = await hvsfw.fn.fetch( {
+				nonce: hvsfwLocal.variation.product.nonce.updateSwatchSettings,
+				action: 'hvsfw_update_swatch_settings',
+				postId,
+			} );
+
+			hvsfw.form.blockLoader( 'hide' );
+
+			if ( res.success === true ) {
+				swatchAttributeElem.innerHTML = res.data.content;
+
+				// Re-init wpColorPicker.
+				hvsfw.form.colorPicker();
+				jQuery( '.hvsfw-color-picker__input' ).wpColorPicker();
+			} else {
+				hvsfw.form.errorNotice( res.data.error );
+			}
+		} );
+	},
+
+	/**
+	 * Reset swatch settings AJAX.
 	 *
 	 * @since 1.0.0
 	 */
 	resetSwatchSettings() {
-		hvsfw.fn.eventListener( 'click', '#hvsfw-js-reset-setting-btn', function( e ) {
+		hvsfw.fn.eventListener( 'click', '#hvsfw-js-reset-setting-btn', async function( e ) {
 			e.preventDefault();
-			alert();
-		});
-	},
+			const postIdElem = document.getElementById( 'post_ID' );
+			if ( ! postIdElem ) {
+				return;
+			}
 
-	/**
-	 * Delete swatch setting/// DELETE IN PROD.
-	 * @return {[type]} [description]
-	 */
-	deleteSwatchSetting() {
-		hvsfw.fn.eventListener( 'click', '#hvsfw-js-delete-setting-btn', async function( e ) {
-			const target = e.target;
-			const postId = target.getAttribute( 'data-id' );
+			const postId = parseInt( postIdElem.value );
+			if ( postId === NaN || postId === 0 ) {
+				return;
+			}
 
-			const res = await hvsfw.fn.fetch({
-				nonce: hvsfwLocal.variation.product.nonce.deleteSwatchSettings,
-				action: 'hvsfw_delete_swatch_settings',
-				postId: postId
-			});
+			const isContinue = confirm( 'Do you really want to reset the swatch settings?' );
+			if ( ! isContinue ) {
+				return;
+			}
+
+			hvsfw.form.blockLoader( 'show' );
+
+			const res = await hvsfw.fn.fetch( {
+				nonce: hvsfwLocal.variation.product.nonce.resetSwatchSettings,
+				action: 'hvsfw_reset_swatch_settings',
+				postId,
+			} );
+
+			hvsfw.form.blockLoader( 'hide' );
 
 			if ( res.success === true ) {
-				alert( 'DELETED' );
+				hvsfw.form.promptNotice( {
+					state: 'success',
+					message: 'Swatch settings has been successfully reset.',
+				} );
+
+				// Close all accordion.
+				const swatchPanelElem = document.getElementById( 'hvsfw_swatch_panel' );
+				if ( swatchPanelElem ) {
+					hvsfw.accordion.closeAllOpenedChild( swatchPanelElem );
+				}
+
+				// Set all input to default.
+				const attributeTypeElems = document.querySelectorAll( '.hvsfw-field-attribute-type' );
+				if ( attributeTypeElems.length > 0 ) {
+					attributeTypeElems.forEach( function( attributeTypeElem ) {
+						attributeTypeElem.value = 'default';
+						attributeTypeElem.dispatchEvent( new Event( 'change', {
+							bubbles: true,
+						} ) );
+					} );
+				}
+			} else {
+				hvsfw.form.errorNotice( res.data.error );
 			}
-		});
-	}
+		} );
+	},
 };
 
 /**

@@ -97,7 +97,7 @@ const tooltipField = {
 	setToDefault( action = 'set', prefix ) {
 		if ( ! action || ! prefix ) {
 			return;
-		} 
+		}
 
 		const imagePickerElem = document.getElementById( `${ prefix }_content_image` );
 		if ( imagePickerElem ) {

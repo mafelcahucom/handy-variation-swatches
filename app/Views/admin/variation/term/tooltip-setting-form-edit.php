@@ -60,10 +60,10 @@ $visible['image'] = ( $tooltip['type'] === 'image' ? 'yes' : 'no' );
 
 <tr class="form-field hvsfw-field">
     <th scope="row" valign="top">
-        <label>Tooltip</label>
+        <label for="hvsfw-tooltip-edit_type">Tooltip</label>
     </th>
     <td>
-        <select name="hvsfw_tooltip_type" id="hvsfw_tooltip_type">
+        <select name="hvsfw_tooltip_type" id="hvsfw-tooltip-edit_type" class="hvsfw-tooltip-field-type" data-prefix="hvsfw-tooltip-edit">
             <option value="none" <?php selected( $tooltip['type'], 'none' ); ?>>None</option>
             <option value="text" <?php selected( $tooltip['type'], 'text' ); ?>>Text</option>
             <option value="html" <?php selected( $tooltip['type'], 'html' ); ?>>HTML</option>
@@ -72,35 +72,35 @@ $visible['image'] = ( $tooltip['type'] === 'image' ? 'yes' : 'no' );
         <p class="description">Select your preferred tooltip content type.</p>
     </td>
 </tr>
-<tr class="form-field hvsfw-field hvsfw-field__tooltip" data-type="text" data-visible="<?php echo $visible['text']; ?>">
+<tr class="form-field hvsfw-field hvsfw-field__tooltip" data-group-field="hvsfw-tooltip-edit_content_text" data-visible="<?php echo $visible['text']; ?>">
     <th scope="row" valign="top">
-        <label>Tooltip Content (Text)</label>
+        <label for="hvsfw-tooltip-edit_content_text">Tooltip Content (Text)</label>
     </th>
     <td>
-        <input type="text" name="hvsfw_tooltip_text" id="hvsfw_tooltip_text" value="<?php echo esc_attr( $content['text'] ); ?>">
+        <input type="text" name="hvsfw_tooltip_text" id="hvsfw-tooltip-edit_content_text" value="<?php echo esc_attr( $content['text'] ); ?>">
         <p class="description">Write the tooltip text content. Term name is the default value.</p>
     </td>
 </tr>
-<tr class="form-field hvsfw-field hvsfw-field__tooltip" data-type="html" data-visible="<?php echo $visible['html']; ?>">
+<tr class="form-field hvsfw-field hvsfw-field__tooltip" data-group-field="hvsfw-tooltip-edit_content_html" data-visible="<?php echo $visible['html']; ?>">
     <th scope="row" valign="top">
-        <label>Tooltip Content (HTML)</label>
+        <label for="hvsfw-tooltip-edit_content_html">Tooltip Content (HTML)</label>
     </th>
     <td>
-        <textarea name="hvsfw_tooltip_html" id="hvsfw_tooltip_html" rows="5">
+        <textarea name="hvsfw_tooltip_html" id="hvsfw-tooltip-edit_content_html" rows="5">
             <?php echo $content['html']; ?>
         </textarea>
         <p class="description">Write the tooltip html markup content. Term name is the default value.</p>
     </td>
 </tr>
-<tr class="form-field hvsfw-field hvsfw-field__tooltip" data-type="image" data-visible="<?php echo $visible['image']; ?>">
+<tr class="form-field hvsfw-field hvsfw-field__tooltip" data-group-field="hvsfw-tooltip-edit_content_image" data-visible="<?php echo $visible['image']; ?>">
     <th scope="row" valign="top">
-        <label>Tooltip Content (Image)</label>
+        <label for="hvsfw-tooltip-edit_content_image">Tooltip Content (Image)</label>
     </th>
     <td>
         <?php
             echo Helper::render_view( 'variation/field/image-picker-field', [
-                'id'   => 'hvsfw-image-picker-tooltip',
-                'name' => 'hvsfw_tooltip_image',
+                'id'            => 'hvsfw-tooltip-edit_content_image',
+                'name'          => 'hvsfw_tooltip_image',
                 'attachment_id' => $content['image'] 
             ]);
         ?>

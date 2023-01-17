@@ -1,5 +1,6 @@
 import colorPickerModule from './modules/color-picker.js';
 import imagePickerModule from './modules/image-picker.js';
+import tooltipFieldModule from './modules/tooltip-field.js';
 
 /**
  * Namespace.
@@ -254,65 +255,6 @@ hvsfw.swatch = {
 };
 
 /**
- * Holds the tooltip setting form.
- *
- * @since 1.0.0
- *
- * @type {Object}
- */
-hvsfw.tooltip = {
-
-	/**
-	 * Initialize.
-	 *
-	 * @since 1.0.0
-	 */
-	init() {
-		this.onChangeTypeField();
-	},
-
-	/**
-	 * Set to default or reset tooltip form.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param {string} action The type of action.
-	 */
-	setToDefault( action = 'set' ) {
-		const imagePickerElem = document.getElementById( 'hvsfw-image-picker-tooltip' );
-		if ( imagePickerElem ) {
-			imagePickerModule.setToDefault( imagePickerElem );
-		}
-
-		hvsfw.fn.setAttribute( '.hvsfw-field__tooltip', 'data-visible', 'no' );
-		hvsfw.fn.setValue( '#hvsfw_tooltip_text', '' );
-		hvsfw.fn.setValue( '#hvsfw_tooltip_html', '' );
-
-		if ( action === 'reset' ) {
-			hvsfw.fn.setValue( '#hvsfw_tooltip_type', 'none' );
-		}
-	},
-
-	/**
-	 * Update all fields state that are dependent in type field.
-	 *
-	 * @since 1.0.0
-	 */
-	onChangeTypeField() {
-		hvsfw.fn.eventListener( 'change', '#hvsfw_tooltip_type', function( e ) {
-			const target = e.target;
-			const type = target.value;
-			if ( ! type || ! [ 'none', 'text', 'image', 'html' ].includes( type ) ) {
-				return;
-			}
-
-			hvsfw.tooltip.setToDefault();
-			hvsfw.fn.setAttribute( `.hvsfw-field__tooltip[data-type="${ type }"]`, 'data-visible', 'yes' );
-		} );
-	},
-};
-
-/**
  * Holds the wp list table .
  *
  * @since 1.0.0
@@ -529,7 +471,7 @@ hvsfw.domReady = {
 hvsfw.domReady.execute( function() {
 	colorPickerModule.init(); // Handle the color picker field events.
 	imagePickerModule.init(); // Handle the image picker field events.
-	hvsfw.tooltip.init(); // Handle the tooltip setting form events.
+	tooltipFieldModule.init(); // Handle the tooltip field events.
 	hvsfw.wpListTable.init(); // Handle the wp list table events.
 	hvsfw.ajax.init(); // Handle the ajax events catcher.
 } );

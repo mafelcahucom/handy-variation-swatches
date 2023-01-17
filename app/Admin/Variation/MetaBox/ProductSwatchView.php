@@ -48,28 +48,6 @@ final class ProductSwatchView {
     protected function __construct() {}
 
     /**
-     * Render the custom woocommerce notice.
-     *
-     * @since 1.0.0
-     *
-     * @param array  $args  Containing the arguments for rendering notice.
-     * $args = [
-     *     'state'   => (string) The notice state.
-     *     'message' => (string) The notice message.
-     * ]
-     */
-    public static function notice( $args = [] ) {
-        if ( ! isset( $args['state'] ) || ! isset( $args['message'] ) ) {
-            return;
-        }
-        ?>
-        <div id="hvsfw-notice" class="hvsfw-notice" data-state="<?php echo $args['state']; ?>" data-visibility="visible">
-            <p id="hvsfw-notice-text"><?php echo $args['message']; ?></p>
-        </div>
-        <?php
-    }
-
-    /**
      * Return the attribute type choices.
      *
      * @since 1.0.0
@@ -134,53 +112,98 @@ final class ProductSwatchView {
     }
 
     /**
+     * Render the custom woocommerce notice.
+     *
+     * @since 1.0.0
+     *
+     * @param array  $args  Containing the arguments for rendering notice.
+     * $args = [
+     *     'state'   => (string) The notice state.
+     *     'message' => (string) The notice message.
+     * ]
+     */
+    public static function notice( $args = [] ) {
+        if ( ! isset( $args['state'] ) || ! isset( $args['message'] ) ) {
+            return;
+        }
+        ?>
+        <div id="hvsfw-notice" class="hvsfw-notice" data-state="<?php echo $args['state']; ?>" data-visibility="visible">
+            <p id="hvsfw-notice-text hvsfw-p-0">
+                <?php echo esc_html( $args['message'] ); ?>
+            </p>
+        </div>
+        <?php
+    }
+
+    /**
      * Render the swatches panel.
      *
      * @since 1.0.0
      * 
-     * @param  object  $product  The product object.
+     * @param  integer  $post_id  The current post id.
      */
-    public static function swatches_panel( $product ) {
-        // Set properties.
-        self::$product_id   = $product->get_id();
-        self::$swatches     = Utility::get_product_swatches( self::$product_id );
-        Helper::log( self::$swatches );
-
-        $is_valid_product   = ( ! empty( $product ) && $product->get_type() === 'variable' );
+    public static function swatches_panel( $post_id ) {
         ?>
         <div id="hvsfw_swatch_panel" class="hvsfw panel woocommerce_options_panel hidden">
             <div id="hvsfw-notice" class="hvsfw-notice" data-state="success" data-visibility="hidden">
-                <p id="hvsfw-notice-text"></p>
+                <p id="hvsfw-notice-text" class="hvsfw-p-0"></p>
             </div>
-            <div class="hvsfw-attributes">
-                <?php
-                    if ( $is_valid_product ) {
-                        $attributes = Utility::get_attributes( $product );
-                        if ( ! empty( $attributes ) ) {
-                            foreach ( $attributes as $key => $attribute ) {
-                                self::attribute_component([
-                                    'name'      => $key,
-                                    'attribute' => $attribute
-                                ]);
-                            }
-                        }
-                    } else {
-                        self::notice([
-                            'state'   => 'success',
-                            'message' => 'Before you can customize the variation swatches settings you need to save this product first.'
-                        ]);
-                    }
+            <div id="hvsfw-swatch-attributes">
+                <?php 
+                    // Render swatch attributes.
+                    self::swatch_attributes( $post_id ); 
                 ?>
             </div>
-            <div class="hvsfw-control">
-                <div class="hvsfw-flex">
-                    <div class="hvsfw-col__left hvsfw-mr-10">
-                        <button type="button" id="hvsfw-js-save-setting-btn" class="button button-primary">Save Settings</button>
-                    </div>
-                    <div class="hvsfw-col__right">
-                        <button type="button" id="hvsfw-js-reset-setting-btn" class="button">Reset Settings</button>
-                    </div>
-                    <button type="button" id="hvsfw-js-delete-setting-btn" class="button" data-id="<?php echo self::$product_id; ?>">Delete</button>
+        </div>
+        <?php
+    }
+
+    /**
+     * Render the swatch attributes list.
+     *
+     * @since 1.0.0
+     * 
+     * @param  integer  $post_id  The current post id.
+     */
+    public static function swatch_attributes( $post_id ) {
+        $product          = wc_get_product( $post_id );
+        self::$product_id = $post_id;
+        self::$swatches   = Utility::get_product_swatches( $post_id );
+
+        $is_valid_product = false;
+        if ( ! empty( $product ) && $product->get_type() === 'variable' ) {
+            $attributes = Utility::get_attributes( $product );
+            if ( ! empty( $attributes ) ) {
+                $is_valid_product = true;
+            }
+        }
+
+        $show_controller  = ( $is_valid_product ? 'yes' : 'no' );
+        ?>
+        <div class="hvsfw-attributes">
+            <?php
+                if ( $is_valid_product ) {
+                    foreach ( $attributes as $key => $attribute ) {
+                        self::attribute_component([
+                            'name'      => $key,
+                            'attribute' => $attribute
+                        ]);
+                    }
+                } else {
+                    self::notice([
+                        'state'   => 'success',
+                        'message' => 'Before you can customize the variation swatches settings you need to add attributes and save this product first.'
+                    ]);
+                }
+            ?>
+        </div>
+        <div class="hvsfw-control" data-visible="<?php echo $show_controller; ?>">
+            <div class="hvsfw-flex">
+                <div class="hvsfw-col__left hvsfw-mr-10">
+                    <button type="button" id="hvsfw-js-save-setting-btn" class="button button-primary">Save Settings</button>
+                </div>
+                <div class="hvsfw-col__right">
+                    <button type="button" id="hvsfw-js-reset-setting-btn" class="button">Reset Settings</button>
                 </div>
             </div>
         </div>
@@ -609,8 +632,8 @@ final class ProductSwatchView {
         }
 
         // Set group visibility.
-        $show_tooltip_text = ( $tooltip_type === 'text' ? 'yes' : 'no' );
-        $show_tooltip_html = ( $tooltip_type === 'html' ? 'yes' : 'no' );
+        $show_tooltip_text  = ( $tooltip_type === 'text' ? 'yes' : 'no' );
+        $show_tooltip_html  = ( $tooltip_type === 'html' ? 'yes' : 'no' );
         $show_tooltip_image = ( $tooltip_type === 'image' ? 'yes' : 'no' );
         ?>
         <div class="hvsfw-accordion" data-accordion="tooltip">

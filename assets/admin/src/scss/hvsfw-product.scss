@@ -41,6 +41,11 @@
 		align-items: center !important;
 	}
 
+	// Padding.
+	&-p-0 {
+		padding: 0 !important;
+	}
+
 	// Margin.
 	&-mb-10 {
 		margin-bottom: 10px;
@@ -75,7 +80,7 @@
 		box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04%);
 
 		&[data-state="success"] {
-			border-left-color: #c3c4c7;
+			border-left-color: #00a32a;
 		}
 
 		&[data-state="error"] {
@@ -269,5 +274,4 @@
 	&-control {
 		padding: 8px 12px;
 	}
-
 }

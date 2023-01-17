@@ -35,25 +35,24 @@ final class ProductSwatch {
      * @since 1.0.0
      */
     protected function __construct() {
-
         // Register styles and scripts.
         add_action( 'admin_enqueue_scripts', [ $this, 'register_styles' ] );
         add_action( 'admin_enqueue_scripts', [ $this, 'register_scripts' ] );
 
-         // Add itemized variation product tab.
+         // Add swatch setting product tab.
         add_filter( 'woocommerce_product_data_tabs', [ $this, 'custom_product_tab' ] );
 
-        // Add itemized variation product panel.
+        // Add swatch setting product panel.
         add_filter( 'woocommerce_product_data_panels', [ $this, 'custom_product_panel' ] );
 
-        // Saving swatch settings event.
+        // Save swatch settings event.
         add_action( 'wp_ajax_hvsfw_save_swatch_settings', [ $this, 'save_swatch_settings' ] );
 
-        // Resetting swatch settings event.
-        add_action( 'wp_ajax_hvsfw_reset_swatch_settings', [ $this, 'reset_swatch_settings' ] );
+        // Update swatch settings event.
+        add_action( 'wp_ajax_hvsfw_update_swatch_settings', [ $this, 'update_swatch_settings' ] );
 
-        // Setting swatch settings event./// DELETE IN PRODUCTION
-        add_action( 'wp_ajax_hvsfw_delete_swatch_settings', [ $this, 'delete_swatch_settings' ] );
+        // Reset swatch settings event.
+        add_action( 'wp_ajax_hvsfw_reset_swatch_settings', [ $this, 'reset_swatch_settings' ] );
     }
 
     /**
@@ -114,9 +113,9 @@ final class ProductSwatch {
             'variation' => [
                 'product' => [
                     'nonce' => [
-                        'saveSwatchSettings'  => wp_create_nonce( 'hvsfw_save_swatch_settings' ),
-                        'resetSwatchSettings' => wp_create_nonce( 'hvsfw_reset_swatch_settings' ),
-                        'deleteSwatchSettings' => wp_create_nonce( 'hvsfw_delete_swatch_settings' ) // DELETE IN PROD
+                        'saveSwatchSettings'   => wp_create_nonce( 'hvsfw_save_swatch_settings' ),
+                        'updateSwatchSettings' => wp_create_nonce( 'hvsfw_update_swatch_settings' ),
+                        'resetSwatchSettings'  => wp_create_nonce( 'hvsfw_reset_swatch_settings' ),
                     ]
                 ]
             ]
@@ -149,13 +148,13 @@ final class ProductSwatch {
      */
     public function custom_product_panel() {
         global $post;
-        $product = wc_get_product( $post->ID );
-        
-        ProductSwatchView::swatches_panel( $product );
+
+        // Render swatch panel.
+        ProductSwatchView::swatches_panel( $post->ID );
     }
 
     /**
-     * Save swatch settings in post meta.
+     * Save swatch settings in post meta via AJAX.
      *
      * @since 1.0.0
      * 
@@ -174,31 +173,74 @@ final class ProductSwatch {
             ]);
         }
 
-        $form_data         = $this->parse_query_string( $_POST['formData'] );
-        $is_empty_post_id  = ( ! isset( $form_data['post_ID'] ) || empty( $form_data['post_ID'] ) );
-        $is_empty_swatches = ( ! isset( $form_data['_hvsfw_value'] ) || empty( $form_data['_hvsfw_value'] ) );
-        if ( $is_empty_post_id || $is_empty_swatches ) {
+        $data       = $this->parse_query_string( $_POST['formData'] );
+        $no_post_id = ( ! isset( $data['post_ID'] ) || empty( $data['post_ID'] ) );
+        $no_value   = ( ! isset( $data['_hvsfw_value'] ) || empty( $data['_hvsfw_value'] ) );
+        if ( $no_post_id || $no_value ) {
+            wp_send_json_error([
+                'error' => 'MISSING_DATA_ERROR',
+            ]);
+        }
+
+        $validated = $this->validate_swatches( $data['_hvsfw_value'] );
+        if ( empty( $validated ) ) {
             wp_send_json_error([
                 'error' => 'MISSING_DATA_ERROR'
             ]);
         }
 
-        $post_id  = $form_data['post_ID'];
-        $swatches = $form_data['_hvsfw_value'];
+        $product = wc_get_product( $data['post_ID'] );
+        if ( empty( $product ) ) {
+            wp_send_json_error([
+                'error' => 'INVALID_PRODUCT_ID'
+            ]);
+        }
 
-        Helper::log( $swatches );
+        if ( $product->get_type() !== 'variable' ) {
+            wp_send_json_error([
+                'error' => 'NOT_VARIABLE_PRODUCT',
+            ]);
+        }
 
-        $validated = $this->validate_swatches( $swatches );
-        Helper::log( $validated );
-        
+        update_post_meta( $data['post_ID'], '_hvsfw_swatches', $validated );
 
-        // Helper::log( $form_data );
-        
-        update_post_meta( $post_id, '_hvsfw_swatches', $validated );
+        wp_send_json_success([
+            'response' => 'SUCCESSFULLY_SAVED'
+        ]);
     }
 
     /**
-     * Reset swatch settings in post meta.
+     * Update swatch settings in post meta via AJAX.
+     *
+     * @since 1.0.0
+     * 
+     * @return json
+     */
+    public function update_swatch_settings() {
+        if ( ! self::is_security_passed( $_POST ) ) {
+            wp_send_json_error([
+                'error' => 'SECURITY_ERROR'
+            ]);
+        }
+
+        if ( self::has_post_empty_data( $_POST, [ 'postId' ] ) ) {
+            wp_send_json_error([
+                'error' => 'MISSING_DATA_ERROR'
+            ]);
+        }
+
+        ob_start();
+        ProductSwatchView::swatch_attributes( $_POST['postId'] );
+        $content = ob_get_clean();
+
+        wp_send_json_success([
+            'response' => 'SUCCESSFULLY_UPDATED',
+            'content'  => $content
+        ]);
+    }
+
+    /**
+     * Reset swatch settings in post meta via AJAX.
      *
      * @since 1.0.0
      * 
@@ -210,21 +252,18 @@ final class ProductSwatch {
                 'error' => 'SECURITY_ERROR'
             ]);
         }
-    }
 
-    /**
-     * Delete swatch settings in post meta. /// DELETE IN PROD.
-     * @return [type] [description]
-     */
-    public function delete_swatch_settings() {
-        if ( ! self::is_security_passed( $_POST ) ) {
+        if ( self::has_post_empty_data( $_POST, [ 'postId' ] ) ) {
             wp_send_json_error([
-                'error' => 'SECURITY_ERROR'
+                'error' => 'MISSING_DATA_ERROR'
             ]);
         }
 
-        delete_post_meta( $_POST['postId'], '_hvsfw_swatches' );
-        wp_send_json_success( 'DELETED' );
+        update_post_meta( $_POST['postId'], '_hvsfw_swatches', [] );
+
+        wp_send_json_success([
+            'response' => 'SUCCESSFULLY_SAVED'
+        ]);
     }
     
     /**
@@ -309,12 +348,8 @@ final class ProductSwatch {
             return [];
         }
 
-        //Helper::log( $swatches );
-
         $validated = []; // Stores the validated swatch.
         foreach ( $swatches as $attr => $swatch ) {
-
-            //Helper::log( $swatch );
 
             // Store attribute type.
             $validated[ $attr ]['type'] = 'select';
