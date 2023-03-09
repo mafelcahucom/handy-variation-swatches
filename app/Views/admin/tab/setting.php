@@ -34,6 +34,22 @@ echo Component::get_header( $args['page_title'] ); ?>
                     'panel' => '#general'
                 ],
                 [
+                    'title' => 'Button Swatch',
+                    'panel' => '#button-swatch'
+                ],
+                [
+                    'title' => 'Color Swatch',
+                    'panel' => '#color-swatch'
+                ],
+                [
+                    'title' => 'Image Swatch',
+                    'panel' => '#image-swatch'
+                ],
+                [
+                    'title' => 'Tooltip',
+                    'panel' => '#tooltip'
+                ],
+                [
                     'title' => 'Advanced',
                     'panel' => '#advanced'
                 ]
@@ -75,12 +91,54 @@ echo Component::get_header( $args['page_title'] ); ?>
             'name'  => 'gn_enable',
             'group' => 'general_setting_group',
             'value' => $settings['gn_enable'],
-            'label' => 'Enable Itemized Variation',
-            'description' => 'Enable this to use itemized variation in the front-end.',
+            'label' => 'Enable Variation Swatch',
+            'description' => 'Enable this to use variation swatch in the front-end.',
         ]);
 
         /**
          * General - Card Closing.
+         */
+        echo Component::get_card_closing();
+
+        /**
+         * Product Single Page - Card Opening.
+         */
+        echo Component::get_card_opening([
+            'title' => 'Product Page',
+            'class' => 'hd-mb-30'
+        ]);
+
+        echo Field::get_switch_field([
+            'name'  => 'gn_pp_enable',
+            'group' => 'general_setting_group',
+            'value' => $settings['gn_pp_enable'],
+            'label' => 'Enable in Product Single Page',
+            'description' => 'Enable this to use variation swatch in the product single page.',
+        ]);
+
+        /**
+         * Product Single Page - Card Closing.
+         */
+        echo Component::get_card_closing();
+
+        /**
+         * Shop Page - Card Opening.
+         */
+        echo Component::get_card_opening([
+            'title' => 'Shop Page',
+            'class' => 'hd-mb-30'
+        ]);
+
+        echo Field::get_switch_field([
+            'name'  => 'gn_sp_enable',
+            'group' => 'general_setting_group',
+            'value' => $settings['gn_sp_enable'],
+            'label' => 'Enable in Shop Page (Archive Page)',
+            'description' => 'Enable this to use variation swatch in the shop page (archive page).',
+        ]);
+
+        /**
+         * Shop Page - Card Closing.
          */
         echo Component::get_card_closing();
 
@@ -101,9 +159,783 @@ echo Component::get_header( $args['page_title'] ); ?>
          */
         echo Component::get_tab_panel_closing();
     ?>
+
+    <?php
+        /**
+         * Button Swatch - Tab Opening.
+         */
+        echo Component::get_tab_panel_opening([
+            'id'    => 'button-swatch',
+            'state' => 'default'
+        ]);
+        
+        /**
+         * Save button settings - general_setting_group.
+         */
+        echo Component::get_button([
+            'type'  => 'normal',
+            'class' => 'hvsfw-js-save-setting-btn hd-ds-block hd-mb-30 hd-ml-auto',
+            'label' => 'Save Changes',
+            'attr'  => [
+                'data-group-target' => 'button_setting_group'
+            ]
+        ]);
+        
+        /**
+         * Default Style - Card Opening.
+         */
+        echo Component::get_card_opening([
+            'title' => 'Default Style',
+            'class' => 'hd-mb-30'
+        ]);
+
+        echo Field::get_select_field([
+            'name'  => 'bn_shape',
+            'group' => 'button_setting_group',
+            'value' => $settings['bn_shape'],
+            'label' => 'Shape',
+            'description' => 'Select your preferred shape for swatch button.',
+            'options' => [
+                [
+                    'value' => 'square',
+                    'label' => 'Square'
+                ],
+                [
+                    'value' => 'circle',
+                    'label' => 'Circle'
+                ],
+                [
+                    'value' => 'custom',
+                    'label' => 'Custom'
+                ]
+            ]
+        ]);
+
+        echo Field::get_multiple_field([
+            'label'  => 'Size',
+            'fields' => [
+                Field::get_text_field([
+                    'name'  => 'bn_wd',
+                    'group' => 'button_setting_group',
+                    'value' => $settings['bn_wd'],
+                    'label' => 'Width',
+                    'placeholder' => 'Width'
+                ]),
+                Field::get_text_field([
+                    'name'  => 'bn_ht',
+                    'group' => 'button_setting_group',
+                    'value' => $settings['bn_ht'],
+                    'label' => 'Height',
+                    'placeholder' => 'Height'
+                ]),
+            ]
+        ]);
+
+        echo Field::get_multiple_field([
+            'label'  => 'Font',
+            'fields' => [
+                Field::get_text_field([
+                    'name'  => 'bn_fs',
+                    'group' => 'button_setting_group',
+                    'value' => $settings['bn_fs'],
+                    'label' => 'Font Size',
+                    'placeholder' => 'Font Size'
+                ]),
+                Field::get_select_field([
+                    'name'  => 'bn_fw',
+                    'group' => 'button_setting_group',
+                    'value' => $settings['bn_fw'],
+                    'label' => 'Font Weight',
+                    'options' => Helper::get_font_weight_choices()
+                ]),
+            ]
+        ]);
+
+        echo Field::get_multiple_field([
+            'label'  => 'Text Color',
+            'fields' => [
+                Field::get_color_picker_field([
+                    'name'  => 'bn_txt_clr',
+                    'group' => 'button_setting_group',
+                    'value' => $settings['bn_txt_clr'],
+                    'label' => 'Color',
+                ]),
+                Field::get_color_picker_field([
+                    'name'  => 'bn_txt_hv_clr',
+                    'group' => 'button_setting_group',
+                    'value' => $settings['bn_txt_hv_clr'],
+                    'label' => 'Hover & Active Color',
+                ])
+            ]
+        ]);
+
+        echo Field::get_multiple_field([
+            'label'  => 'Background Color',
+            'fields' => [
+                Field::get_color_picker_field([
+                    'name'  => 'bn_bg_clr',
+                    'group' => 'button_setting_group',
+                    'value' => $settings['bn_bg_clr'],
+                    'label' => 'Color',
+                ]),
+                Field::get_color_picker_field([
+                    'name'  => 'bn_bg_hv_clr',
+                    'group' => 'button_setting_group',
+                    'value' => $settings['bn_bg_hv_clr'],
+                    'label' => 'Hover & Active Color',
+                ])
+            ]
+        ]);
+
+        echo Field::get_multiple_field([
+            'label'  => 'Padding',
+            'fields' => [
+                Field::get_text_field([
+                    'name'  => 'bn_pt',
+                    'group' => 'button_setting_group',
+                    'value' => $settings['bn_pt'],
+                    'label' => 'Top',
+                    'placeholder' => 'Top'
+                ]),
+                Field::get_text_field([
+                    'name'  => 'bn_pb',
+                    'group' => 'button_setting_group',
+                    'value' => $settings['bn_pb'],
+                    'label' => 'Bottom',
+                    'placeholder' => 'Bottom'
+                ]),
+                Field::get_text_field([
+                    'name'  => 'bn_pl',
+                    'group' => 'button_setting_group',
+                    'value' => $settings['bn_pl'],
+                    'label' => 'Left',
+                    'placeholder' => 'Left'
+                ]),
+                Field::get_text_field([
+                    'name'  => 'bn_pr',
+                    'group' => 'button_setting_group',
+                    'value' => $settings['bn_pr'],
+                    'label' => 'Right',
+                    'placeholder' => 'Right'
+                ]),
+            ]
+        ]);
+
+        echo Field::get_multiple_field([
+            'label'  => 'Border',
+            'fields' => [
+                Field::get_select_field([
+                    'name'  => 'bn_bs',
+                    'group' => 'button_setting_group',
+                    'value' => $settings['bn_bs'],
+                    'label' => 'Style',
+                    'options' => Helper::get_border_style_choices()
+                ]),
+                Field::get_text_field([
+                    'name'  => 'bn_bw',
+                    'group' => 'button_setting_group',
+                    'value' => $settings['bn_bw'],
+                    'label' => 'Width',
+                    'placeholder' => 'Width'
+                ]),
+                Field::get_color_picker_field([
+                    'name'  => 'bn_b_clr',
+                    'group' => 'button_setting_group',
+                    'value' => $settings['bn_b_clr'],
+                    'label' => 'Color'
+                ]),
+                Field::get_color_picker_field([
+                    'name'  => 'bn_b_hv_clr',
+                    'group' => 'button_setting_group',
+                    'value' => $settings['bn_b_hv_clr'],
+                    'label' => 'Hover & Active Color'
+                ]),
+                Field::get_text_field([
+                    'name'  => 'bn_br',
+                    'group' => 'button_setting_group',
+                    'value' => $settings['bn_br'],
+                    'label' => 'Radius',
+                    'placeholder' => 'Radius'
+                ]),
+            ]
+        ]);
+
+        echo Field::get_text_field([
+            'name'  => 'bn_gap',
+            'group' => 'button_setting_group',
+            'value' => $settings['bn_gap'],
+            'label' => 'Gap',
+            'placeholder' => 'Gap'
+        ]);
+
+        /**
+         * Default Style - Card Closing.
+         */
+        echo Component::get_card_closing();
+        
+        /**
+         * Save button settings - button_setting_group.
+         */
+        echo Component::get_button([
+            'type'  => 'normal',
+            'class' => 'hvsfw-js-save-setting-btn hd-ds-block hd-mb-30 hd-ml-auto',
+            'label' => 'Save Changes',
+            'attr'  => [
+                'data-group-target' => 'button_setting_group'
+            ]
+        ]);
+        
+        /**
+         * Button Swatch - Tab Closing.
+         */
+        echo Component::get_tab_panel_closing();
+    ?>
+
+    <?php
+        /**
+         * Color Swatch - Tab Opening.
+         */
+        echo Component::get_tab_panel_opening([
+            'id'    => 'color-swatch',
+            'state' => 'default'
+        ]);
+        
+        /**
+         * Save button settings - color_setting_group.
+         */
+        echo Component::get_button([
+            'type'  => 'normal',
+            'class' => 'hvsfw-js-save-setting-btn hd-ds-block hd-mb-30 hd-ml-auto',
+            'label' => 'Save Changes',
+            'attr'  => [
+                'data-group-target' => 'color_setting_group'
+            ]
+        ]);
+
+        /**
+         * Default Style - Card Opening.
+         */
+        echo Component::get_card_opening([
+            'title' => 'Default Style',
+            'class' => 'hd-mb-30'
+        ]);
+        
+        echo Field::get_select_field([
+            'name'  => 'cr_shape',
+            'group' => 'color_setting_group',
+            'value' => $settings['cr_shape'],
+            'label' => 'Shape',
+            'description' => 'Select your preferred shape for swatch color.',
+            'options' => [
+                [
+                    'value' => 'square',
+                    'label' => 'Square'
+                ],
+                [
+                    'value' => 'circle',
+                    'label' => 'Circle'
+                ],
+                [
+                    'value' => 'custom',
+                    'label' => 'Custom'
+                ]
+            ]
+        ]);
+
+        echo Field::get_text_field([
+            'name'  => 'cr_size',
+            'group' => 'color_setting_group',
+            'value' => $settings['cr_size'],
+            'label' => 'Dimension',
+            'description' => 'Note this will be applicable in square and circle shape only.',
+            'placeholder' => 'Dimension'
+        ]);
+
+        echo Field::get_multiple_field([
+            'label'  => 'Size',
+            'description' => 'Note this will be applicable in custom shape only.',
+            'fields' => [
+                Field::get_text_field([
+                    'name'  => 'cr_wd',
+                    'group' => 'color_setting_group',
+                    'value' => $settings['cr_wd'],
+                    'label' => 'Width',
+                    'placeholder' => 'Width'
+                ]),
+                Field::get_text_field([
+                    'name'  => 'cr_ht',
+                    'group' => 'color_setting_group',
+                    'value' => $settings['cr_ht'],
+                    'label' => 'Height',
+                    'placeholder' => 'Height'
+                ]),
+            ]
+        ]);
+
+        echo Field::get_multiple_field([
+            'label'  => 'Border',
+            'fields' => [
+                Field::get_select_field([
+                    'name'  => 'cr_bs',
+                    'group' => 'color_setting_group',
+                    'value' => $settings['cr_bs'],
+                    'label' => 'Style',
+                    'options' => Helper::get_border_style_choices()
+                ]),
+                Field::get_text_field([
+                    'name'  => 'cr_bw',
+                    'group' => 'color_setting_group',
+                    'value' => $settings['cr_bw'],
+                    'label' => 'Width',
+                    'placeholder' => 'Width'
+                ]),
+                Field::get_color_picker_field([
+                    'name'  => 'cr_b_clr',
+                    'group' => 'color_setting_group',
+                    'value' => $settings['cr_b_clr'],
+                    'label' => 'Color'
+                ]),
+                Field::get_color_picker_field([
+                    'name'  => 'cr_b_hv_clr',
+                    'group' => 'color_setting_group',
+                    'value' => $settings['cr_b_hv_clr'],
+                    'label' => 'Hover & Active Color'
+                ]),
+                Field::get_text_field([
+                    'name'  => 'cr_br',
+                    'group' => 'color_setting_group',
+                    'value' => $settings['cr_br'],
+                    'label' => 'Radius',
+                    'placeholder' => 'Radius'
+                ]),
+            ]
+        ]);
+
+        echo Field::get_text_field([
+            'name'  => 'cr_gap',
+            'group' => 'color_setting_group',
+            'value' => $settings['cr_gap'],
+            'label' => 'Gap',
+            'placeholder' => 'Gap'
+        ]);
+
+        /**
+         * Default Style - Card Closing.
+         */
+        echo Component::get_card_closing();
+        
+        /**
+         * Save button settings - color_setting_group.
+         */
+        echo Component::get_button([
+            'type'  => 'normal',
+            'class' => 'hvsfw-js-save-setting-btn hd-ds-block hd-mb-30 hd-ml-auto',
+            'label' => 'Save Changes',
+            'attr'  => [
+                'data-group-target' => 'color_setting_group'
+            ]
+        ]);
+        
+        /**
+         * Color Swatch - Tab Closing.
+         */
+        echo Component::get_tab_panel_closing();
+    ?>
+
+    <?php
+        /**
+         * Image Swatch - Tab Opening.
+         */
+        echo Component::get_tab_panel_opening([
+            'id'    => 'image-swatch',
+            'state' => 'default'
+        ]);
+        
+        /**
+         * Save button settings - image_setting_group.
+         */
+        echo Component::get_button([
+            'type'  => 'normal',
+            'class' => 'hvsfw-js-save-setting-btn hd-ds-block hd-mb-30 hd-ml-auto',
+            'label' => 'Save Changes',
+            'attr'  => [
+                'data-group-target' => 'image_setting_group'
+            ]
+        ]);
+
+        /**
+         * Default Style - Card Opening.
+         */
+        echo Component::get_card_opening([
+            'title' => 'Default Style',
+            'class' => 'hd-mb-30'
+        ]);
+        
+        echo Field::get_select_field([
+            'name'  => 'im_image_size',
+            'group' => 'image_setting_group',
+            'value' => $settings['im_image_size'],
+            'label' => 'Image Size',
+            'description' => 'Select the image size for swatch image.',
+            'options' => Helper::get_image_sizes()
+        ]);
+
+        echo Field::get_select_field([
+            'name'  => 'im_shape',
+            'group' => 'image_setting_group',
+            'value' => $settings['im_shape'],
+            'label' => 'Shape',
+            'description' => 'Select your preferred shape for swatch image.',
+            'options' => [
+                [
+                    'value' => 'square',
+                    'label' => 'Square'
+                ],
+                [
+                    'value' => 'circle',
+                    'label' => 'Circle'
+                ],
+                [
+                    'value' => 'custom',
+                    'label' => 'Custom'
+                ]
+            ]
+        ]);
+
+        echo Field::get_text_field([
+            'name'  => 'im_size',
+            'group' => 'image_setting_group',
+            'value' => $settings['im_size'],
+            'label' => 'Dimension',
+            'description' => 'Note this will be applicable in square and circle image only.',
+            'placeholder' => 'Dimension'
+        ]);
+
+        echo Field::get_multiple_field([
+            'label'  => 'Size',
+            'description' => 'Note this will be applicable in custom image only.',
+            'fields' => [
+                Field::get_text_field([
+                    'name'  => 'im_wd',
+                    'group' => 'image_setting_group',
+                    'value' => $settings['im_wd'],
+                    'label' => 'Width',
+                    'placeholder' => 'Width'
+                ]),
+                Field::get_text_field([
+                    'name'  => 'im_ht',
+                    'group' => 'image_setting_group',
+                    'value' => $settings['im_ht'],
+                    'label' => 'Height',
+                    'placeholder' => 'Height'
+                ]),
+            ]
+        ]);
+
+        echo Field::get_multiple_field([
+            'label'  => 'Border',
+            'fields' => [
+                Field::get_select_field([
+                    'name'  => 'im_bs',
+                    'group' => 'image_setting_group',
+                    'value' => $settings['im_bs'],
+                    'label' => 'Style',
+                    'options' => Helper::get_border_style_choices()
+                ]),
+                Field::get_text_field([
+                    'name'  => 'im_bw',
+                    'group' => 'image_setting_group',
+                    'value' => $settings['im_bw'],
+                    'label' => 'Width',
+                    'placeholder' => 'Width'
+                ]),
+                Field::get_color_picker_field([
+                    'name'  => 'im_b_clr',
+                    'group' => 'image_setting_group',
+                    'value' => $settings['im_b_clr'],
+                    'label' => 'Color'
+                ]),
+                Field::get_color_picker_field([
+                    'name'  => 'im_b_hv_clr',
+                    'group' => 'image_setting_group',
+                    'value' => $settings['im_b_hv_clr'],
+                    'label' => 'Hover & Active Color'
+                ]),
+                Field::get_text_field([
+                    'name'  => 'im_br',
+                    'group' => 'image_setting_group',
+                    'value' => $settings['im_br'],
+                    'label' => 'Radius',
+                    'placeholder' => 'Radius'
+                ]),
+            ]
+        ]);
+
+        echo Field::get_text_field([
+            'name'  => 'im_gap',
+            'group' => 'image_setting_group',
+            'value' => $settings['im_gap'],
+            'label' => 'Gap',
+            'placeholder' => 'Gap'
+        ]);
+
+        /**
+         * Default Style - Card Closing.
+         */
+        echo Component::get_card_closing();
+        
+        /**
+         * Save button settings - color_setting_group.
+         */
+        echo Component::get_button([
+            'type'  => 'normal',
+            'class' => 'hvsfw-js-save-setting-btn hd-ds-block hd-mb-30 hd-ml-auto',
+            'label' => 'Save Changes',
+            'attr'  => [
+                'data-group-target' => 'color_setting_group'
+            ]
+        ]);
+        
+        /**
+         * Color Swatch - Tab Closing.
+         */
+        echo Component::get_tab_panel_closing();
+    ?>
+
+    <?php
+        /**
+         * Tooltip - Tab Opening.
+         */
+        echo Component::get_tab_panel_opening([
+            'id'    => 'tooltip',
+            'state' => 'default'
+        ]);
+        
+        /**
+         * Save button settings - tooltip_setting_group.
+         */
+        echo Component::get_button([
+            'type'  => 'normal',
+            'class' => 'hvsfw-js-save-setting-btn hd-ds-block hd-mb-30 hd-ml-auto',
+            'label' => 'Save Changes',
+            'attr'  => [
+                'data-group-target' => 'tooltip_setting_group'
+            ]
+        ]);
+
+        /**
+         * Default Style - Card Opening.
+         */
+        echo Component::get_card_opening([
+            'title' => 'Default Style',
+            'class' => 'hd-mb-30'
+        ]);
+
+        echo Field::get_multiple_field([
+            'label'  => 'Size',
+            'fields' => [
+                Field::get_text_field([
+                    'name'  => 'tl_mn_wd',
+                    'group' => 'tooltip_setting_group',
+                    'value' => $settings['tl_mn_wd'],
+                    'label' => 'Min Width',
+                    'placeholder' => 'Min Width'
+                ]),
+                Field::get_text_field([
+                    'name'  => 'tl_mx_wd',
+                    'group' => 'tooltip_setting_group',
+                    'value' => $settings['tl_mx_wd'],
+                    'label' => 'Max Width',
+                    'placeholder' => 'Max Width'
+                ]),
+                Field::get_text_field([
+                    'name'  => 'tl_mn_ht',
+                    'group' => 'tooltip_setting_group',
+                    'value' => $settings['tl_mn_ht'],
+                    'label' => 'Min Height',
+                    'placeholder' => 'Min Height'
+                ]),
+                Field::get_text_field([
+                    'name'  => 'tl_mx_ht',
+                    'group' => 'tooltip_setting_group',
+                    'value' => $settings['tl_mx_ht'],
+                    'label' => 'Max Height',
+                    'placeholder' => 'Max Height'
+                ])
+            ]
+        ]);
+
+        echo Field::get_multiple_field([
+            'label'  => 'Font',
+            'fields' => [
+                Field::get_text_field([
+                    'name'  => 'tl_fs',
+                    'group' => 'tooltip_setting_group',
+                    'value' => $settings['tl_fs'],
+                    'label' => 'Font Size',
+                    'placeholder' => 'Font Size'
+                ]),
+                Field::get_select_field([
+                    'name'  => 'tl_fw',
+                    'group' => 'tooltip_setting_group',
+                    'value' => $settings['tl_fw'],
+                    'label' => 'Font Weight',
+                    'options' => Helper::get_font_weight_choices()
+                ]),
+                Field::get_text_field([
+                    'name'  => 'tl_ln',
+                    'group' => 'tooltip_setting_group',
+                    'value' => $settings['tl_ln'],
+                    'label' => 'Line Height',
+                    'placeholder' => 'Line Height'
+                ]),
+            ]
+        ]);
+
+        echo Field::get_multiple_field([
+            'label'  => 'Color',
+            'fields' => [
+                Field::get_color_picker_field([
+                    'name'  => 'tl_txt_clr',
+                    'group' => 'tooltip_setting_group',
+                    'value' => $settings['tl_txt_clr'],
+                    'label' => 'Text Color',
+                ]),
+                Field::get_color_picker_field([
+                    'name'  => 'tl_bg_clr',
+                    'group' => 'tooltip_setting_group',
+                    'value' => $settings['tl_bg_clr'],
+                    'label' => 'Background Color',
+                ])
+            ]
+        ]);
+
+        echo Field::get_multiple_field([
+            'label'  => 'Image Size & Radius',
+            'description' => 'Set the image size, width, height and radius for tooltip image.',
+            'fields' => [
+                Field::get_select_field([
+                    'name'  => 'tl_image_src_wd',
+                    'group' => 'tooltip_setting_group',
+                    'value' => $settings['tl_image_src_wd'],
+                    'label' => 'Image Size',
+                    'options' => Helper::get_image_sizes()
+                ]),
+                Field::get_text_field([
+                    'name'  => 'tl_image_mx_wd',
+                    'group' => 'tooltip_setting_group',
+                    'value' => $settings['tl_image_mx_wd'],
+                    'label' => 'Max Width',
+                    'placeholder' => 'Max Width'
+                ]),
+                Field::get_text_field([
+                    'name'  => 'tl_image_mx_ht',
+                    'group' => 'tooltip_setting_group',
+                    'value' => $settings['tl_image_mx_ht'],
+                    'label' => 'Max Height',
+                    'placeholder' => 'Max Height'
+                ]),
+                Field::get_text_field([
+                    'name'  => 'tl_image_br',
+                    'group' => 'tooltip_setting_group',
+                    'value' => $settings['tl_image_br'],
+                    'label' => 'Border Radius',
+                    'placeholder' => 'Border Radius'
+                ])
+            ]
+        ]);
+
+        echo Field::get_multiple_field([
+            'label'  => 'Padding',
+            'fields' => [
+                Field::get_text_field([
+                    'name'  => 'tl_pt',
+                    'group' => 'tooltip_setting_group',
+                    'value' => $settings['tl_pt'],
+                    'label' => 'Top',
+                    'placeholder' => 'Top'
+                ]),
+                Field::get_text_field([
+                    'name'  => 'tl_pb',
+                    'group' => 'tooltip_setting_group',
+                    'value' => $settings['tl_pb'],
+                    'label' => 'Bottom',
+                    'placeholder' => 'Bottom'
+                ]),
+                Field::get_text_field([
+                    'name'  => 'tl_pl',
+                    'group' => 'tooltip_setting_group',
+                    'value' => $settings['tl_pl'],
+                    'label' => 'Left',
+                    'placeholder' => 'Left'
+                ]),
+                Field::get_text_field([
+                    'name'  => 'tl_pr',
+                    'group' => 'tooltip_setting_group',
+                    'value' => $settings['tl_pr'],
+                    'label' => 'Right',
+                    'placeholder' => 'Right'
+                ]),
+            ]
+        ]);
+
+        echo Field::get_multiple_field([
+            'label'  => 'Border',
+            'fields' => [
+                Field::get_select_field([
+                    'name'  => 'tl_bs',
+                    'group' => 'tooltip_setting_group',
+                    'value' => $settings['tl_bs'],
+                    'label' => 'Style',
+                    'options' => Helper::get_border_style_choices()
+                ]),
+                Field::get_text_field([
+                    'name'  => 'tl_bw',
+                    'group' => 'tooltip_setting_group',
+                    'value' => $settings['tl_bw'],
+                    'label' => 'Width',
+                    'placeholder' => 'Width'
+                ]),
+                Field::get_color_picker_field([
+                    'name'  => 'tl_b_clr',
+                    'group' => 'tooltip_setting_group',
+                    'value' => $settings['tl_b_clr'],
+                    'label' => 'Color'
+                ]),
+                Field::get_text_field([
+                    'name'  => 'tl_br',
+                    'group' => 'tooltip_setting_group',
+                    'value' => $settings['tl_br'],
+                    'label' => 'Radius',
+                    'placeholder' => 'Radius'
+                ]),
+            ]
+        ]);
+
+        /**
+         * Default Style - Card Closing.
+         */
+        echo Component::get_card_closing();
+        
+        /**
+         * Save button settings - tooltip_setting_group.
+         */
+        echo Component::get_button([
+            'type'  => 'normal',
+            'class' => 'hvsfw-js-save-setting-btn hd-ds-block hd-mb-30 hd-ml-auto',
+            'label' => 'Save Changes',
+            'attr'  => [
+                'data-group-target' => 'tooltip_setting_group'
+            ]
+        ]);
+        
+        /**
+         * Tooltip - Tab Closing.
+         */
+        echo Component::get_tab_panel_closing();
+    ?>
     
     <?php
-
         /**
          * Advanced - Tab Opening.
          */

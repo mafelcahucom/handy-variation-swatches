@@ -47,6 +47,59 @@ hvsfw.fn = {
 };
 
 /**
+ * Holds the swatch events.
+ *
+ * @since 1.0.0
+ * 
+ * @type {Object}
+ */
+hvsfw.swatch = {
+
+	/**
+	 * Initialize.
+	 *
+	 * @since 1.0.0
+	 */
+	init() {
+
+		this.onMouseEnterTerm();
+		this.onMouseLeaveTerm();
+	},
+
+	/**
+	 * On mouse enter swatch term.
+	 *
+	 * @since 1.0.0
+	 */
+	onMouseEnterTerm() {
+		jQuery( '.hvsfw-term[data-tooltip="yes"]' ).mouseenter( function( e ) {
+			const target = e.target;
+			const tooltipElem = target.querySelector( '.hvsfw-tooltip' );
+			console.log( tooltipElem );
+			if ( tooltipElem ) {
+				tooltipElem.setAttribute( 'data-visibility', 'visible' );
+			}
+		});
+	},
+
+	/**
+	 * On mouse leave swatch term.
+	 *
+	 * @since 1.0.0
+	 */
+	onMouseLeaveTerm() {
+		jQuery( '.hvsfw-term[data-tooltip="yes]' ).mouseleave( function( e ) {
+			const target = e.target;
+			const tooltipElem = target.querySelector( '.hvsfw-tooltip' );
+			console.log( tooltipElem );
+			if ( tooltipElem ) {
+				tooltipElem.setAttribute( 'data-visibility', 'hidden' );
+			}
+		});
+	}
+};
+
+/**
  * Is Dom Ready.
  *
  * @since 1.0.0
@@ -72,5 +125,5 @@ hvsfw.domReady = {
 };
 
 hvsfw.domReady.execute( function() {
-
+	hvsfw.swatch.init();
 } );

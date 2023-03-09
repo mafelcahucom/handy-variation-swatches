@@ -1,5 +1,5 @@
 <?php
-namespace HVSFW\Admin\Variation\MetaBox;
+namespace HVSFW\Admin\Variation;
 
 use HVSFW\Inc\Traits\Singleton;
 use HVSFW\Inc\Utility;
@@ -9,13 +9,13 @@ use HVSFW\Admin\Inc\SwatchHelper;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Product Swatch View.
+ * Product Swatch Meta View.
  *
  * @since 	1.0.0
  * @version 1.0.0
  * @author Mafel John Cahucom
  */
-final class ProductSwatchView {
+final class ProductMetaView {
 
 	/**
 	 * Inherit Singleton.
@@ -93,22 +93,6 @@ final class ProductSwatchView {
         }
 
         return $name;
-    }
-
-    /**
-     * Return a converted slug string.
-     *
-     * @since 1.0.0
-     * 
-     * @param  string  $string  The string to be converted to slug.
-     * @return string
-     */
-    private static function get_converted_slug( $string ) {
-        if ( empty( $string ) ) {
-            return;
-        }
-
-        return strtolower( trim( preg_replace( '/[^A-Za-z0-9-]+/', '-', $string ) ) );
     }
 
     /**
@@ -313,26 +297,28 @@ final class ProductSwatchView {
      * 
      * @param  array  $args  Containing the arguments for rendering term components.
      * $args = [
-     *     'type'      => (string)  The attribute type.
-     *     'attr_name' => (string)  The attribute name or slug.
-     *     'is_custom' => (boolean) Is custom attribute.
-     *     'attribute' => (object)  The object attribute.
+     *     'type'      => (string) The attribute type.
+     *     'attr_name' => (string) The attribute name or slug.
+     *     'is_custom' => (string) Is custom attribute.
+     *     'attribute' => (object) The object attribute.
      * ]
      */
     private static function term_component( $args = [] ) {
         $parameters = [ 'type', 'attr_name', 'is_custom', 'attribute' ];
-        if ( Helper::has_array_unset( $args, $parameters ) ) {
+        if ( Utility::has_array_unset( $args, $parameters ) ) {
             return;
         }
 
         $terms = [];
         foreach ( $args['attribute']->get_options() as $key => $option ) {
             if ( $args['is_custom'] === 'yes' ) {
+                $terms[ $key ]['id']   = 0;
                 $terms[ $key ]['name'] = $option;
-                $terms[ $key ]['slug'] = self::get_converted_slug( $option );
+                $terms[ $key ]['slug'] = Utility::get_converted_slug( $option );
             } else {
                 $term = get_term( $option );
                 if ( $term ) {
+                    $terms[ $key ]['id']   = $option;
                     $terms[ $key ]['name'] = $term->name;
                     $terms[ $key ]['slug'] = $term->slug;
                 }
@@ -380,6 +366,7 @@ final class ProductSwatchView {
                                     </option>
                                 <?php endforeach; ?>
                             </select>
+                            <input type="hidden" name="<?php echo $root_name . '[id]'; ?>" value="<?php echo esc_attr( $term['id'] ); ?>">
                         </div>
                         <button type="button" class="hvsfw-accordion__toggle-btn hvsfw-flex-cc" data-state="close" aria-label="open" title="open">
                             <span class="hvsfw-accordion__chevron hvsfw-dashicon"></span>
@@ -414,14 +401,15 @@ final class ProductSwatchView {
                             self::tooltip_component([
                                 'attr_name' => $args['attr_name'],
                                 'term_slug' => $term['slug'],
-                                'root_name' => $root_name . '[tooltip]'
+                                'root_name' => $root_name . '[tooltip]',
+                                'is_custom' => $args['is_custom']
                             ]);
                         ?>
                     </div>
                 </div>
             </div>
-        <?php endforeach; ?>
-        <?php
+        <?php 
+            endforeach;
     }
 
     /**
@@ -440,7 +428,7 @@ final class ProductSwatchView {
      */
     private static function value_component( $args = [] ) {
         $parameters = [ 'type', 'attr_name', 'term_name', 'term_name', 'root_name' ];
-        if ( Helper::has_array_unset( $args, $parameters ) ) {
+        if ( Utility::has_array_unset( $args, $parameters ) ) {
             return;
         }
 
@@ -586,14 +574,15 @@ final class ProductSwatchView {
      *     'attr_name' => (string) The attribute name or slug.
      *     'term_slug' => (string) The term slug.
      *     'root_name' => (string) The root name, will be used in field attribute name.
+     *     'is_custom' => (string) Is custom attribute.
      * ]
      */
     private static function tooltip_component( $args = [] ) {
         $parameters = [ 'attr_name', 'term_slug', 'root_name' ];
-        if ( Helper::has_array_unset( $args, $parameters ) ) {
+        if ( Utility::has_array_unset( $args, $parameters ) ) {
             return;
         }
-        
+
         // Set stored swatches.
         $stored_swatches = self::$swatches;
     
@@ -631,6 +620,35 @@ final class ProductSwatchView {
             }
         }
 
+        // Set tooltip type choices.
+        $tooltip_choices = [
+            [
+                'value' => 'none',
+                'label' => 'None'
+            ],
+            [
+                'value' => 'default',
+                'label' => 'Default'
+            ],
+            [
+                'value' => 'text',
+                'label' => 'Text'
+            ],
+            [
+                'value' => 'html',
+                'label' => 'HTML',
+            ],
+            [
+                'value' => 'image',
+                'label' => 'Image'
+            ]
+        ];
+
+        // Remove default value in tooltip choices.
+        if ( $args['is_custom'] === 'yes' ) {
+            unset( $tooltip_choices[1] );
+        }
+
         // Set group visibility.
         $show_tooltip_text  = ( $tooltip_type === 'text' ? 'yes' : 'no' );
         $show_tooltip_html  = ( $tooltip_type === 'html' ? 'yes' : 'no' );
@@ -653,10 +671,11 @@ final class ProductSwatchView {
                             <div class="hvsfw-field__wrap">
                                 <div class="hvsfw-field__fluid">
                                     <select name="<?php echo $args['root_name'] . '[type]'; ?>" id="<?php echo $args['root_name'] . '_type'; ?>" class="hvsfw-tooltip-field-type" data-prefix="<?php echo $args['root_name']; ?>">
-                                        <option value="none" <?php selected( $tooltip_type, 'none' ); ?>>None</option>
-                                        <option value="text" <?php selected( $tooltip_type, 'text' ); ?>>Text</option>
-                                        <option value="html" <?php selected( $tooltip_type, 'html' ); ?>>HTML</option>
-                                        <option value="image" <?php selected( $tooltip_type, 'image' ); ?>>Image</option>
+                                        <?php foreach ( $tooltip_choices as $choice ): ?>
+                                            <option value="<?php echo $choice['value']; ?>" <?php selected( $tooltip_type, $choice['value'] ) ?>>
+                                                <?php echo $choice['label']; ?>
+                                            </option>
+                                        <?php endforeach; ?>
                                     </select>
                                 </div>
                                 <?php echo wc_help_tip( 'Select your preferred tooltip content type.' ); ?>
@@ -732,7 +751,7 @@ final class ProductSwatchView {
      */
     private static function style_component( $args = [] ) {
         $parameters = [ 'accordion', 'title', 'type', 'setting', 'root_name' ];
-        if ( Helper::has_array_unset( $args, $parameters ) ) {
+        if ( Utility::has_array_unset( $args, $parameters ) ) {
             return;
         }
 
@@ -984,6 +1003,19 @@ final class ProductSwatchView {
                                     <input type="text" name="<?php echo $args['root_name'] . '[border_radius]'; ?>" id="<?php echo $args['root_name'] . '_border_radius'; ?>" placeholder="0px" value="<?php echo esc_attr( $settings['border_radius'] ); ?>">
                                 </div>
                                 <?php echo wc_help_tip( 'The border radius of this variation swatch attribute.' ); ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hvsfw-field" data-group-field="<?php echo $args['root_name'] . '_gap'; ?>" data-visible="<?php echo $field_visibility['gap']; ?>">
+                        <div class="hvsfw-field__col--left">
+                            <label for="<?php echo $args['root_name'] . '_gap'; ?>" class="hvsfw-field__label">Gap</label>
+                        </div>
+                        <div class="hvsfw-field__col--right">
+                            <div class="hvsfw-field__wrap">
+                                <div class="hvsfw-field__fluid">
+                                    <input type="text" name="<?php echo $args['root_name'] . '[gap]'; ?>" id="<?php echo $args['root_name'] . '_gap'; ?>" placeholder="0px" value="<?php echo esc_attr( $settings['gap'] ); ?>">
+                                </div>
+                                <?php echo wc_help_tip( 'The gap between each swatch term of this variation swatch attribute.' ); ?>
                             </div>
                         </div>
                     </div>

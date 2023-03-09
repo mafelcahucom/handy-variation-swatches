@@ -158,32 +158,17 @@ final class Style {
                 -webkit-box-sizing: border-box;
                 box-sizing: border-box;
             }
-            .hvsfw p,
-            .hvsfw figure {
-                margin: 0;
-            }
-            .hvsfw ul {
-                padding: 0;
-                margin: 0;
-                list-style: none;
-            }
-            .hvsfw a {
-                text-decoration: none;
-            }
             .hvsfw button {
                 cursor: pointer;
                 outline: none;
             }
-            .hvsfw button[data-state='loading'] {
-                cursor: loading;
-            }
-            .hvsfw button[data-state='disabled'] {
-                cursor: not-allowed;
-            }
             .hvsfw button > * {
                 pointer-events: none;
             }
-            .hvsfw svg {
+            .hvsfw-ds-none {
+                display: none;
+            }
+            .hvsfw-ds-block {
                 display: block;
             }
             .hvsfw-flex {
@@ -227,6 +212,99 @@ final class Style {
                 -webkit-transition: all 320ms ease-in-out 0s;
                 -o-transition: all 320ms ease-in-out 0s;
                 transition: all 320ms ease-in-out 0s;
+            }
+        ";
+
+        // Attribute.
+        $class .= '
+            .hvsfw-attribute {
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -ms-flex-wrap: wrap;
+                flex-wrap: wrap;
+            }
+        ';
+
+        // Term.
+        $class .= '
+            .hvsfw-term {
+                position: relative;
+            }
+        ';
+
+        // Button.
+        $class .= "
+            .hvsfw-term[data-type='button'][data-default='yes'] {
+                margin-right: {$settings['bn_gap']};
+            }
+            .hvsfw-button[data-default='yes'] {
+                width: {$settings['bn_wd']};
+                height: {$settings['bn_ht']};
+                font-size: {$settings['bn_fs']};
+                font-weight: {$settings['bn_fw']};
+                color: {$settings['bn_txt_clr']};
+                background-color: {$settings['bn_bg_clr']};
+                padding: {$this->get_padding( $settings, 'bn' )};
+                border: {$this->get_border( $settings, 'bn' )};
+            }
+            .hvsfw-button[data-default='yes']:hover,
+            .hvsfw-button[data-default='yes']:focus,
+            .hvsfw-button[data-default='yes'][data-active='yes'] {
+                color: {$settings['bn_txt_hv_clr']};
+                background-color: {$settings['bn_bg_hv_clr']};
+                border-color: {$settings['bn_b_hv_clr']};
+            }
+            .hvsfw-button[data-default='yes'][data-shape='square'] {
+                border-radius: 0px;
+            }
+            .hvsfw-button[data-default='yes'][data-shape='circle'] {
+                border-radius: 100%;
+            }
+            .hvsfw-button[data-default='yes'][data-shape='custom'] {
+                border-radius: {$settings['bn_br']};
+            }
+        ";
+
+        // Tooltip.
+        $class .= "
+            .hvsfw-tooltip {
+                display: none;
+                position: absolute;
+                bottom: 100%;
+                left: 50%;
+                margin-bottom: 10px;
+                -webkit-transform: translateX(-50%);
+                -ms-transform: translateX(-50%);
+                transform: translateX(-50%);
+                z-index: 999999;
+            }
+            .hvsfw-tooltip[data-visibility='visible'] {
+                display: block;
+            }
+            .hvsfw-tooltip__box {
+                position: relative;
+                font-size: 14px;
+                font-weight: 500;
+                line-height: 21px;
+                color: rgba(255,255,255,1);
+                background-color: rgba(50,50,50,0.9);
+                padding: 5px;
+            }
+            .hvsfw-tooltip__box::after {
+                content: '';
+                display: block;
+                position: absolute;
+                bottom: -7px;
+                left: 50%;
+                width: 0;
+                height: 0;
+                border-left: 5px solid transparent;
+                border-right: 5px solid transparent;
+                border-top: 7px solid rgba(50,50,50,0.9);
+                -webkit-transform: translateX(-50%);
+                -ms-transform: translateX(-50%);
+                transform: translateX(-50%);
             }
         ";
         

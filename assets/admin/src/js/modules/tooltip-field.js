@@ -126,7 +126,7 @@ const tooltipField = {
 			const target = e.target;
 			const type = target.value;
 			const prefix = target.getAttribute( 'data-prefix' );
-			if ( ! prefix || ! [ 'none', 'text', 'image', 'html' ].includes( type ) ) {
+			if ( ! prefix || ! [ 'none', 'default', 'text', 'image', 'html' ].includes( type ) ) {
 				return;
 			}
 

@@ -346,31 +346,6 @@ final class Helper {
     }
 
     /**
-     * Check if the an array has unset keys.
-     *
-     * @since 1.0.0
-     * 
-     * @param  array  $array  Containg the array to be check.
-     * @param  array  $keys   Containg the array keys use as reference.
-     * @return boolean
-     */
-    public static function has_array_unset( $array, $keys ) {
-        if ( empty( $array ) || empty( $keys ) ) {
-            return;
-        }
-  
-        $has_unset = false;
-        foreach ( $keys as $key ) {
-            if ( ! isset( $array[ $key ] ) ) {
-                $has_unset = true;
-                break;
-            }
-        }
-
-        return $has_unset;
-    }
-
-    /**
      * Validate size value.
      *
      * @since 1.0.0

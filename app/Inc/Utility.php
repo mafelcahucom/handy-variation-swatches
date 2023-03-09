@@ -281,7 +281,7 @@ final class Utility {
     }
 
     /**
-     * Return the attribute type by attribute id.
+     * Return the product attribute type by attribute id.
      *
      * @since 1.0.0
      * 
@@ -308,6 +308,47 @@ final class Utility {
         ));
 
         return ( $result !== null ? $result : '' );
+    }
+
+    /**
+     * Return a converted slug string.
+     *
+     * @since 1.0.0
+     * 
+     * @param  string  $string  The string to be converted to slug.
+     * @return string
+     */
+    public static function get_converted_slug( $string ) {
+        if ( empty( $string ) ) {
+            return;
+        }
+
+        return strtolower( trim( preg_replace( '/[^A-Za-z0-9-]+/', '-', $string ) ) );
+    }
+
+    /**
+     * Check if the an array has unset keys.
+     *
+     * @since 1.0.0
+     * 
+     * @param  array  $array  Containg the array to be check.
+     * @param  array  $keys   Containg the array keys use as reference.
+     * @return boolean
+     */
+    public static function has_array_unset( $array, $keys ) {
+        if ( empty( $array ) || empty( $keys ) ) {
+            return;
+        }
+  
+        $has_unset = false;
+        foreach ( $keys as $key ) {
+            if ( ! isset( $array[ $key ] ) ) {
+                $has_unset = true;
+                break;
+            }
+        }
+
+        return $has_unset;
     }
 
     /**

@@ -157,3 +157,8 @@ defined( 'ABSPATH' ) || exit;
     <input type="text" name="hvsfw_border_radius" id="hvsfw_border_radius" placeholder="0px" value="0px">
     <p class="description">The border radius of this variation swatch attribute.</p>
 </div>
+<div class="form-field hvsfw-field hvsfw-field__add" data-group-field="hvsfw_gap" data-visible="no">
+    <label for="hvsfw_size">Gap</label>
+    <input type="text" name="hvsfw_gap" id="hvsfw_gap" placeholder="10px" value="10px">
+    <p class="description">The gap between each swatch term of this variation swatch attribute.</p>
+</div>

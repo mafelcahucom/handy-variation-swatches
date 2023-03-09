@@ -125,6 +125,10 @@ final class SwatchHelper {
                 'type'    => 'size',
                 'default' => '0px',
             ],
+            'gap'                     => [
+                'type'    => 'size',
+                'default' => '10px'
+            ]
         ];
     }
 
@@ -151,7 +155,8 @@ final class SwatchHelper {
             'background_color' => 'no',
             'padding'          => 'no',
             'border'           => 'no',
-            'border_radius'    => 'no'
+            'border_radius'    => 'no',
+            'gap'              => 'no'
         ];
 
         // Style.
@@ -161,9 +166,10 @@ final class SwatchHelper {
             if ( $settings['style'] === 'custom' ) {
                 $is_color_image = in_array( $settings['type'], [ 'color', 'image' ] );
 
-                // Shape, Border.
+                // Shape, Border, Gap.
                 $visible['shape']  = 'yes';
                 $visible['border'] = 'yes';
+                $visible['gap']    = 'yes';
 
                 // Size.
                 if ( $is_color_image && $settings['shape'] !== 'custom' ) {

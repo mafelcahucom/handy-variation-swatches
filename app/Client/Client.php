@@ -6,6 +6,9 @@ use HVSFW\Inc\Plugins;
 use HVSFW\Client\Inc\Helper;
 use HVSFW\Client\Actions;
 use HVSFW\Client\Style;
+use HVSFW\Client\Swatch;
+
+use HVSFW\Client\Reset; // DELETE IN PROD
 
 defined( 'ABSPATH' ) || exit;
 
@@ -67,6 +70,8 @@ final class Client {
         return [
             Actions::class,
             Style::class,
+            Swatch::class,
+            Reset::class
         ];
     }
 

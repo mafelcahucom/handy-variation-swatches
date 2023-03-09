@@ -8,7 +8,7 @@ use HVSFW\Admin\Tab\Setting\SettingTab;
 use HVSFW\Admin\Tab\ImporterExporter\ImporterExporterTab;
 use HVSFW\Admin\Variation\AttributeMeta;
 use HVSFW\Admin\Variation\TermMeta;
-use HVSFW\Admin\Variation\MetaBox\ProductSwatch;
+use HVSFW\Admin\Variation\ProductMeta;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -145,7 +145,7 @@ final class Admin {
             ImporterExporterTab::class,
             AttributeMeta::class,
             TermMeta::class,
-            ProductSwatch::class
+            ProductMeta::class
         ];
     }
 

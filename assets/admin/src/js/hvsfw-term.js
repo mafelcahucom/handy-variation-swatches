@@ -435,9 +435,9 @@ hvsfw.ajax = {
 				hvsfw.swatch.renderImagePreviewer();
 				hvsfw.swatch.setImageToDefault();
 
-				hvsfw.tooltip.setToDefault( 'reset' );
-
 				hvsfw.wpListTable.reposition();
+
+				tooltipFieldModule.setToDefault( 'reset', 'hvsfw-tooltip-add' );
 			}
 		} );
 	},
