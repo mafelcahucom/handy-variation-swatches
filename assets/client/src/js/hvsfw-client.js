@@ -44,6 +44,25 @@ hvsfw.fn = {
 			} );
 		} );
 	},
+
+	/**
+	 * Set or implement the inline style on a certain element based on
+	 * the given styles.
+	 *
+	 * @since 1.0.0
+	 * 
+	 * @param  {Object} element The target element.
+	 * @param  {array}  styles  Containing the style attribute and value.
+	 */
+	setInlineStyle( element, styles ) {
+		if ( ! element || ! styles ) {
+			return;
+		}
+
+		Object.entries( styles ).forEach( function( style ) {
+			element.style[ style[0] ] = style[1];
+		});
+	}
 };
 
 /**
@@ -61,42 +80,39 @@ hvsfw.swatch = {
 	 * @since 1.0.0
 	 */
 	init() {
-
-		this.onMouseEnterTerm();
-		this.onMouseLeaveTerm();
+		this.onHoverTerm();
 	},
 
 	/**
-	 * On mouse enter swatch term.
+	 * On mouse enter and leave swatch term.
 	 *
 	 * @since 1.0.0
 	 */
-	onMouseEnterTerm() {
-		jQuery( '.hvsfw-term[data-tooltip="yes"]' ).mouseenter( function( e ) {
-			const target = e.target;
-			const tooltipElem = target.querySelector( '.hvsfw-tooltip' );
-			console.log( tooltipElem );
-			if ( tooltipElem ) {
-				tooltipElem.setAttribute( 'data-visibility', 'visible' );
+	onHoverTerm() {
+		jQuery( '.hvsfw-term' ).on( 'mouseenter mouseleave', function( e ) {
+			const target = e.target;;
+			
+			// Override style.
+			const styleEncoded = target.getAttribute( 'data-style' );
+			if ( styleEncoded ) {
+				const styleParsed = JSON.parse( styleEncoded );
+				const styles = ( e.type === 'mouseenter' ? styleParsed.enter : styleParsed.leave );
+				if ( styles ) {
+					hvsfw.fn.setInlineStyle( target, styles );
+				}
+			}
+
+			// Showing and hiding tooltip.
+			const isTooltipEnabled = target.getAttribute( 'data-tooltip' );
+			if ( isTooltipEnabled === 'yes' ) {
+				const tooltipElem = target.querySelector( '.hvsfw-tooltip' );
+				if ( tooltipElem ) {
+					const tooltipVisibility = ( e.type === 'mouseenter' ? 'show' : 'hide' );
+					tooltipElem.setAttribute( 'data-visibility', tooltipVisibility );
+				} 
 			}
 		});
 	},
-
-	/**
-	 * On mouse leave swatch term.
-	 *
-	 * @since 1.0.0
-	 */
-	onMouseLeaveTerm() {
-		jQuery( '.hvsfw-term[data-tooltip="yes]' ).mouseleave( function( e ) {
-			const target = e.target;
-			const tooltipElem = target.querySelector( '.hvsfw-tooltip' );
-			console.log( tooltipElem );
-			if ( tooltipElem ) {
-				tooltipElem.setAttribute( 'data-visibility', 'hidden' );
-			}
-		});
-	}
 };
 
 /**

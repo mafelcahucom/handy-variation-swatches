@@ -229,37 +229,71 @@ final class Swatch {
         $term      = $args['term'];
         $option    = $args['option'];
         $attribute = $args['attribute'];
-        
+
+        // Set value.
         if ( ! isset( $term['value'] ) ) {
             $term['value'] = [
                 'button_label' => $option['name']
             ];
         }
 
+        // Set tooltip.
         $tooltip = $this->get_tooltip([
             'id'      => $term['id'],
             'label'   => $term['value']['button_label'],
             'tooltip' => $term['tooltip']
         ]);
 
+        // Set style and css
+        $css   = "";
+        $style = $option['style'];
+        if ( $option['is_default'] === 'no' ) {
+            $css .= "width: {$style['width']};";
+            $css .= "height: {$style['height']};";
+            $css .= "font-size: {$style['font_size']};";
+            $css .= "font-weight: {$style['font_weight']};";
+            $css .= "line-height: {$style['font_size']};";
+            $css .= "color: {$style['font_color']};";
+            $css .= "background-color: {$style['background_color']};";
+            $css .= "padding-top: {$style['padding_top']};";
+            $css .= "padding-bottom: {$style['padding_bottom']};";
+            $css .= "padding-left: {$style['padding_left']};";
+            $css .= "padding-right: {$style['padding_right']};";
+            $css .= "border-style: {$style['border_style']};";
+            $css .= "border-width: {$style['border_width']};";
+            $css .= "border-color: {$style['border_color']};";
+            $css .= "margin-right: {$style['gap']};";
+
+            if ( $style['shape'] === 'custom' ) {
+                $css .= "border-radius: {$style['border_radius']};";
+            }
+        }
+
+        // Set data style.
+        $data_style = htmlspecialchars( json_encode( [
+            'leave' => [
+                'color'            => $style['font_color'],
+                'background-color' => $style['background_color'],
+                'border-color'     => $style['border_color']
+            ],
+            'enter' => [
+                'color'            => $style['font_hover_color'],
+                'background-color' => $style['background_hover_color'],
+                'border-color'     => $style['border_hover_color']
+            ],
+        ]));
+
         ob_start();
         ?>
-        <div class="hvsfw-term" 
+        <div class="hvsfw-term"
              data-type="button"
-             data-event="no"
              data-default="<?php echo esc_attr( $option['is_default'] ); ?>"
-             data-tooltip="<?php echo esc_attr( $tooltip['is_enabled'] ); ?>">
-            <button type="button" class="hvsfw-button" 
-                    data-attribute="<?php echo esc_attr( $attribute['slug'] ); ?>"
-                    data-default="<?php echo esc_attr( $option['is_default'] ); ?>"
-                    data-shape="<?php echo esc_attr( $option['style']['shape'] ); ?>"
-                    data-value="<?php echo esc_attr( $option['value'] ); ?>"
-                    data-event="no"
-                    data-active="no">
-                <?php echo esc_html( $term['value']['button_label'] ); ?>
-            </button>
-            <?php
-                // Render tooltip.
+             data-tooltip="<?php echo esc_attr( $tooltip['is_enabled'] ); ?>"
+             data-style="<?php echo esc_attr( $data_style ); ?>"
+             style="<?php echo $css; ?>">
+            <?php 
+                echo esc_html( $term['value']['button_label'] );
+
                 if ( $tooltip['is_enabled'] === 'yes' && ! empty( $tooltip['html'] ) ) {
                     echo $tooltip['html'];
                 }
@@ -279,11 +313,11 @@ final class Swatch {
     }
 
     /**
-     * Render the tooltip.
+     * Return the tooltip component.
      *
      * @since 1.0.0
      * 
-     * @param  array  $args  Containing the necessary arguments for tooltip requirements.
+     * @param  array  $args  Containing the necessary arguments for tooltip component.
      * $args = [
      *     'id'      => (Integer) The term id.
      *     'label'   => (String)  The term label or name.
@@ -297,51 +331,40 @@ final class Swatch {
             'html'       => ''
         ];
 
-        Helper::log( 'LABEL : ' . $args['label'] );
-
         $parameters = [ 'id', 'label', 'tooltip' ];
         if ( Utility::has_array_unset( $args, $parameters ) ) {
             return $output;
         }
 
         if ( $args['tooltip']['type'] === 'none' ) {
-            Helper::log( 'Tooltip Test 1' );
             return $output;
         }
 
         $type    = 'text';
         $content = '';
-
         if ( in_array( $args['tooltip']['type'], [ 'text', 'html', 'image' ] ) ) {
             $type    = $args['tooltip']['type'];
             $content = $args['tooltip']['content'];
-
-            Helper::log( 'Tooltip Test 2' );
         }
 
         if ( $args['tooltip']['type'] === 'default' && $args['id'] != 0 ) {
             $default_tooltip = Utility::get_swatch_tooltip( $args['id'] );
             if ( $default_tooltip['type'] === 'none' ) {
-                Helper::log( 'Tooltip Test 3' );
                 return $output;
             }
 
             $type    = $default_tooltip['type'];
             $content = $default_tooltip['content'];
-            Helper::log( 'Tooltip Test 4' );
         }
 
         if ( $type === 'image' ) {
             if ( ! empty( $content ) ) {
-                Helper::log( 'Tooltip Test 5' );
                 $image = wp_get_attachment_image_src( $content, $this->settings['tl_image_src_wd'] );
                 if ( $image ) {
-                    Helper::log( 'Tooltip Test 6' );
                     $image_alt   = get_post_meta( $content, '_wp_attachment_image_alt', true );
                     $image_title = get_the_title( $content );
                 } else {
                     $content = '';
-                    Helper::log( 'Tooltip Test 7' );
                 }
             }
         }
@@ -349,25 +372,20 @@ final class Swatch {
         if ( $content === '' || ( $type === 'image' && empty( $content ) ) ) {
             $type    = 'text';
             $content = $args['label'];
-            Helper::log( 'Tooltip Test 8' );
         }
-
-        Helper::log( $type );
 
         ob_start();
         ?>
-        <div class="hvsfw-tooltip" type="<?php echo esc_attr( $type ); ?>" data-visibility="hidden">
+        <div class="hvsfw-tooltip" data-type="<?php echo esc_attr( $type ); ?>" data-visibility="hidden">
             <div class="hvsfw-tooltip__box">
                 <?php if ( $type === 'text' ): ?>
                     <?php echo esc_html( $content ); ?>
-                <?php endif; ?>
-
-                <?php if ( $type === 'html' ): ?>
+                <?php elseif ( $type === 'html' ): ?>
                     <?php echo $content; ?>
-                <?php endif; ?>
-
-                <?php if ( $type === 'image' ): ?>
-                    <img src="<?php echo esc_url( $image[0] ); ?>" alt="<?php echo esc_attr( $image_alt ); ?>" title="<?php echo esc_attr( $image_title ); ?>">
+                <?php elseif ( $type === 'image' ): ?>
+                    <div class="hvsfw-tooltip__image">
+                        <img src="<?php echo esc_url( $image[0] ); ?>" alt="<?php echo esc_attr( $image_alt ); ?>" title="<?php echo esc_attr( $image_title ); ?>">
+                    </div>
                 <?php endif; ?>
             </div>
         </div>

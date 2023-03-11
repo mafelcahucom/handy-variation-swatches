@@ -236,6 +236,8 @@ final class Helper {
     }
 
 
+
+
     /**
      * DELETE IN PRODUCTION.
      * @param  [type] $log [description]

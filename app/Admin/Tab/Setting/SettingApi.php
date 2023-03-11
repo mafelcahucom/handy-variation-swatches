@@ -249,16 +249,16 @@ final class SettingApi {
             ],
             'tl_fs'                         => [
                 'type'     => 'size',
-                'default'  => '14px'
+                'default'  => '12px'
             ],
             'tl_fw'                         => [
                 'type'     => 'select',
-                'default'  => '500',
+                'default'  => '400',
                 'choices'  => Helper::get_font_weight_choices( 'value' )
             ],
             'tl_ln'                         => [
                 'type'     => 'size',
-                'default'  => '21px'
+                'default'  => '18px'
             ],
             'tl_txt_clr'                    => [
                 'type'     => 'color',
@@ -266,40 +266,27 @@ final class SettingApi {
             ],
             'tl_bg_clr'                     => [
                 'type'     => 'color',
-                'default'  => 'rgba(0,0,0,0.8)'
+                'default'  => 'rgba(0,0,0,1)'
             ],
             'tl_pt'                         => [
                 'type'     => 'size',
-                'default'  => '5px'
+                'default'  => '8px'
             ],
             'tl_pb'                         => [
                 'type'     => 'size',
-                'default'  => '5px'
+                'default'  => '8px'
             ],
             'tl_pl'                         => [
                 'type'     => 'size',
-                'default'  => '5px'
+                'default'  => '8px'
             ],
             'tl_pr'                         => [
                 'type'     => 'size',
-                'default'  => '5px'
-            ],
-            'tl_bs'                         => [
-                'type'     => 'select',
-                'default'  => 'none',
-                'choices'  => Helper::get_border_style_choices( 'value' )
-            ],
-            'tl_bw'                         => [
-                'type'     => 'size',
-                'default'  => '0px'
-            ],
-            'tl_b_clr'                      => [
-                'type'     => 'color',
-                'default'  => 'rgba(0,0,0,0)'
+                'default'  => '8px'
             ],
             'tl_br'                         => [
                 'type'     => 'size',
-                'default'  => '0px'
+                'default'  => '4px'
             ],
             'tl_image_src_wd'               => [
                 'type'     => 'select',
@@ -316,7 +303,7 @@ final class SettingApi {
             ],
             'tl_image_br'                   => [
                 'type'     => 'size',
-                'default'  => '0px'
+                'default'  => '4px'
             ],
 
 

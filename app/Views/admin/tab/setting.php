@@ -879,37 +879,12 @@ echo Component::get_header( $args['page_title'] ); ?>
             ]
         ]);
 
-        echo Field::get_multiple_field([
-            'label'  => 'Border',
-            'fields' => [
-                Field::get_select_field([
-                    'name'  => 'tl_bs',
-                    'group' => 'tooltip_setting_group',
-                    'value' => $settings['tl_bs'],
-                    'label' => 'Style',
-                    'options' => Helper::get_border_style_choices()
-                ]),
-                Field::get_text_field([
-                    'name'  => 'tl_bw',
-                    'group' => 'tooltip_setting_group',
-                    'value' => $settings['tl_bw'],
-                    'label' => 'Width',
-                    'placeholder' => 'Width'
-                ]),
-                Field::get_color_picker_field([
-                    'name'  => 'tl_b_clr',
-                    'group' => 'tooltip_setting_group',
-                    'value' => $settings['tl_b_clr'],
-                    'label' => 'Color'
-                ]),
-                Field::get_text_field([
-                    'name'  => 'tl_br',
-                    'group' => 'tooltip_setting_group',
-                    'value' => $settings['tl_br'],
-                    'label' => 'Radius',
-                    'placeholder' => 'Radius'
-                ]),
-            ]
+        echo Field::get_text_field([
+            'name'  => 'tl_br',
+            'group' => 'tooltip_setting_group',
+            'value' => $settings['tl_br'],
+            'label' => 'Border Radius',
+            'placeholder' => 'Border Radius'
         ]);
 
         /**

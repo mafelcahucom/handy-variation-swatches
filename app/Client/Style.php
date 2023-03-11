@@ -152,8 +152,62 @@ final class Style {
     public function custom_internal_css() {
         $settings = get_option( '_hvsfw_main_settings' );
 
-        // Global
+        // Keyframes.
         $class = "
+            @-webkit-keyframes hvsfw-fade-in-bottom {
+                0% {
+                    -webkit-transform: translateY(5px);
+                    transform: translateY(5px);
+                    opacity: 0;
+                }
+                100% {
+                    -webkit-transform: translateY(-5px);
+                    transform: translateY(-5px);
+                    opacity: 1;
+                    }
+                }
+            }
+            @keyframes hvsfw-fade-in-bottom {
+                0% {
+                    -webkit-transform: translateY(5px);
+                    transform: translateY(5px);
+                    opacity: 0;
+                }
+                100% {
+                    -webkit-transform: translateY(-5px);
+                    transform: translateY(-5px);
+                    opacity: 1;
+                    }
+                }
+            }
+            @-webkit-keyframes hvsfw-fade-out-bottom {
+                0% {
+                    -webkit-transform: translateY(-5px);
+                    transform: translateY(-5px);
+                    opacity: 1;
+                }
+                100% {
+                    -webkit-transform: translateY(5px);
+                    transform: translateY(5px);
+                    opacity: 0;
+                }
+            }
+            @keyframes hvsfw-fade-out-bottom {
+                0% {
+                    -webkit-transform: translateY(-5px);
+                    transform: translateY(-5px);
+                    opacity: 1;
+                }
+                100% {
+                    -webkit-transform: translateY(5px);
+                    transform: translateY(5px);
+                    opacity: 0;
+                }
+            }
+        ";
+
+        // Global.
+        $class .= "
             .hvsfw * {
                 -webkit-box-sizing: border-box;
                 box-sizing: border-box;
@@ -230,17 +284,32 @@ final class Style {
         $class .= '
             .hvsfw-term {
                 position: relative;
+                cursor: pointer;
+            }
+            .hvsfw-term > * {
+                pointer-events: none;
             }
         ';
 
         // Button.
         $class .= "
+            .hvsfw-term[data-type='button'] {
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-align: center;
+                -ms-flex-align: center;
+                align-items: center;
+                -webkit-box-pack: center;
+                -ms-flex-pack: center;
+                justify-content: center;
+            }
             .hvsfw-term[data-type='button'][data-default='yes'] {
                 margin-right: {$settings['bn_gap']};
             }
-            .hvsfw-button[data-default='yes'] {
-                width: {$settings['bn_wd']};
-                height: {$settings['bn_ht']};
+            .hvsfw-term[data-type='button'][data-default='yes'] {
+                min-width: {$settings['bn_wd']};
+                min-height: {$settings['bn_ht']};
                 font-size: {$settings['bn_fs']};
                 font-weight: {$settings['bn_fw']};
                 color: {$settings['bn_txt_clr']};
@@ -248,20 +317,20 @@ final class Style {
                 padding: {$this->get_padding( $settings, 'bn' )};
                 border: {$this->get_border( $settings, 'bn' )};
             }
-            .hvsfw-button[data-default='yes']:hover,
-            .hvsfw-button[data-default='yes']:focus,
-            .hvsfw-button[data-default='yes'][data-active='yes'] {
+            .hvsfw-term[data-type='button'][data-default='yes']:hover,
+            .hvsfw-term[data-type='button'][data-default='yes']:focus,
+            .hvsfw-term[data-type='button'][data-default='yes'][data-active='yes'] {
                 color: {$settings['bn_txt_hv_clr']};
                 background-color: {$settings['bn_bg_hv_clr']};
                 border-color: {$settings['bn_b_hv_clr']};
             }
-            .hvsfw-button[data-default='yes'][data-shape='square'] {
+            .hvsfw-term[data-type='button'][data-default='yes'][data-shape='square'] {
                 border-radius: 0px;
             }
-            .hvsfw-button[data-default='yes'][data-shape='circle'] {
+            .hvsfw-term[data-type='button'][data-default='yes'][data-shape='circle'] {
                 border-radius: 100%;
             }
-            .hvsfw-button[data-default='yes'][data-shape='custom'] {
+            .hvsfw-term[data-type='button'][data-default='yes'][data-shape='custom'] {
                 border-radius: {$settings['bn_br']};
             }
         ";
@@ -273,23 +342,45 @@ final class Style {
                 position: absolute;
                 bottom: 100%;
                 left: 50%;
+                width: max-content;
                 margin-bottom: 10px;
                 -webkit-transform: translateX(-50%);
                 -ms-transform: translateX(-50%);
                 transform: translateX(-50%);
                 z-index: 999999;
             }
-            .hvsfw-tooltip[data-visibility='visible'] {
+            .hvsfw-tooltip[data-visibility='show'],
+            .hvsfw-tooltip[data-visibility='hide'] {
                 display: block;
+                
+            }
+            .hvsfw-tooltip[data-visibility='show'] .hvsfw-tooltip__box {
+                -webkit-animation: hvsfw-fade-in-bottom 0.5s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+                animation: hvsfw-fade-in-bottom 0.5s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+            }
+            .hvsfw-tooltip[data-visibility='hide'] .hvsfw-tooltip__box {
+                -webkit-animation: hvsfw-fade-out-bottom 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+                animation: hvsfw-fade-out-bottom 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+            }
+            .hvsfw-tooltip[data-type='text'] {
+                text-align: center;
+            }
+            .hvsfw-tooltip[data-type='image'] .hvsfw-tooltip__box {
+                min-width: unset;
             }
             .hvsfw-tooltip__box {
                 position: relative;
-                font-size: 14px;
-                font-weight: 500;
-                line-height: 21px;
-                color: rgba(255,255,255,1);
-                background-color: rgba(50,50,50,0.9);
-                padding: 5px;
+                min-width: {$settings['tl_mn_wd']};
+                max-width: {$settings['tl_mx_wd']};
+                min-height: {$settings['tl_mn_ht']};
+                max-height: {$settings['tl_mx_ht']};
+                font-size: {$settings['tl_fs']};
+                font-weight: {$settings['tl_fw']};
+                line-height: {$settings['tl_ln']};
+                color: {$settings['tl_txt_clr']};
+                background-color: {$settings['tl_bg_clr']};
+                padding: {$this->get_padding( $settings, 'tl' )};
+                border-radius: {$settings['tl_br']};
             }
             .hvsfw-tooltip__box::after {
                 content: '';
@@ -301,10 +392,19 @@ final class Style {
                 height: 0;
                 border-left: 5px solid transparent;
                 border-right: 5px solid transparent;
-                border-top: 7px solid rgba(50,50,50,0.9);
+                border-top: 7px solid {$settings['tl_bg_clr']};
                 -webkit-transform: translateX(-50%);
                 -ms-transform: translateX(-50%);
                 transform: translateX(-50%);
+            }
+            .hvsfw-tooltip__image {
+                max-width: {$settings['tl_image_mx_wd']} !important;
+                max-height: {$settings['tl_image_mx_ht']} !important;
+            }
+            .hvsfw-tooltip__image > img {
+                display: block !important;
+                max-width: 100% !important;
+                border-radius: {$settings['tl_image_br']} !important;
             }
         ";
         
