@@ -1006,19 +1006,6 @@ final class ProductMetaView {
                             </div>
                         </div>
                     </div>
-                    <div class="hvsfw-field" data-group-field="<?php echo $args['root_name'] . '_gap'; ?>" data-visible="<?php echo $field_visibility['gap']; ?>">
-                        <div class="hvsfw-field__col--left">
-                            <label for="<?php echo $args['root_name'] . '_gap'; ?>" class="hvsfw-field__label">Gap</label>
-                        </div>
-                        <div class="hvsfw-field__col--right">
-                            <div class="hvsfw-field__wrap">
-                                <div class="hvsfw-field__fluid">
-                                    <input type="text" name="<?php echo $args['root_name'] . '[gap]'; ?>" id="<?php echo $args['root_name'] . '_gap'; ?>" placeholder="0px" value="<?php echo esc_attr( $settings['gap'] ); ?>">
-                                </div>
-                                <?php echo wc_help_tip( 'The gap between each swatch term of this variation swatch attribute.' ); ?>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

@@ -62,12 +62,25 @@ final class Installer {
 
             // gn.
             'gn_enable'                     => 1,
+            'gn_enable_tooltip'             => 1,
+            'gn_disable_item_oos'           => 1,
+            'gn_disable_item_style'         => 'blurred-crossed',
 
             // gn_pp.
             'gn_pp_enable'                  => 1,
 
             // gn_sp.
             'gn_sp_enable'                  => 1,
+            
+            // gs_pp.
+            'gs_pp_sw_label_position'       => 'block',
+            'gs_pp_sw_label_fs'             => '16px',
+            'gs_pp_sw_label_fw'             => '500',
+            'gs_pp_sw_label_ln'             => '20px',
+            'gs_pp_sw_label_m'              => '5px',
+            'gs_pp_sw_label_clr'            => 'rgba(0,0,0,1)',
+            'gs_pp_sw_item_gap_row'         => '10px',
+            'gs_pp_sw_item_gap_col'         => '10px',
 
             // bn.
             'bn_shape'                      => 'square',
@@ -88,7 +101,8 @@ final class Installer {
             'bn_b_clr'                      => 'rgba(0,0,0,1)',
             'bn_b_hv_clr'                   => 'rgba(0,113,242,1)',
             'bn_br'                         => '0px',
-            'bn_gap'                        => '10px',
+            'bn_gap_row'                    => '10px',
+            'bn_gap_col'                    => '10px',
 
             // cr.
             'cr_shape'                      => 'square',
@@ -100,10 +114,10 @@ final class Installer {
             'cr_b_clr'                      => 'rgba(0,0,0,1)',
             'cr_b_hv_clr'                   => 'rgba(0,113,242,1)',
             'cr_br'                         => '0px',
-            'cr_gap'                        => '10px',
+            'cr_gap_row'                    => '10px',
+            'cr_gap_col'                    => '10px',
 
             // im.
-            'im_image_size'                 => 'thumbnail',
             'im_shape'                      => 'square',
             'im_size'                       => '40px',
             'im_wd'                         => '40px',
@@ -114,6 +128,8 @@ final class Installer {
             'im_b_hv_clr'                   => 'rgba(0,113,242,1)',
             'im_br'                         => '0px',
             'im_gap'                        => '10px',
+            'im_gap_row'                    => '10px',
+            'im_gap_col'                    => '10px',
 
             // tl.
             'tl_mn_wd'                      => '100px',

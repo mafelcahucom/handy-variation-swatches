@@ -43,17 +43,68 @@ final class SettingApi {
                 'type'    => 'switch',
                 'default' => 1
             ],
+            'gn_enable_tooltip'             => [
+                'type'    => 'switch',
+                'default' => 1
+            ],
+            'gn_disable_item_oos'           => [
+                'type'    => 'switch',
+                'default' => 1
+            ],
+            'gn_disable_item_style'         => [
+                'type'     => 'select',
+                'default'  => 'blurred-crossed',
+                'choices'  => [ 'hidden', 'blurred', 'crossed-out', 'blurred-crossed' ]
+            ],
 
-            // gb_pp.
+
+            // gn_pp.
             'gn_pp_enable'                  => [
                 'type'    => 'switch',
                 'default' => 1
             ],
+            
 
-            // gb_sp.
+            // gn_sp.
             'gn_sp_enable'                  => [
                 'type'    => 'switch',
                 'default' => 1
+            ],
+
+            // gs_pp.
+            'gs_pp_sw_label_position'       => [
+                'type'     => 'select',
+                'default'  => 'block',
+                'choices'  => [ 'hidden', 'inline', 'block' ]
+            ],
+            'gs_pp_sw_label_fs'             => [
+                'type'     => 'size',
+                'default'  => '16px'
+            ],
+            'gs_pp_sw_label_fw'             => [
+                'type'     => 'select',
+                'default'  => '500',
+                'choices'  => Helper::get_font_weight_choices( 'value' )
+            ],
+            'gs_pp_sw_label_ln'             => [
+                'type'     => 'size',
+                'default'  => '20px'
+            ],
+            'gs_pp_sw_label_m'              => [
+                'type'     => 'size',
+                'default'  => '5px'
+            ],
+            'gs_pp_sw_label_clr'            => [
+                'type'     => 'color',
+                'default'  => 'rgba(0,0,0,1)'
+            ],
+            'gs_pp_sw_item_gap_row'         => [
+                'type'     => 'size',
+                'default'  => '10px'
+            ],
+            'gs_pp_sw_item_gap_col'         => [
+                'type'     => 'size',
+                'default'  => '10px'
             ],
 
             // bn.
@@ -132,7 +183,11 @@ final class SettingApi {
                 'type'     => 'size',
                 'default'  => '0px'
             ],
-            'bn_gap'                        => [
+            'bn_gap_row'                    => [
+                'type'     => 'size',
+                'default'  => '10px'
+            ],
+            'bn_gap_col'                    => [
                 'type'     => 'size',
                 'default'  => '10px'
             ],
@@ -176,17 +231,16 @@ final class SettingApi {
                 'type'     => 'size',
                 'default'  => '0px'
             ],
-            'cr_gap'                        => [
+            'cr_gap_row'                    => [
+                'type'     => 'size',
+                'default'  => '10px'
+            ],
+            'cr_gap_col'                    => [
                 'type'     => 'size',
                 'default'  => '10px'
             ],
 
             // im.
-            'im_image_size'                 => [
-                'type'     => 'select',
-                'default'  => 'thumbnail',
-                'choices'  => array_column( Helper::get_image_sizes(), 'value' )
-            ],
             'im_shape'                      => [
                 'type'     => 'select',
                 'default'  => 'square',
@@ -225,7 +279,11 @@ final class SettingApi {
                 'type'     => 'size',
                 'default'  => '0px'
             ],
-            'im_gap'                        => [
+            'im_gap_row'                    => [
+                'type'     => 'size',
+                'default'  => '10px'
+            ],
+            'im_gap_col'                    => [
                 'type'     => 'size',
                 'default'  => '10px'
             ],

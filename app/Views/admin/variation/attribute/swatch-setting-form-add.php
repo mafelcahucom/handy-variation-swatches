@@ -12,7 +12,7 @@ use HVSFW\Admin\Inc\Helper;
 defined( 'ABSPATH' ) || exit;
 ?>
 <hr>
-<h2>Variation Swatch Settings.sadasd</h2>
+<h2>Variation Swatch Settings</h2>
 <p class="description">Configure the settings for this variation swatch attribute. For more additional configuration, click <a class="hvsfw-card__setting" href="<?php echo esc_url( Helper::get_root_url() ); ?>" target="_blank" title="Go To Settings" aria-label="Go To Settings">here</a>.</p>
 <div id="hvsfw-form-field-style" class="form-field hvsfw-field hvsfw-field__add" data-group-field="hvsfw_style" data-visible="no">
     <label for="hvsfw_style">Style (Design)</label>
@@ -156,9 +156,4 @@ defined( 'ABSPATH' ) || exit;
     <label for="hvsfw_size">Border Radius</label>
     <input type="text" name="hvsfw_border_radius" id="hvsfw_border_radius" placeholder="0px" value="0px">
     <p class="description">The border radius of this variation swatch attribute.</p>
-</div>
-<div class="form-field hvsfw-field hvsfw-field__add" data-group-field="hvsfw_gap" data-visible="no">
-    <label for="hvsfw_size">Gap</label>
-    <input type="text" name="hvsfw_gap" id="hvsfw_gap" placeholder="10px" value="10px">
-    <p class="description">The gap between each swatch term of this variation swatch attribute.</p>
 </div>

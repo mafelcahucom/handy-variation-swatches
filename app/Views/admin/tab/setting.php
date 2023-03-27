@@ -34,6 +34,10 @@ echo Component::get_header( $args['page_title'] ); ?>
                     'panel' => '#general'
                 ],
                 [
+                    'title' => 'Global Style',
+                    'panel' => '#global-style'
+                ],
+                [
                     'title' => 'Button Swatch',
                     'panel' => '#button-swatch'
                 ],
@@ -101,6 +105,61 @@ echo Component::get_header( $args['page_title'] ); ?>
         echo Component::get_card_closing();
 
         /**
+         * Variation - Card Opening.
+         */
+        echo Component::get_card_opening([
+            'title' => 'Variation',
+            'class' => 'hd-mb-30'
+        ]);
+
+        echo Field::get_switch_field([
+            'name'  => 'gn_enable_tooltip',
+            'group' => 'general_setting_group',
+            'value' => $settings['gn_enable_tooltip'],
+            'label' => 'Enable Tooltip',
+            'description' => 'Enable this to show tooltip on each term.',
+        ]);
+
+        echo Field::get_switch_field([
+            'name'  => 'gn_disable_item_oos',
+            'group' => 'general_setting_group',
+            'value' => $settings['gn_disable_item_oos'],
+            'label' => 'Disable Out Of Stock Term',
+            'description' => 'Enable this to disable or add effects to out of stock attribute terms',
+        ]);
+
+        echo Field::get_select_field([
+            'name'  => 'gn_disable_item_style',
+            'group' => 'general_setting_group',
+            'value' => $settings['gn_disable_item_style'],
+            'label' => 'Disabled Term Style',
+            'description' => 'Select the style indicator of disabled or out of stock terms.',
+            'options' => [
+                [
+                    'value' => 'hidden',
+                    'label' => 'Hidden'
+                ],
+                [
+                    'value' => 'blurred',
+                    'label' => 'Blurred'
+                ],
+                [
+                    'value' => 'crossed-out',
+                    'label' => 'Crossed Out'
+                ],
+                [
+                    'value' => 'blurred-crossed',
+                    'label' => 'Blurred + Crossed Out'
+                ]
+            ]
+        ]);
+
+        /**
+         * Variation - Card Closing.
+         */
+        echo Component::get_card_closing();
+
+        /**
          * Product Single Page - Card Opening.
          */
         echo Component::get_card_opening([
@@ -108,11 +167,16 @@ echo Component::get_header( $args['page_title'] ); ?>
             'class' => 'hd-mb-30'
         ]);
 
+        echo Field::get_note_field([
+            'title' => 'Instruction',
+            'message' => 'Note all the setting modified in here will be only applied in Product Single Page.'
+        ]);
+
         echo Field::get_switch_field([
             'name'  => 'gn_pp_enable',
             'group' => 'general_setting_group',
             'value' => $settings['gn_pp_enable'],
-            'label' => 'Enable in Product Single Page',
+            'label' => 'Enable on Product Single Page',
             'description' => 'Enable this to use variation swatch in the product single page.',
         ]);
 
@@ -129,11 +193,16 @@ echo Component::get_header( $args['page_title'] ); ?>
             'class' => 'hd-mb-30'
         ]);
 
+        echo Field::get_note_field([
+            'title' => 'Instruction',
+            'message' => 'Note all the setting modified in here will be only applied in Shop Page (Archive Page).'
+        ]);
+
         echo Field::get_switch_field([
             'name'  => 'gn_sp_enable',
             'group' => 'general_setting_group',
             'value' => $settings['gn_sp_enable'],
-            'label' => 'Enable in Shop Page (Archive Page)',
+            'label' => 'Enable on Shop Page (Archive Page)',
             'description' => 'Enable this to use variation swatch in the shop page (archive page).',
         ]);
 
@@ -156,6 +225,145 @@ echo Component::get_header( $args['page_title'] ); ?>
 
         /**
          * General - Tab Closing.
+         */
+        echo Component::get_tab_panel_closing();
+    ?>
+
+    <?php
+        /**
+         * Global Style - Tab Opening.
+         */
+        echo Component::get_tab_panel_opening([
+            'id'    => 'global-style',
+            'state' => 'active'
+        ]);
+
+        /**
+         * Save button settings - global_style_setting_group
+         */
+        echo Component::get_button([
+            'type'  => 'normal',
+            'class' => 'hvsfw-js-save-setting-btn hd-ds-block hd-mb-30 hd-ml-auto',
+            'label' => 'Save Changes',
+            'attr'  => [
+                'data-group-target' => 'global_style_setting_group'
+            ]
+        ]);
+
+        /**
+         * Product Single Page - Card Opening.
+         */
+        echo Component::get_card_opening([
+            'title' => 'Product Page',
+            'class' => 'hd-mb-30'
+        ]);
+
+        echo Field::get_note_field([
+            'title' => 'Instruction',
+            'message' => 'Note all the setting modified in here will be only applied in Product Single Page.'
+        ]);
+
+        echo Field::get_multiple_field([
+            'label'  => 'Swatch Label',
+            'description' => 'Set the style of the swatch label.',
+            'fields' => [
+                Field::get_select_field([
+                    'name'  => 'gs_pp_sw_label_position',
+                    'group' => 'global_style_setting_group',
+                    'value' => $settings['gs_pp_sw_label_position'],
+                    'label' => 'Position',
+                    'options' => [
+                        [
+                            'value' => 'hidden',
+                            'label' => 'Hidden'
+                        ],
+                        [
+                            'value' => 'inline',
+                            'label' => 'Inline'
+                        ],
+                        [
+                            'value' => 'block',
+                            'label' => 'Block'
+                        ]
+                    ]
+                ]),
+                Field::get_text_field([
+                    'name'  => 'gs_pp_sw_label_fs',
+                    'group' => 'global_style_setting_group',
+                    'value' => $settings['gs_pp_sw_label_fs'],
+                    'label' => 'Font Size',
+                    'placeholder' => 'Font Size'
+                ]),
+                Field::get_select_field([
+                    'name'  => 'gs_pp_sw_label_fw',
+                    'group' => 'global_style_setting_group',
+                    'value' => $settings['gs_pp_sw_label_fw'],
+                    'label' => 'Font Weight',
+                    'options' => Helper::get_font_weight_choices()
+                ]),
+                Field::get_text_field([
+                    'name'  => 'gs_pp_sw_label_ln',
+                    'group' => 'global_style_setting_group',
+                    'value' => $settings['gs_pp_sw_label_ln'],
+                    'label' => 'Line Height',
+                    'placeholder' => 'Line Height'
+                ]),
+                Field::get_text_field([
+                    'name'  => 'gs_pp_sw_label_m',
+                    'group' => 'global_style_setting_group',
+                    'value' => $settings['gs_pp_sw_label_m'],
+                    'label' => 'Margin',
+                    'placeholder' => 'Margin'
+                ]),
+                Field::get_color_picker_field([
+                    'name'  => 'gs_pp_sw_label_clr',
+                    'group' => 'global_style_setting_group',
+                    'value' => $settings['gs_pp_sw_label_clr'],
+                    'label' => 'Color',
+                ]),
+            ]
+        ]);
+
+        echo Field::get_multiple_field([
+            'label'  => 'Swatch Item Gap',
+            'description' => 'Set the row gap and column gap in each swatch item or attributes.',
+            'fields' => [
+                Field::get_text_field([
+                    'name'  => 'gs_pp_sw_item_gap_row',
+                    'group' => 'global_style_setting_group',
+                    'value' => $settings['gs_pp_sw_item_gap_row'],
+                    'label' => 'Row',
+                    'placeholder' => 'Row'
+                ]),
+                Field::get_text_field([
+                    'name'  => 'gs_pp_sw_item_gap_col',
+                    'group' => 'global_style_setting_group',
+                    'value' => $settings['gs_pp_sw_item_gap_col'],
+                    'label' => 'Column',
+                    'placeholder' => 'Column'
+                ])
+            ]
+        ]);
+
+        /**
+         * Product Page - Card Closing.
+         */
+        echo Component::get_card_closing();
+
+        /**
+         * Save button settings - global_style_setting_group
+         */
+        echo Component::get_button([
+            'type'  => 'normal',
+            'class' => 'hvsfw-js-save-setting-btn hd-ds-block hd-mb-30 hd-ml-auto',
+            'label' => 'Save Changes',
+            'attr'  => [
+                'data-group-target' => 'global_style_setting_group'
+            ]
+        ]);
+
+        /**
+         * Global Style - Tab Closing.
          */
         echo Component::get_tab_panel_closing();
     ?>
@@ -349,23 +557,17 @@ echo Component::get_header( $args['page_title'] ); ?>
                     'group' => 'button_setting_group',
                     'value' => $settings['bn_b_hv_clr'],
                     'label' => 'Hover & Active Color'
-                ]),
-                Field::get_text_field([
-                    'name'  => 'bn_br',
-                    'group' => 'button_setting_group',
-                    'value' => $settings['bn_br'],
-                    'label' => 'Radius',
-                    'placeholder' => 'Radius'
-                ]),
+                ])
             ]
         ]);
 
         echo Field::get_text_field([
-            'name'  => 'bn_gap',
+            'name'  => 'bn_br',
             'group' => 'button_setting_group',
-            'value' => $settings['bn_gap'],
-            'label' => 'Gap',
-            'placeholder' => 'Gap'
+            'value' => $settings['bn_br'],
+            'label' => 'Border Radius',
+            'description' => 'Note this custom border radius will be only be applied if the shape is set to custom.',
+            'placeholder' => 'Border Radius'
         ]);
 
         /**
@@ -500,23 +702,17 @@ echo Component::get_header( $args['page_title'] ); ?>
                     'group' => 'color_setting_group',
                     'value' => $settings['cr_b_hv_clr'],
                     'label' => 'Hover & Active Color'
-                ]),
-                Field::get_text_field([
-                    'name'  => 'cr_br',
-                    'group' => 'color_setting_group',
-                    'value' => $settings['cr_br'],
-                    'label' => 'Radius',
-                    'placeholder' => 'Radius'
-                ]),
+                ])
             ]
         ]);
 
         echo Field::get_text_field([
-            'name'  => 'cr_gap',
+            'name'  => 'cr_br',
             'group' => 'color_setting_group',
-            'value' => $settings['cr_gap'],
-            'label' => 'Gap',
-            'placeholder' => 'Gap'
+            'value' => $settings['cr_br'],
+            'label' => 'Border Radius',
+            'description' => 'Note this custom border radius will be only be applied if the shape is set to custom.',
+            'placeholder' => 'Border Radius'
         ]);
 
         /**
@@ -569,15 +765,6 @@ echo Component::get_header( $args['page_title'] ); ?>
         echo Component::get_card_opening([
             'title' => 'Default Style',
             'class' => 'hd-mb-30'
-        ]);
-        
-        echo Field::get_select_field([
-            'name'  => 'im_image_size',
-            'group' => 'image_setting_group',
-            'value' => $settings['im_image_size'],
-            'label' => 'Image Size',
-            'description' => 'Select the image size for swatch image.',
-            'options' => Helper::get_image_sizes()
         ]);
 
         echo Field::get_select_field([
@@ -660,23 +847,17 @@ echo Component::get_header( $args['page_title'] ); ?>
                     'group' => 'image_setting_group',
                     'value' => $settings['im_b_hv_clr'],
                     'label' => 'Hover & Active Color'
-                ]),
-                Field::get_text_field([
-                    'name'  => 'im_br',
-                    'group' => 'image_setting_group',
-                    'value' => $settings['im_br'],
-                    'label' => 'Radius',
-                    'placeholder' => 'Radius'
-                ]),
+                ])
             ]
         ]);
 
         echo Field::get_text_field([
-            'name'  => 'im_gap',
+            'name'  => 'im_br',
             'group' => 'image_setting_group',
-            'value' => $settings['im_gap'],
-            'label' => 'Gap',
-            'placeholder' => 'Gap'
+            'value' => $settings['im_br'],
+            'label' => 'Border Radius',
+            'description' => 'Note this custom border radius will be only be applied if the shape is set to custom.',
+            'placeholder' => 'Border Radius'
         ]);
 
         /**
@@ -685,19 +866,19 @@ echo Component::get_header( $args['page_title'] ); ?>
         echo Component::get_card_closing();
         
         /**
-         * Save button settings - color_setting_group.
+         * Save button settings - image_setting_group.
          */
         echo Component::get_button([
             'type'  => 'normal',
             'class' => 'hvsfw-js-save-setting-btn hd-ds-block hd-mb-30 hd-ml-auto',
             'label' => 'Save Changes',
             'attr'  => [
-                'data-group-target' => 'color_setting_group'
+                'data-group-target' => 'image_setting_group'
             ]
         ]);
         
         /**
-         * Color Swatch - Tab Closing.
+         * Image Swatch - Tab Closing.
          */
         echo Component::get_tab_panel_closing();
     ?>

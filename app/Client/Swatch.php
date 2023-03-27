@@ -43,10 +43,15 @@ final class Swatch {
         if ( $this->settings['gn_pp_enable'] == true ) {
             add_filter( 'woocommerce_dropdown_variation_attribute_options_html', [ $this, 'render_product_single_page_swatches' ], 100, 2 );
         }
+
+        // Render the variation attributes in shop page.
+        if ( $this->settings['gn_sp_enable'] == true ) {
+            add_action( 'woocommerce_after_shop_loop_item', [ $this, 'render_shop_page_swatches' ], 10 );
+        }
     }
 
     /**
-     * Render the swatches in product single page.
+     * Render the variation swatches in product single page.
      *
      * @since 1.0.0
      * 
@@ -58,6 +63,8 @@ final class Swatch {
         global $product;
         $select_html = $html;
 
+        Helper::log( $args );
+
         $attribute = $this->get_attribute( $product, $args['attribute'] );
         if ( empty( $attribute ) ) {
             return $select_html;
@@ -67,8 +74,6 @@ final class Swatch {
         if ( ! in_array( $attribute['slug'], array_keys( $saved_swatches ) ) ) {
             return $select_html;
         }
-
-        //Helper::log( $saved_swatches );
 
         $swatch = $saved_swatches[ $attribute['slug'] ];
 
@@ -89,8 +94,10 @@ final class Swatch {
             }
         }
 
-        $html  = '<div class="hvsfw hvsfw-swatch-container">';
-        $html .= '<div class="hvsfw-ds-none">'. $select_html .'</div>';
+        $html  = '<div class="hvsfw hvsfw-swatch">';
+        $html .= '<div class="hvsfw-select" data-attribute="'. esc_attr( $attribute['slug'] ) .'">';
+        $html .= $select_html;
+        $html .= '</div>';
         $html .= $this->get_variation_attribute([
             'attribute' => $attribute,
             'swatch'    => $swatch
@@ -98,6 +105,60 @@ final class Swatch {
         $html .= '</div>';
 
         return $html; 
+    }
+
+    /**
+     * Render the variation swatches in shop page.
+     *
+     * @since 1.0.0
+     */
+    public function render_shop_page_swatches() {
+        global $product;
+        
+        if ( ! $product->is_type( 'variable' ) ) {
+            return;
+        }
+
+        $variations = $product->get_available_variations();
+        if ( ! $variations ) {
+            return;
+        }
+        
+        $product_id         = $product->get_id();
+        $attributes         = $product->get_variation_attributes();
+        $attribute_keys     = array_keys( $attributes );
+        $encoded_variations = wp_json_encode( $variations );
+        ?>
+        <div class="hvsfw-variations-form variations_form"
+             data-product_id="<?php echo absint( $product_id ); ?>"
+             data-product_variations="<?php echo esc_attr( $encoded_variations ); ?>">
+            <table class="hvsfw-variations-table variations" cellspacing="0" role="presentation">
+                <tbody>
+                    <?php foreach ( $attributes as $attribute_name => $options ): ?>
+                        <tr>
+                            <td class="label">
+                                <label for="<?php echo esc_attr( $attribute_name ); ?>">
+                                    <?php echo esc_html( wc_attribute_label( $attribute_name ) ); ?>
+                                </label>
+                            </td>
+                            <td class="value">
+                                <?php
+                                    wc_dropdown_variation_attribute_options(
+                                        array(
+                                            'options'   => $options,
+                                            'attribute' => $attribute_name,
+                                            'product'   => $product,
+                                        )
+                                    );
+                                    echo end( $attribute_keys ) === $attribute_name ? wp_kses_post( apply_filters( 'woocommerce_reset_variations_link', '<a class="reset_variations" href="#">' . esc_html__( 'Clear', 'woocommerce' ) . '</a>' ) ) : '';
+                                ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <?php
     }
 
     /**
@@ -142,61 +203,63 @@ final class Swatch {
 
         ob_start();
         ?>
-        <div class="hvsfw-attribute" data-attribute="<?php echo esc_attr( $attribute['slug'] ); ?>" data-type="<?php echo esc_attr( $attribute_type ); ?>">
+        <div class="hvsfw-attribute" data-page="product-page" data-attribute="<?php echo esc_attr( $attribute['slug'] ); ?>" data-type="<?php echo esc_attr( $attribute_type ); ?>">
             <?php
                 if ( ! empty( $attribute['options'] ) ) {
                     foreach ( $attribute['options'] as $option ) {
                         // Set term.
                         $term = ( isset( $swatch['term'][ $option['slug'] ] ) ? $swatch['term'][ $option['slug'] ] : [] );
-
-                        // Set term_type.
-                        $term_type = $attribute_type;
                         if ( ! empty( $term ) ) {
+
+                            // Set term_type.
+                            $term_type = $attribute_type;
                             if ( isset( $term['type'] ) && $term['type'] !== 'default' ) {
                                 $term_type = $term['type'];
+                            } else {
+                                if ( $attribute_type === 'assorted' ) {
+                                    $term_type = 'button';
+                                }
                             }
-                        } else {
+
+                            // Set is_default and style to assorted type.
                             if ( $attribute_type === 'assorted' ) {
-                                $term_type = 'button';
-                            }
-                        }
+                                $is_default = 'yes';
+                                $style      = $this->get_default_style( $term_type );
 
-                        // Set is_default and style to assorted type.
-                        if ( $attribute_type === 'assorted' ) {
-                            $is_default = 'yes';
-                            $style      = $this->get_default_style( $term_type );
-
-                            if ( ! empty( $term ) ) {
                                 if ( isset( $term['style']['style'] ) && $term['style']['style'] !== 'default' ) {
                                     $is_default = 'no';
                                     $style      = $term['style'];
                                 }
                             }
-                        }
 
-                        // Set option style and is_default.
-                        $option['style']      = $style;
-                        $option['is_default'] = $is_default;
+                            // Set option style and is_default.
+                            $option['style']      = $style;
+                            $option['is_default'] = $is_default;
 
-                        // Render term type.
-                        switch ( $term_type ) {
-                            case 'button':
-                                echo $this->get_term_button([
-                                    'term'       => $term,
-                                    'option'     => $option,
-                                    'attribute'  => $attribute
-                                ]);
-                                break;
-                            case 'color':
-                                echo $this->get_term_color([
-
-                                ]);
-                                break;
-                            case 'image':
-                                echo $this->get_term_image([
-
-                                ]);
-                                break;
+                            // Render term type.
+                            switch ( $term_type ) {
+                                case 'button':
+                                    echo $this->get_term_button([
+                                        'term'      => $term,
+                                        'option'    => $option,
+                                        'attribute' => $attribute
+                                    ]);
+                                    break;
+                                case 'color':
+                                    echo $this->get_term_color([
+                                        'term'      => $term,
+                                        'option'    => $option,
+                                        'attribute' => $attribute
+                                    ]);
+                                    break;
+                                case 'image':
+                                    echo $this->get_term_image([
+                                        'term'      => $term,
+                                        'option'    => $option,
+                                        'attribute' => $attribute
+                                    ]);
+                                    break;
+                            }
                         }
                     }
                 }
@@ -208,15 +271,15 @@ final class Swatch {
     }
 
     /**
-     * Render the term button type.
+     * Render the swatch button type.
      *
      * @since 1.0.0
      * 
-     * @param  array  $args  Containing the necessary arguments for term button requirements.
+     * @param  array  $args  Containing the necessary arguments for swatch button type requirements.
      * $args = [
-     *     'term'       => (array)  The term id, value, style, tooltip from saved swatch in post meta.
-     *     'option'     => (array)  The term name, slug, value, is_default and style.
-     *     'attribute'  => (array)  The attribute value from $this->get_attribute().
+     *     'term'      => (array)  The term id, value, style, tooltip from saved swatch in post meta.
+     *     'option'    => (array)  The term name, slug, value, is_default and style.
+     *     'attribute' => (array)  The attribute value from $this->get_attribute().
      * ]
      * @return string
      */
@@ -232,19 +295,16 @@ final class Swatch {
 
         // Set value.
         if ( ! isset( $term['value'] ) ) {
-            $term['value'] = [
-                'button_label' => $option['name']
-            ];
+            $term['value']['button_label'] = $option['name'];
         }
 
         // Set tooltip.
         $tooltip = $this->get_tooltip([
-            'id'      => $term['id'],
-            'label'   => $term['value']['button_label'],
-            'tooltip' => $term['tooltip']
+            'term'  => $term,
+            'label' => $term['value']['button_label']
         ]);
 
-        // Set style and css
+        // Set CSS.
         $css   = "";
         $style = $option['style'];
         if ( $option['is_default'] === 'no' ) {
@@ -262,14 +322,13 @@ final class Swatch {
             $css .= "border-style: {$style['border_style']};";
             $css .= "border-width: {$style['border_width']};";
             $css .= "border-color: {$style['border_color']};";
-            $css .= "margin-right: {$style['gap']};";
 
             if ( $style['shape'] === 'custom' ) {
                 $css .= "border-radius: {$style['border_radius']};";
             }
         }
 
-        // Set data style.
+        // Set data-style attribute.
         $data_style = htmlspecialchars( json_encode( [
             'leave' => [
                 'color'            => $style['font_color'],
@@ -287,13 +346,17 @@ final class Swatch {
         ?>
         <div class="hvsfw-term"
              data-type="button"
+             data-enable="yes"
+             data-state="default"
+             data-attribute="<?php echo esc_attr( $attribute['slug'] ); ?>"
+             data-value="<?php echo esc_attr( $option['value'] ); ?>"
              data-default="<?php echo esc_attr( $option['is_default'] ); ?>"
+             data-shape="<?php echo esc_attr( $style['shape'] ); ?>"
              data-tooltip="<?php echo esc_attr( $tooltip['is_enabled'] ); ?>"
              data-style="<?php echo esc_attr( $data_style ); ?>"
-             style="<?php echo $css; ?>">
+             style="<?php echo esc_attr( $css ); ?>">
             <?php 
                 echo esc_html( $term['value']['button_label'] );
-
                 if ( $tooltip['is_enabled'] === 'yes' && ! empty( $tooltip['html'] ) ) {
                     echo $tooltip['html'];
                 }
@@ -304,12 +367,184 @@ final class Swatch {
         return ob_get_clean();
     }
 
+    /**
+     * Render the swatch color type.
+     *
+     * @since 1.0.0
+     * 
+     * @param  array  $args  Containing the necessary arguments for swatch color type requirements.
+     * $args = [
+     *     'term'      => (array)  The term id, value, style, tooltip from saved swatch in post meta.
+     *     'option'    => (array)  The term name, slug, value, is_default and style.
+     *     'attribute' => (array)  The attribute value from $this->get_attribute().
+     * ]
+     * @return string
+     */
     private function get_term_color( $args = [] ) {
+        $parameters = [ 'term', 'option', 'attribute' ];
+        if ( Utility::has_array_unset( $args, $parameters ) ) {
+            return '';
+        }
 
+        $term      = $args['term'];
+        $option    = $args['option'];
+        $attribute = $args['attribute'];
+
+        //Helper::log( $option );
+
+        // Set background color.
+        if ( ! isset( $term['value'] ) ) {
+            $term['value']['color'] = Utility::get_swatch_color( $term['id'] );
+        }
+        $background_color = Utility::get_linear_color( $term['value']['color'] );
+
+        // Set tooltip.
+        $tooltip = $this->get_tooltip([
+            'term'  => $term,
+            'label' => $option['name'],
+        ]);
+
+        // Set CSS.
+        $css   = "";
+        $style = $option['style'];
+        if ( $option['is_default'] === 'no' ) {
+            $css .= "border-style: {$style['border_style']};";
+            $css .= "border-width: {$style['border_width']};";
+            $css .= "border-color: {$style['border_color']};";
+
+            if ( $style['shape'] === 'custom' ) {
+                $css .= "width: {$style['width']};";
+                $css .= "height: {$style['height']};";
+                $css .= "border-radius: {$style['border_radius']};";
+            } else {
+                $css .= "width: {$style['size']};";
+                $css .= "height: {$style['size']};";
+            }
+        }
+
+        // Set data-style attribute.
+        $data_style = htmlspecialchars( json_encode( [
+            'leave' => [
+                'border-color' => $style['border_color']
+            ],
+            'enter' => [
+                'border-color' => $style['border_hover_color']
+            ],
+        ]));
+        
+        ob_start();
+        ?>
+        <div class="hvsfw-term"
+             data-type="color"
+             data-enable="yes"
+             data-state="default"
+             data-attribute="<?php echo esc_attr( $attribute['slug'] ); ?>"
+             data-value="<?php echo esc_attr( $option['value'] ); ?>"
+             data-default="<?php echo esc_attr( $option['is_default'] ); ?>"
+             data-shape="<?php echo esc_attr( $style['shape'] ); ?>"
+             data-tooltip="<?php echo esc_attr( $tooltip['is_enabled'] ); ?>"
+             data-style="<?php echo esc_attr( $data_style ); ?>"
+             style="<?php echo esc_attr( $css ); ?>">
+            <?php
+                if ( $tooltip['is_enabled'] === 'yes' && ! empty( $tooltip['html'] ) ) {
+                    echo $tooltip['html'];
+                }
+            ?>
+            <div class="hvsfw-color" style="background: <?php echo esc_attr( $background_color ) ?>;"></div>
+        </div>
+
+        <?php
+
+        return ob_get_clean();
     }
 
+    /**
+     * Render the swatch image type.
+     *
+     * @since 1.0.0
+     * 
+     * @param  array  $args  Containing the necessary arguments for swatch image type requirements.
+     * $args = [
+     *     'term'      => (array)  The term id, value, style, tooltip from saved swatch in post meta.
+     *     'option'    => (array)  The term name, slug, value, is_default and style.
+     *     'attribute' => (array)  The attribute value from $this->get_attribute().
+     * ]
+     * @return string
+     */
     private function get_term_image( $args = [] ) {
+        $parameters = [ 'term', 'option', 'attribute' ];
+        if ( Utility::has_array_unset( $args, $parameters ) ) {
+            return '';
+        }
 
+        $term      = $args['term'];
+        $option    = $args['option'];
+        $attribute = $args['attribute'];
+
+        // Set image source and size.
+        if ( ! isset( $term['value'] ) ) {
+            $term['value']['image']      = Utility::get_swatch_image( $term['id'] );
+            $term['value']['image_size'] = Utility::get_swatch_image_size( $term['id'] );
+        }
+        $image = Utility::get_swatch_image_by_attachment_id( $term['value']['image'], $term['value']['image_size'] );
+
+        // Set tooltip.
+        $tooltip = $this->get_tooltip([
+            'term'  => $term,
+            'label' => $option['name'],
+        ]);
+        
+        // Set CSS.
+        $css   = "";
+        $style = $option['style'];
+        if ( $option['is_default'] === 'no' ) {
+            $css .= "border-style: {$style['border_style']};";
+            $css .= "border-width: {$style['border_width']};";
+            $css .= "border-color: {$style['border_color']};";
+
+            if ( $style['shape'] === 'custom' ) {
+                $css .= "width: {$style['width']};";
+                $css .= "height: {$style['height']};";
+                $css .= "border-radius: {$style['border_radius']};";
+            } else {
+                $css .= "width: {$style['size']};";
+                $css .= "height: {$style['size']};";
+            }
+        }
+
+        // Set data-style attribute.
+        $data_style = htmlspecialchars( json_encode( [
+            'leave' => [
+                'border-color' => $style['border_color']
+            ],
+            'enter' => [
+                'border-color' => $style['border_hover_color']
+            ],
+        ]));
+
+        ob_start();
+        ?>
+        <div class="hvsfw-term"
+             data-type="image"
+             data-enable="yes"
+             data-state="default"
+             data-attribute="<?php echo esc_attr( $attribute['slug'] ); ?>"
+             data-value="<?php echo esc_attr( $option['value'] ); ?>"
+             data-default="<?php echo esc_attr( $option['is_default'] ); ?>"
+             data-shape="<?php echo esc_attr( $style['shape'] ); ?>"
+             data-tooltip="<?php echo esc_attr( $tooltip['is_enabled'] ); ?>"
+             data-style="<?php echo esc_attr( $data_style ); ?>"
+             style="<?php echo esc_attr( $css ); ?>">
+            <?php
+                if ( $tooltip['is_enabled'] === 'yes' && ! empty( $tooltip['html'] ) ) {
+                    echo $tooltip['html'];
+                }
+            ?>
+            <div class="hvsfw-image" style="background-image: url('<?php echo esc_url( $image['src'] ); ?>');"></div>
+        </div>
+        <?php
+
+        return ob_get_clean();
     }
 
     /**
@@ -319,9 +554,8 @@ final class Swatch {
      * 
      * @param  array  $args  Containing the necessary arguments for tooltip component.
      * $args = [
-     *     'id'      => (Integer) The term id.
-     *     'label'   => (String)  The term label or name.
-     *     'tooltip' => (Array)   The tooltip from saved swatch post meta.
+     *     'term'  => (array)  The term id, value, style, tooltip from saved swatch in post meta.
+     *     'label' => (String) The tooltip default label.
      * ]
      * @return array
      */
@@ -331,24 +565,31 @@ final class Swatch {
             'html'       => ''
         ];
 
-        $parameters = [ 'id', 'label', 'tooltip' ];
-        if ( Utility::has_array_unset( $args, $parameters ) ) {
+        if ( ! $this->settings['gn_enable_tooltip'] ) {
             return $output;
         }
 
-        if ( $args['tooltip']['type'] === 'none' ) {
+        if ( ! isset( $args['term'] ) || ! isset( $args['label'] ) ) {
+            return $output;
+        }
+
+        if ( $args['term']['type'] === 'default' && $args['term']['id'] != 0 ) {
+            $args['term']['tooltip'] = Utility::get_swatch_tooltip( $args['term']['id'] );
+        }
+
+        if ( $args['term']['tooltip']['type'] === 'none' ) {
             return $output;
         }
 
         $type    = 'text';
         $content = '';
-        if ( in_array( $args['tooltip']['type'], [ 'text', 'html', 'image' ] ) ) {
-            $type    = $args['tooltip']['type'];
-            $content = $args['tooltip']['content'];
+        if ( in_array( $args['term']['tooltip']['type'], [ 'text', 'html', 'image' ] ) ) {
+            $type    = $args['term']['tooltip']['type'];
+            $content = $args['term']['tooltip']['content'];
         }
 
-        if ( $args['tooltip']['type'] === 'default' && $args['id'] != 0 ) {
-            $default_tooltip = Utility::get_swatch_tooltip( $args['id'] );
+        if ( $args['term']['tooltip']['type'] === 'default' && $args['term']['id'] != 0 ) {
+            $default_tooltip = Utility::get_swatch_tooltip( $args['term']['id'] );
             if ( $default_tooltip['type'] === 'none' ) {
                 return $output;
             }
@@ -393,7 +634,6 @@ final class Swatch {
 
         $output['html']       = ob_get_clean();
         $output['is_enabled'] = 'yes';
-
         return $output;
     }
 
@@ -508,7 +748,6 @@ final class Swatch {
             'border_color'           => [ 'b_clr',      'rgba(0,0,0,1)'       ],
             'border_hover_color'     => [ 'b_hv_clr',   'rgba(0,113,242,1)'   ],
             'border_radius'          => [ 'br',         '0px'                 ],
-            'gap'                    => [ 'gap',        '0px'                 ]
         ];
 
         $style = [];

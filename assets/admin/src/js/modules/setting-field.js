@@ -259,13 +259,6 @@ const settingField = {
 					type: 'size',
 					default: '0px',
 				},
-			],
-			gap: [
-				{
-					id: 'gap',
-					type: 'size',
-					default: '10px'
-				}
 			]
 		};
 	},
@@ -280,7 +273,7 @@ const settingField = {
 	getGroupFields() {
 		return [
 			'shape', 'size', 'dimension', 'font', 'text_color',
-			'background_color', 'padding', 'border', 'border_radius', 'gap'
+			'background_color', 'padding', 'border', 'border_radius'
 		];
 	},
 
@@ -300,13 +293,13 @@ const settingField = {
 		const fields = {
 			button: [
 				'shape', 'dimension', 'font', 'text_color',
-				'background_color', 'padding', 'border', 'gap'
+				'background_color', 'padding', 'border'
 			],
 			color: [
-				'shape', 'size', 'border', 'gap'
+				'shape', 'size', 'border'
 			],
 			image: [
-				'shape', 'size', 'border', 'gap'
+				'shape', 'size', 'border'
 			],
 		};
 

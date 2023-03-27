@@ -269,8 +269,15 @@ final class Style {
             }
         ";
 
+        // Select.
+        $class .= "
+            .hvsfw-select {
+                display: none;
+            }
+        ";
+
         // Attribute.
-        $class .= '
+        $class .= "
             .hvsfw-attribute {
                 display: -webkit-box;
                 display: -ms-flexbox;
@@ -278,18 +285,81 @@ final class Style {
                 -ms-flex-wrap: wrap;
                 flex-wrap: wrap;
             }
-        ';
+        ";
 
         // Term.
-        $class .= '
+        $class .= "
             .hvsfw-term {
                 position: relative;
                 cursor: pointer;
+                overflow: hidden;
             }
             .hvsfw-term > * {
                 pointer-events: none;
             }
-        ';
+            .hvsfw-term:last-child {
+                margin-right: 0 !important;
+            }
+            .hvsfw-term[data-shape='square'] {
+                border-radius: 0px;
+            }
+            .hvsfw-term[data-shape='circle'] {
+                border-radius: 100%;
+            }
+            
+        ";
+
+        // Term Disable Style.
+        if ( $settings['gn_disable_item_oos'] ) {
+            $disable_item_style   = $settings['gn_disable_item_style'];
+            $is_crossed           = in_array( $disable_item_style, [ 'crossed-out', 'blurred-crossed' ] );
+            $is_blurred           = in_array( $disable_item_style, [ 'blurred', 'blurred-crossed' ] );
+            $disable_item_opacity = ( $is_blurred ? 0.7 : 1 );
+
+            $class .= "
+                .hvsfw-term[data-enable='no'] {
+                    cursor: not-allowed;
+                    opacity: {$disable_item_opacity};
+                }
+            ";
+
+            if ( $disable_item_style === 'hidden' ) {
+                $class .= "
+                    .hvsfw-term[data-enable='no'] {
+                        display: none !important;
+                    }
+                ";
+            }
+
+            if ( $is_crossed ) {
+                $class .= "
+                    .hvsfw-term[data-enable='no']:before,
+                    .hvsfw-term[data-enable='no']:after {
+                        content: '';
+                        position: absolute;
+                        top: 50%;
+                        bottom: 0;
+                        left: 0;
+                        right: 0;
+                        width: 100%;
+                        height: 1px;
+                        background-color: #cb3b3b;
+                        opacity: 1;
+                        
+                    }
+                    .hvsfw-term[data-enable='no']:before {
+                        -webkit-transform: rotate(45deg);
+                        -ms-transform: rotate(45deg);
+                        transform: rotate(45deg);
+                    }
+                    .hvsfw-term[data-enable='no']:after {
+                        -webkit-transform: rotate(-45deg);
+                        -ms-transform: rotate(-45deg);
+                        transform: rotate(-45deg);
+                    }
+                ";
+            }
+        }
 
         // Button.
         $class .= "
@@ -303,9 +373,7 @@ final class Style {
                 -webkit-box-pack: center;
                 -ms-flex-pack: center;
                 justify-content: center;
-            }
-            .hvsfw-term[data-type='button'][data-default='yes'] {
-                margin-right: {$settings['bn_gap']};
+                line-height: 1.2em;
             }
             .hvsfw-term[data-type='button'][data-default='yes'] {
                 min-width: {$settings['bn_wd']};
@@ -317,23 +385,125 @@ final class Style {
                 padding: {$this->get_padding( $settings, 'bn' )};
                 border: {$this->get_border( $settings, 'bn' )};
             }
-            .hvsfw-term[data-type='button'][data-default='yes']:hover,
-            .hvsfw-term[data-type='button'][data-default='yes']:focus,
-            .hvsfw-term[data-type='button'][data-default='yes'][data-active='yes'] {
-                color: {$settings['bn_txt_hv_clr']};
-                background-color: {$settings['bn_bg_hv_clr']};
-                border-color: {$settings['bn_b_hv_clr']};
-            }
-            .hvsfw-term[data-type='button'][data-default='yes'][data-shape='square'] {
-                border-radius: 0px;
-            }
-            .hvsfw-term[data-type='button'][data-default='yes'][data-shape='circle'] {
-                border-radius: 100%;
-            }
             .hvsfw-term[data-type='button'][data-default='yes'][data-shape='custom'] {
                 border-radius: {$settings['bn_br']};
             }
         ";
+
+        // Color.
+        $class .= "
+            .hvsfw-term[data-type='color'] {
+                padding: 3px;
+            }
+            .hvsfw-term[data-type='color'] .hvsfw-color {
+                width: 100%;
+                height: 100%;
+                border: 1px solid #e1e1e1;
+                border-radius: inherit;
+            }
+            .hvsfw-term[data-type='color'][data-default='yes'] {
+                width: {$settings['cr_size']};
+                height: {$settings['cr_size']};
+                border: {$this->get_border( $settings, 'cr' )};
+            }
+            .hvsfw-term[data-type='color'][data-default='yes'][data-shape='custom'] {
+                width: {$settings['cr_wd']};
+                height: {$settings['cr_ht']};
+                border-radius: {$settings['cr_br']};
+            }
+        ";
+
+        // Image.
+        $class .= "
+            .hvsfw-term[data-type='image'] {
+                padding: 3px;
+            }
+            .hvsfw-term[data-type='image'] .hvsfw-image {
+                width: 100%;
+                height: 100%;
+                background-size: cover;
+                border-radius: inherit;
+            }
+            .hvsfw-term[data-type='image'][data-default='yes'] {
+                width: {$settings['im_size']};
+                height: {$settings['im_size']};
+                border: {$this->get_border( $settings, 'im' )};
+            }
+            .hvsfw-term[data-type='image'][data-default='yes'][data-shape='custom'] {
+                width: {$settings['im_wd']};
+                height: {$settings['im_ht']};
+                border-radius: {$settings['im_br']};
+            }
+        ";
+
+        // Product Page.
+        $class .= "
+            .hvsfw-attribute[data-page='product-page'] {
+                grid-row-gap: {$settings['gs_pp_sw_item_gap_row']};
+                grid-column-gap: {$settings['gs_pp_sw_item_gap_col']};
+            }
+            form.variations_form table.variations tr {
+                margin-bottom: 15px;
+            }
+            form.variations_form table.variations tr:last-child {
+                margin-bottom: 0px;
+            }
+        ";
+
+        if ( $settings['gs_pp_sw_label_position'] === 'hidden' ) {
+            $class .= "
+                form.variations_form table.variations th.label {
+                    display: none !important;
+                }
+            ";
+        }
+
+        if ( $settings['gs_pp_sw_label_position'] !== 'hidden' ) {
+            $class .= "
+                form.variations_form table.variations {
+                    width: 100%;
+                }
+                form.variations_form table.variations th.label {
+                    text-align: left !important;
+                }
+                form.variations_form table.variations th.label > label {
+                    font-size: {$settings['gs_pp_sw_label_fs']} !important;
+                    font-weight: {$settings['gs_pp_sw_label_fw']} !important;
+                    line-height: {$settings['gs_pp_sw_label_ln']} !important;
+                    color: {$settings['gs_pp_sw_label_clr']} !important;
+                }
+            ";
+            
+            if ( $settings['gs_pp_sw_label_position'] === 'inline' ) {
+                $class .= "
+                    form.variations_form table.variations tr {
+                        display: table-row;
+                        margin-bottom: 0px;
+                    }
+                    form.variations_form table.variations th.label {
+                        display: table-cell;
+                        margin-bottom: 0px;
+                        padding-right: {$settings['gs_pp_sw_label_m']};
+                    }
+                    form.variations_form table.variations td.value {
+                        display: table-cell;
+                    }
+                ";
+            }
+
+            if ( $settings['gs_pp_sw_label_position'] === 'block' ) {
+                $class .= "
+                    form.variations_form table.variations tr {
+                        display: block;
+                    }
+                    form.variations_form table.variations th.label {
+                        display: block;
+                        line-height: 0px !important;
+                        margin-bottom: {$settings['gs_pp_sw_label_m']};
+                    }
+                ";
+            }
+        }
 
         // Tooltip.
         $class .= "

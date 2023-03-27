@@ -109,6 +109,11 @@ final class Client {
         // Include dependency.
         $client_dependency = [ 'jquery' ];
 
+        // Include wc-add-to-cart-variation in shop page.
+        if ( $this->settings['gn_sp_enable'] == true ) {
+            $client_dependency[] = 'wc-add-to-cart-variation';
+        }
+
         // Client js.
         wp_register_script( 'hvsfw-client-js', Helper::get_asset_src( 'js/hvsfw-client.min.js' ), $client_dependency, '1.0.0', true );
         wp_enqueue_script( 'hvsfw-client-js' );

@@ -224,12 +224,3 @@ $field_visibility = SwatchHelper::get_swatch_setting_group_field_visibility( $se
         <p class="description">The border radius of this variation swatch attribute.</p>
     </td>
 </tr>
-<tr class="form-field hvsfw-field hvsfw-field__edit" data-group-field="hvsfw_gap" data-visible="<?php echo $field_visibility['gap']; ?>">
-    <th scope="row" valign="top">
-        <label for="hvsfw_size">Gap</label>
-    </th>
-    <td>
-        <input type="text" name="hvsfw_gap" id="hvsfw_gap" placeholder="0px" value="<?php echo esc_attr( $settings['gap'] ); ?>">
-        <p class="description">The gap between each swatch term of this variation swatch attribute.</p>
-    </td>
-</tr>
