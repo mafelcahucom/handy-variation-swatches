@@ -71,6 +71,7 @@ final class Installer {
 
             // gn_sp.
             'gn_sp_enable'                  => 1,
+            'gn_sp_attribute_limit'         => 0,
             
             // gs_pp.
             'gs_pp_sw_label_position'       => 'block',
@@ -81,6 +82,26 @@ final class Installer {
             'gs_pp_sw_label_clr'            => 'rgba(0,0,0,1)',
             'gs_pp_sw_item_gap_row'         => '10px',
             'gs_pp_sw_item_gap_col'         => '10px',
+
+            // gs_sp.
+            'gs_sp_sw_alignment'            => 'left',
+            'gs_sp_sw_label_position'       => 'block',
+            'gs_sp_sw_label_fs'             => '16px',
+            'gs_sp_sw_label_fw'             => '500',
+            'gs_sp_sw_label_ln'             => '20px',
+            'gs_sp_sw_label_m'              => '5px',
+            'gs_sp_sw_label_clr'            => 'rgba(0,0,0,1)',
+            'gs_sp_sw_item_gap_row'         => '10px',
+            'gs_sp_sw_item_gap_col'         => '10px',
+
+            // gs_ml.
+            'gs_ml_format'                  => 'label-number',
+            'gs_ml_label'                   => 'More',
+            'gs_ml_fs'                      => '14px',
+            'gs_ml_fw'                      => '500',
+            'gs_ml_ln'                      => '21px',
+            'gs_ml_txt_clr'                 => 'rgba(0,113,242,1)',
+            'gs_ml_txt_hv_clr'              => 'rgba(2,97,205,1)',
 
             // bn.
             'bn_shape'                      => 'square',

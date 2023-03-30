@@ -39,10 +39,8 @@ final class Swatch {
         // Set global setting property.
         $this->settings = get_option( '_hvsfw_main_settings' );
 
-        // Render the variation attributes in product single page.
-        if ( $this->settings['gn_pp_enable'] == true ) {
-            add_filter( 'woocommerce_dropdown_variation_attribute_options_html', [ $this, 'render_product_single_page_swatches' ], 100, 2 );
-        }
+        // Override the default dropdown variation to swatches.
+        add_filter( 'woocommerce_dropdown_variation_attribute_options_html', [ $this, 'custom_swatch_variation_attribute' ], 100, 2 );
 
         // Render the variation attributes in shop page.
         if ( $this->settings['gn_sp_enable'] == true ) {
@@ -51,7 +49,7 @@ final class Swatch {
     }
 
     /**
-     * Render the variation swatches in product single page.
+     * Override the default dropdown variation attribute to swatches.
      *
      * @since 1.0.0
      * 
@@ -59,11 +57,18 @@ final class Swatch {
      * @param  array   $args  Containing the default arguments from a filter hook.
      * @return string
      */
-    public function render_product_single_page_swatches( $html, $args ) {
-        global $product;
+    public function custom_swatch_variation_attribute( $html, $args ) {
+        $product     = $args['product'];
         $select_html = $html;
 
-        Helper::log( $args );
+        $template = 'single-product';
+        if ( property_exists( $product, 'hvsfw_template' ) ) {
+            $template = $product->hvsfw_template;
+        }
+
+        if ( $template === 'single-product' && $this->settings['gn_pp_enable'] == false ) {
+            return $select_html;
+        } 
 
         $attribute = $this->get_attribute( $product, $args['attribute'] );
         if ( empty( $attribute ) ) {
@@ -76,7 +81,6 @@ final class Swatch {
         }
 
         $swatch = $saved_swatches[ $attribute['slug'] ];
-
         if ( $swatch['custom'] === 'yes' && in_array( $swatch['type'], [ 'default', 'select' ] ) ) {
             return $select_html;
         }
@@ -94,14 +98,18 @@ final class Swatch {
             }
         }
 
+        $variation_html = $this->get_variation_attribute([
+            'product_id' => $product->get_id(),
+            'attribute'  => $attribute,
+            'swatch'     => $swatch,
+            'template'   => $template
+        ]);
+
         $html  = '<div class="hvsfw hvsfw-swatch">';
         $html .= '<div class="hvsfw-select" data-attribute="'. esc_attr( $attribute['slug'] ) .'">';
         $html .= $select_html;
         $html .= '</div>';
-        $html .= $this->get_variation_attribute([
-            'attribute' => $attribute,
-            'swatch'    => $swatch
-        ]);
+        $html .= $variation_html;
         $html .= '</div>';
 
         return $html; 
@@ -124,10 +132,11 @@ final class Swatch {
             return;
         }
         
-        $product_id         = $product->get_id();
-        $attributes         = $product->get_variation_attributes();
-        $attribute_keys     = array_keys( $attributes );
-        $encoded_variations = wp_json_encode( $variations );
+        $product_id              = $product->get_id();
+        $attributes              = $product->get_variation_attributes();
+        $attribute_keys          = array_keys( $attributes );
+        $encoded_variations      = wp_json_encode( $variations );
+        $product->hvsfw_template = 'archive-product';
         ?>
         <div class="hvsfw-variations-form variations_form"
              data-product_id="<?php echo absint( $product_id ); ?>"
@@ -136,11 +145,13 @@ final class Swatch {
                 <tbody>
                     <?php foreach ( $attributes as $attribute_name => $options ): ?>
                         <tr>
-                            <td class="label">
-                                <label for="<?php echo esc_attr( $attribute_name ); ?>">
-                                    <?php echo esc_html( wc_attribute_label( $attribute_name ) ); ?>
-                                </label>
-                            </td>
+                            <?php if ( $this->settings['gs_sp_sw_label_position'] !== 'hidden' ): ?>
+                                <th class="label">
+                                    <label for="<?php echo esc_attr( $attribute_name ); ?>">
+                                        <?php echo esc_html( wc_attribute_label( $attribute_name ) ); ?>
+                                    </label>
+                                </th>
+                            <?php endif; ?>
                             <td class="value">
                                 <?php
                                     wc_dropdown_variation_attribute_options(
@@ -150,8 +161,14 @@ final class Swatch {
                                             'product'   => $product,
                                         )
                                     );
-                                    echo end( $attribute_keys ) === $attribute_name ? wp_kses_post( apply_filters( 'woocommerce_reset_variations_link', '<a class="reset_variations" href="#">' . esc_html__( 'Clear', 'woocommerce' ) . '</a>' ) ) : '';
                                 ?>
+                                <?php if ( end( $attribute_keys ) === $attribute_name ): ?>
+                                    <div class="hvsfw-variations-reset">
+                                        <?php
+                                            echo wp_kses_post( apply_filters( 'woocommerce_reset_variations_link', '<a class="reset_variations" href="#">' . esc_html__( 'Clear', 'woocommerce' ) . '</a>' ) );
+                                        ?>
+                                    </div>
+                                <?php endif; ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -168,13 +185,16 @@ final class Swatch {
      * 
      * @param  array  $args  Containing the necessary arguments for variation attributes.
      * $args = [
-     *     'attribute' => (array) The attribute value from $this->get_attribute().
-     *     'swatch'    => (array) The current setting of the swatch.
+     *     'product_id' => (integer) The target product's id.
+     *     'attribute'  => (array)   The attribute value from $this->get_attribute().
+     *     'swatch'     => (array)   The current setting of the swatch.
+     *     'template'   => (string)  The type of product page template.
      * ]
      * @return string
      */
     private function get_variation_attribute( $args = [] ) {
-        if ( ! isset( $args['attribute'] ) || ! isset( $args['swatch'] ) ) {
+        $parameters = [ 'product_id', 'attribute', 'swatch', 'template' ];
+        if ( Utility::has_array_unset( $args, $parameters ) ) {
             return '';
         }
 
@@ -201,12 +221,21 @@ final class Swatch {
             }
         }
 
+        // Set attribute_limit and is_limited.
+        $attribute_limit = $this->settings['gn_sp_attribute_limit'];
+        $is_limited      = ( $args['template'] === 'archive-product' && $attribute_limit > 0 ? true : false );
+
         ob_start();
         ?>
-        <div class="hvsfw-attribute" data-page="product-page" data-attribute="<?php echo esc_attr( $attribute['slug'] ); ?>" data-type="<?php echo esc_attr( $attribute_type ); ?>">
+        <div class="hvsfw-attribute" data-attribute="<?php echo esc_attr( $attribute['slug'] ); ?>" data-type="<?php echo esc_attr( $attribute_type ); ?>">
             <?php
                 if ( ! empty( $attribute['options'] ) ) {
-                    foreach ( $attribute['options'] as $option ) {
+                    foreach ( $attribute['options'] as $key => $option ) {
+                        // Implement limit.
+                        if ( $is_limited && ( $key + 1 ) > $attribute_limit ) {
+                            break;
+                        }
+
                         // Set term.
                         $term = ( isset( $swatch['term'][ $option['slug'] ] ) ? $swatch['term'][ $option['slug'] ] : [] );
                         if ( ! empty( $term ) ) {
@@ -261,6 +290,11 @@ final class Swatch {
                                     break;
                             }
                         }
+                    }
+
+                    // Render more link.
+                    if ( $is_limited && ( count( $attribute['options'] ) > $attribute_limit ) ) {
+                        echo $this->get_more_link( $args['product_id'], count( $attribute['options'] ) );
                     }
                 }
             ?>
@@ -699,19 +733,44 @@ final class Swatch {
     }
 
     /**
-     * Return style and is_default class.
+     * Return the more link html.
      *
      * @since 1.0.0
      * 
-     * @param  array  $swatch  The swatch setting.
-     * @return array
+     * @param  integer  $product_id     The target product's id.
+     * @param  integer  $total_options  The total attribute options.
+     * @return string
      */
-    private function get_style( $swatch = [] ) {
-        if ( empty( $swatch ) ) {
-            return [];
+    private function get_more_link( $product_id, $total_options ) {
+        if ( empty( $product_id ) || empty( $total_options ) ) {
+            return;
         }
 
+        $text       = '';
+        $label      = $this->settings['gs_ml_label'];
+        $difference = '('. ( $total_options - $this->settings['gn_sp_attribute_limit'] ) .')';
+        switch ( $this->settings['gs_ml_format'] ) {
+            case 'label':
+                $text = $label;
+                break;
+            case 'number':
+                $text = $difference;
+                break;
+            case 'label-number':
+                $text = $label .' '. $difference;
+                break;
+        }
 
+        ob_start();
+        ?>
+        <div class="hvsfw-flex hvsfw-flex-ai-c">
+            <a class="hvsfw-more-link" href="<?php echo esc_url( get_permalink( $product_id ) ); ?>">
+                <?php echo esc_html( $text ); ?>
+            </a>
+        </div>
+        <?php
+
+        return ob_get_clean();
     }
 
     /**

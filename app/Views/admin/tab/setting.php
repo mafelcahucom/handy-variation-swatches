@@ -206,6 +206,15 @@ echo Component::get_header( $args['page_title'] ); ?>
             'description' => 'Enable this to use variation swatch in the shop page (archive page).',
         ]);
 
+        echo Field::get_number_field([
+            'name'  => 'gn_sp_attribute_limit',
+            'group' => 'general_setting_group',
+            'value' => $settings['gn_sp_attribute_limit'],
+            'label' => 'Attributes Limit',
+            'description' => 'Set the number of attributes to be displayed. For no limit retain the value 0.',
+            'placeholder' => 'Attributes Limit'
+        ]);
+
         /**
          * Shop Page - Card Closing.
          */
@@ -325,8 +334,8 @@ echo Component::get_header( $args['page_title'] ); ?>
         ]);
 
         echo Field::get_multiple_field([
-            'label'  => 'Swatch Item Gap',
-            'description' => 'Set the row gap and column gap in each swatch item or attributes.',
+            'label'  => 'Swatch Term Gap',
+            'description' => 'Set the row gap and column gap in each swatch term or attributes.',
             'fields' => [
                 Field::get_text_field([
                     'name'  => 'gs_pp_sw_item_gap_row',
@@ -347,6 +356,220 @@ echo Component::get_header( $args['page_title'] ); ?>
 
         /**
          * Product Page - Card Closing.
+         */
+        echo Component::get_card_closing();
+
+        /**
+         * Shop Page - Card Opening.
+         */
+        echo Component::get_card_opening([
+            'title' => 'Shop Page',
+            'class' => 'hd-mb-30'
+        ]);
+
+        echo Field::get_note_field([
+            'title' => 'Instruction',
+            'message' => 'Note all the setting modified in here will be only applied in Shop Page (Archive Page).'
+        ]);
+
+        echo Field::get_select_field([
+            'name'  => 'gs_sp_sw_alignment',
+            'group' => 'global_style_setting_group',
+            'value' => $settings['gs_sp_sw_alignment'],
+            'label' => 'Swatch Alignment',
+            'description' => 'Select the swatch alignment.',
+            'options' => [
+                [
+                    'value' => 'left',
+                    'label' => 'Left'
+                ],
+                [
+                    'value' => 'center',
+                    'label' => 'Center'
+                ],
+                [
+                    'value' => 'right',
+                    'label' => 'Right'
+                ]
+            ]
+        ]);
+
+        echo Field::get_multiple_field([
+            'label'  => 'Swatch Label',
+            'description' => 'Set the style of the swatch label.',
+            'fields' => [
+                Field::get_select_field([
+                    'name'  => 'gs_sp_sw_label_position',
+                    'group' => 'global_style_setting_group',
+                    'value' => $settings['gs_sp_sw_label_position'],
+                    'label' => 'Position',
+                    'options' => [
+                        [
+                            'value' => 'hidden',
+                            'label' => 'Hidden'
+                        ],
+                        [
+                            'value' => 'inline',
+                            'label' => 'Inline'
+                        ],
+                        [
+                            'value' => 'block',
+                            'label' => 'Block'
+                        ]
+                    ]
+                ]),
+                Field::get_text_field([
+                    'name'  => 'gs_sp_sw_label_fs',
+                    'group' => 'global_style_setting_group',
+                    'value' => $settings['gs_sp_sw_label_fs'],
+                    'label' => 'Font Size',
+                    'placeholder' => 'Font Size'
+                ]),
+                Field::get_select_field([
+                    'name'  => 'gs_sp_sw_label_fw',
+                    'group' => 'global_style_setting_group',
+                    'value' => $settings['gs_sp_sw_label_fw'],
+                    'label' => 'Font Weight',
+                    'options' => Helper::get_font_weight_choices()
+                ]),
+                Field::get_text_field([
+                    'name'  => 'gs_sp_sw_label_ln',
+                    'group' => 'global_style_setting_group',
+                    'value' => $settings['gs_sp_sw_label_ln'],
+                    'label' => 'Line Height',
+                    'placeholder' => 'Line Height'
+                ]),
+                Field::get_text_field([
+                    'name'  => 'gs_sp_sw_label_m',
+                    'group' => 'global_style_setting_group',
+                    'value' => $settings['gs_sp_sw_label_m'],
+                    'label' => 'Margin',
+                    'placeholder' => 'Margin'
+                ]),
+                Field::get_color_picker_field([
+                    'name'  => 'gs_sp_sw_label_clr',
+                    'group' => 'global_style_setting_group',
+                    'value' => $settings['gs_sp_sw_label_clr'],
+                    'label' => 'Color',
+                ]),
+            ]
+        ]);
+
+        echo Field::get_multiple_field([
+            'label'  => 'Swatch Term Gap',
+            'description' => 'Set the row gap and column gap in each swatch term or attributes.',
+            'fields' => [
+                Field::get_text_field([
+                    'name'  => 'gs_sp_sw_item_gap_row',
+                    'group' => 'global_style_setting_group',
+                    'value' => $settings['gs_sp_sw_item_gap_row'],
+                    'label' => 'Row',
+                    'placeholder' => 'Row'
+                ]),
+                Field::get_text_field([
+                    'name'  => 'gs_sp_sw_item_gap_col',
+                    'group' => 'global_style_setting_group',
+                    'value' => $settings['gs_sp_sw_item_gap_col'],
+                    'label' => 'Column',
+                    'placeholder' => 'Column'
+                ])
+            ]
+        ]);
+
+        /**
+         * Shop Page - Card Closing.
+         */
+        echo Component::get_card_closing();
+
+        /**
+         * More Link - Card Opening.
+         */
+        echo Component::get_card_opening([
+            'title' => 'More Link',
+            'class' => 'hd-mb-30'
+        ]);
+
+        echo Field::get_note_field([
+            'title' => 'Instruction',
+            'message' => 'Note more link will be only be displayed on shop page if the attribute limit value is greater than 0.'
+        ]);
+
+        echo Field::get_select_field([
+            'name'  => 'gs_ml_format',
+            'group' => 'global_style_setting_group',
+            'value' => $settings['gs_ml_format'],
+            'label' => 'Format',
+            'options' => [
+                [
+                    'value' => 'label',
+                    'label' => 'Label'
+                ],
+                [
+                    'value' => 'number',
+                    'label' => 'Number'
+                ],
+                [
+                    'value' => 'label-number',
+                    'label' => 'Label & Number'
+                ]
+            ]
+        ]);
+
+        echo Field::get_text_field([
+            'name'  => 'gs_ml_label',
+            'group' => 'global_style_setting_group',
+            'value' => $settings['gs_ml_label'],
+            'label' => 'Label',
+            'placeholder' => 'Label'
+        ]);
+
+        echo Field::get_multiple_field([
+            'label'  => 'Font',
+            'fields' => [
+                Field::get_text_field([
+                    'name'  => 'gs_ml_fs',
+                    'group' => 'global_style_setting_group',
+                    'value' => $settings['gs_ml_fs'],
+                    'label' => 'Font Size',
+                    'placeholder' => 'Font Size'
+                ]),
+                Field::get_select_field([
+                    'name'  => 'gs_ml_fw',
+                    'group' => 'global_style_setting_group',
+                    'value' => $settings['gs_ml_fw'],
+                    'label' => 'Font Weight',
+                    'options' => Helper::get_font_weight_choices()
+                ]),
+                Field::get_text_field([
+                    'name'  => 'gs_ml_ln',
+                    'group' => 'global_style_setting_group',
+                    'value' => $settings['gs_ml_ln'],
+                    'label' => 'Line Height',
+                    'placeholder' => 'Line Height'
+                ]),
+            ]
+        ]);
+
+        echo Field::get_multiple_field([
+            'label'  => 'Text Color',
+            'fields' => [
+                Field::get_color_picker_field([
+                    'name'  => 'gs_ml_txt_clr',
+                    'group' => 'global_style_setting_group',
+                    'value' => $settings['gs_ml_txt_clr'],
+                    'label' => 'Color',
+                ]),
+                Field::get_color_picker_field([
+                    'name'  => 'gs_ml_txt_hv_clr',
+                    'group' => 'global_style_setting_group',
+                    'value' => $settings['gs_ml_txt_hv_clr'],
+                    'label' => 'Hover & Active Color',
+                ])
+            ]
+        ]);
+
+        /**
+         * More Link - Card Closing.
          */
         echo Component::get_card_closing();
 

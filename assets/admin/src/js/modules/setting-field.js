@@ -259,7 +259,7 @@ const settingField = {
 					type: 'size',
 					default: '0px',
 				},
-			]
+			],
 		};
 	},
 
@@ -273,7 +273,7 @@ const settingField = {
 	getGroupFields() {
 		return [
 			'shape', 'size', 'dimension', 'font', 'text_color',
-			'background_color', 'padding', 'border', 'border_radius'
+			'background_color', 'padding', 'border', 'border_radius',
 		];
 	},
 
@@ -293,13 +293,13 @@ const settingField = {
 		const fields = {
 			button: [
 				'shape', 'dimension', 'font', 'text_color',
-				'background_color', 'padding', 'border'
+				'background_color', 'padding', 'border',
 			],
 			color: [
-				'shape', 'size', 'border'
+				'shape', 'size', 'border',
 			],
 			image: [
-				'shape', 'size', 'border'
+				'shape', 'size', 'border',
 			],
 		};
 

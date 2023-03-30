@@ -70,6 +70,10 @@ final class SettingApi {
                 'type'    => 'switch',
                 'default' => 1
             ],
+            'gn_sp_attribute_limit'         => [
+                'type'     => 'number',
+                'default'  => 0
+            ],
 
             // gs_pp.
             'gs_pp_sw_label_position'       => [
@@ -105,6 +109,80 @@ final class SettingApi {
             'gs_pp_sw_item_gap_col'         => [
                 'type'     => 'size',
                 'default'  => '10px'
+            ],
+
+            // gs_sp.
+            'gs_sp_sw_alignment'            => [
+                'type'     => 'select',
+                'default'  => 'left',
+                'choices'  => [ 'left', 'center', 'right' ]
+            ],
+            'gs_sp_sw_label_position'       => [
+                'type'     => 'select',
+                'default'  => 'block',
+                'choices'  => [ 'hidden', 'inline', 'block' ]
+            ],
+            'gs_sp_sw_label_fs'             => [
+                'type'     => 'size',
+                'default'  => '16px'
+            ],
+            'gs_sp_sw_label_fw'             => [
+                'type'     => 'select',
+                'default'  => '500',
+                'choices'  => Helper::get_font_weight_choices( 'value' )
+            ],
+            'gs_sp_sw_label_ln'             => [
+                'type'     => 'size',
+                'default'  => '20px'
+            ],
+            'gs_sp_sw_label_m'              => [
+                'type'     => 'size',
+                'default'  => '5px'
+            ],
+            'gs_sp_sw_label_clr'            => [
+                'type'     => 'color',
+                'default'  => 'rgba(0,0,0,1)'
+            ],
+            'gs_sp_sw_item_gap_row'         => [
+                'type'     => 'size',
+                'default'  => '10px'
+            ],
+            'gs_sp_sw_item_gap_col'         => [
+                'type'     => 'size',
+                'default'  => '10px'
+            ],
+
+            // gs_ml.
+            'gs_ml_format'                  => [
+                'type'     => 'select',
+                'default'  => 'label-number',
+                'choices'  => [ 'label', 'number', 'label-number' ]
+            ],
+            'gs_ml_label'                   => [
+                'type'     => 'text',
+                'default'  => 'More',
+                'max'      => 50
+            ],
+            'gs_ml_fs'                      => [
+                'type'     => 'size',
+                'default'  => '14px'
+            ],
+            'gs_ml_fw'                      => [
+                'type'     => 'select',
+                'default'  => '500',
+                'choices'  => Helper::get_font_weight_choices( 'value' )
+            ],
+            'gs_ml_ln'                      => [
+                'type'     => 'size',
+                'default'  => '21px'
+            ],
+            'gs_ml_txt_clr'                 => [
+                'type'     => 'color',
+                'default'  => 'rgba(0,113,242,1)'
+            ],
+            'gs_ml_txt_hv_clr'              => [
+                'type'     => 'color',
+                'default'  => 'rgba(2,97,205,1)'
             ],
 
             // bn.

@@ -50,9 +50,9 @@ hvsfw.fn = {
 	 * the given styles.
 	 *
 	 * @since 1.0.0
-	 * 
-	 * @param  {Object} element The target element.
-	 * @param  {array}  styles  Containing the style attribute and value.
+	 *
+	 * @param {Object} element The target element.
+	 * @param {Array}  styles  Containing the style attribute and value.
 	 */
 	setInlineStyle( element, styles ) {
 		if ( ! element || ! styles ) {
@@ -60,16 +60,16 @@ hvsfw.fn = {
 		}
 
 		Object.entries( styles ).forEach( function( style ) {
-			element.style[ style[0] ] = style[1];
-		});
-	}
+			element.style[ style[ 0 ] ] = style[ 1 ];
+		} );
+	},
 };
 
 /**
  * Holds the swatch events.
  *
  * @since 1.0.0
- * 
+ *
  * @type {Object}
  */
 hvsfw.swatch = {
@@ -92,7 +92,7 @@ hvsfw.swatch = {
 	 * Set the inline style of target term element.
 	 *
 	 * @since 1.0.0
-	 * 
+	 *
 	 * @param {Object} element The target term element.
 	 * @param {string} event   The style event |enter|leave.
 	 */
@@ -125,7 +125,7 @@ hvsfw.swatch = {
 
 		if ( formElems.length === 0 ) {
 			return;
-		} 
+		}
 
 		formElems.forEach( function( formElem ) {
 			const selectElems = formElem.querySelectorAll( '.hvsfw-select' );
@@ -137,7 +137,7 @@ hvsfw.swatch = {
 						if ( selectInputElem ) {
 							const selectInputValues = Array.from( selectInputElem.options ).map( function( e ) {
 								return e.value;
-							});
+							} );
 
 							// Update the term enable state.
 							const termElems = formElem.querySelectorAll( `.hvsfw-term[data-attribute="${ attribute }"]` );
@@ -146,18 +146,19 @@ hvsfw.swatch = {
 									const termValue = termElem.getAttribute( 'data-value' );
 									const isTermValueExists = selectInputValues.includes( termValue );
 									termElem.setAttribute( 'data-enable', ( isTermValueExists ? 'yes' : 'no' ) );
-								});
+								} );
 							}
 						}
 					}
-				});
+				} );
 			}
-		});
+		} );
 	},
 
 	/**
 	 * On load swatch term events.
-	 * @return {[type]} [description]
+	 *
+	 * @since 1.0.0
 	 */
 	onLoadTerm() {
 		setTimeout( function() {
@@ -174,7 +175,7 @@ hvsfw.swatch = {
 		jQuery( '.hvsfw-term' ).on( 'mouseenter mouseleave', function( e ) {
 			const target = e.target;
 			const enable = target.getAttribute( 'data-enable' );
-			
+
 			// Override inline style.
 			const state = target.getAttribute( 'data-state' );
 			if ( enable === 'yes' && state === 'default' ) {
@@ -189,9 +190,9 @@ hvsfw.swatch = {
 				if ( tooltipElem ) {
 					const tooltipVisibility = ( e.type === 'mouseenter' ? 'show' : 'hide' );
 					tooltipElem.setAttribute( 'data-visibility', tooltipVisibility );
-				} 
+				}
 			}
-		});
+		} );
 	},
 
 	/**
@@ -218,8 +219,8 @@ hvsfw.swatch = {
 			const selectElem = formElem.querySelector( `select[name="attribute_${ attribute }"]` );
 			if ( selectElem ) {
 				selectElem.value = value;
-				selectElem.dispatchEvent( new Event( 'change', { 
-					bubbles: true 
+				selectElem.dispatchEvent( new Event( 'change', {
+					bubbles: true,
 				} ) );
 
 				// Set term current & siblings state.
@@ -230,14 +231,14 @@ hvsfw.swatch = {
 						termElems.forEach( function( termElem ) {
 							termElem.setAttribute( 'data-state', 'default' );
 							hvsfw.swatch.setTermInlineStyle( termElem, 'leave' );
-						});
+						} );
 
 						target.setAttribute( 'data-state', 'active' );
 						hvsfw.swatch.setTermInlineStyle( target, 'enter' );
 					}
 				}
 			}
-		});
+		} );
 	},
 
 	/**
@@ -279,7 +280,7 @@ hvsfw.swatch = {
 					}
 				}
 			}
-		});
+		} );
 	},
 
 	/**
@@ -290,10 +291,11 @@ hvsfw.swatch = {
 	onChangeVariationListener() {
 		jQuery( '.variations_form' ).on( 'woocommerce_variation_select_change', function( e ) {
 			const target = e.target;
+
 			setTimeout( function() {
 				hvsfw.swatch.setTermsEnable( target );
 			}, 200 );
-		});
+		} );
 	},
 
 	/**
@@ -337,9 +339,8 @@ hvsfw.swatch = {
 					priceElem.outerHTML = variation.price_html;
 				}
 			}
-			
-		});
-	}
+		} );
+	},
 };
 
 /**
