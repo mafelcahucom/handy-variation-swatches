@@ -105,10 +105,10 @@ echo Component::get_header( $args['page_title'] ); ?>
         echo Component::get_card_closing();
 
         /**
-         * Variation - Card Opening.
+         * Advanced - Card Opening.
          */
         echo Component::get_card_opening([
-            'title' => 'Variation',
+            'title' => 'Advanced',
             'class' => 'hd-mb-30'
         ]);
 
@@ -125,7 +125,7 @@ echo Component::get_header( $args['page_title'] ); ?>
             'group' => 'general_setting_group',
             'value' => $settings['gn_disable_item_oos'],
             'label' => 'Disable Out Of Stock Term',
-            'description' => 'Enable this to disable or add effects to out of stock attribute terms',
+            'description' => 'Enable this to disable an out of stock variation term.',
         ]);
 
         echo Field::get_select_field([
@@ -133,7 +133,7 @@ echo Component::get_header( $args['page_title'] ); ?>
             'group' => 'general_setting_group',
             'value' => $settings['gn_disable_item_style'],
             'label' => 'Disabled Term Style',
-            'description' => 'Select the style indicator of disabled or out of stock terms.',
+            'description' => 'Select the style indicator of disabled term.',
             'options' => [
                 [
                     'value' => 'hidden',
@@ -155,7 +155,7 @@ echo Component::get_header( $args['page_title'] ); ?>
         ]);
 
         /**
-         * Variation - Card Closing.
+         * Advanced - Card Closing.
          */
         echo Component::get_card_closing();
 

@@ -122,6 +122,12 @@ final class Client {
         wp_localize_script( 'hvsfw-client-js', 'hvsfwLocal', [
             'crafter' => 'Y35qwbAlyt+y60cldwAatUDyxikpRb30wBPT9Y1Xymk=',
             'url'     => admin_url( 'admin-ajax.php' ),
+            'plugin'  => [
+                'isHAFWActive' => Plugins::is_active( 'handy-add-to-cart' )
+            ],
+            'nonce'   => [
+                'addToCart' => wp_create_nonce( 'hvsfw_add_to_cart' )
+            ]
         ]);
     }
 }

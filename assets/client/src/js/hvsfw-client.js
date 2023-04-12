@@ -46,6 +46,58 @@ hvsfw.fn = {
 	},
 
 	/**
+	 * Fetch handler.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param {Object} params Containing the parameters.
+	 * @return {Object} Fetch response
+	 */
+	async fetch( params ) {
+		let result = {
+			success: false,
+			data: {
+				error: 'NETWORK_ERROR',
+			},
+		};
+
+		if ( this.isObjectEmpty( params ) ) {
+			result.data.error = 'MISSING_DATA_ERROR';
+			return result;
+		}
+
+		try {
+			const response = await fetch( hvsfwLocal.url, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+				},
+				body: new URLSearchParams( params ),
+			} );
+
+			if ( response.ok ) {
+				result = await response.json();
+			}
+		} catch ( e ) {
+			console.log( 'error', e );
+		}
+
+		return result;
+	},
+
+	/**
+	 * Checks if the object is empty.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param {Object} object The object to be checked.
+	 * @return {boolean} Whether has empty key.
+	 */
+	isObjectEmpty( object ) {
+		return Object.keys( object ).length === 0;
+	},
+
+	/**
 	 * Set or implement the inline style on a certain element based on
 	 * the given styles.
 	 *
@@ -306,40 +358,167 @@ hvsfw.swatch = {
 	onFoundVariationListener() {
 		jQuery( '.variations_form' ).on( 'found_variation', function( e, variation ) {
 			const target = e.target;
-
-			// Shop Page or Product Thumbnail.
 			const thumbnailElem = target.closest( 'li.product.product-type-variable' );
-			if ( thumbnailElem ) {
-				// Update thumbnail.
-				const imageElem = thumbnailElem.querySelector( 'img.attachment-woocommerce_thumbnail' );
-				if ( imageElem ) {
-					if ( ! target.hasAttribute( 'data-image' ) ) {
-						const imageOriginal = {
-							alt: imageElem.getAttribute( 'alt' ),
-							sizes: imageElem.getAttribute( 'sizes' ),
-							srcset: imageElem.getAttribute( 'srcset' ),
-							thumb_src: imageElem.getAttribute( 'src' ),
-						};
-						target.setAttribute( 'data-image', JSON.stringify( imageOriginal ) );
-					}
-
-					imageElem.setAttribute( 'src', variation.image.thumb_src );
-					imageElem.setAttribute( 'srcset', variation.image.srcset );
-					imageElem.setAttribute( 'sizes', variation.image.sizes );
-					imageElem.setAttribute( 'alt', variation.image.alt );
-				}
-
-				// Update price.
-				const priceElem = thumbnailElem.querySelector( '.price' );
-				if ( priceElem ) {
-					if ( ! target.hasAttribute( 'data-price' ) ) {
-						target.setAttribute( 'data-price', priceElem.innerHTML );
-					}
-
-					priceElem.outerHTML = variation.price_html;
-				}
+			if ( ! thumbnailElem ) {
+				return;
 			}
+
+			// Update thumbnail.
+			const imageElem = thumbnailElem.querySelector( 'img.attachment-woocommerce_thumbnail' );
+			if ( imageElem ) {
+				if ( ! target.hasAttribute( 'data-image' ) ) {
+					const imageOriginal = {
+						alt: imageElem.getAttribute( 'alt' ),
+						sizes: imageElem.getAttribute( 'sizes' ),
+						srcset: imageElem.getAttribute( 'srcset' ),
+						thumb_src: imageElem.getAttribute( 'src' ),
+					};
+					target.setAttribute( 'data-image', JSON.stringify( imageOriginal ) );
+				}
+
+				imageElem.setAttribute( 'src', variation.image.thumb_src );
+				imageElem.setAttribute( 'srcset', variation.image.srcset );
+				imageElem.setAttribute( 'sizes', variation.image.sizes );
+				imageElem.setAttribute( 'alt', variation.image.alt );
+			}
+
+			// Update price.
+			const priceElem = thumbnailElem.querySelector( '.price' );
+			if ( priceElem ) {
+				if ( ! target.hasAttribute( 'data-price' ) ) {
+					target.setAttribute( 'data-price', priceElem.innerHTML );
+				}
+
+				priceElem.outerHTML = variation.price_html;
+			}
+
+			// HAFW: Update button.
+			hvsfw.addToCart.setHAFWButton( target, variation );
 		} );
+	}
+};
+
+/**
+ * Add To Cart Event.
+ *
+ * @since 1.0.0
+ * 
+ * @type {Object}
+ */
+hvsfw.addToCart = {
+
+	/**
+	 * Initialize.
+	 *
+	 * @since 1.0.0
+	 */
+	init() {
+		this.onAjaxAdd();
+	},
+
+	/**
+	 * Set the HAFW add to car button in archive or shop page.
+	 *
+	 * @since 1.0.0
+	 * 
+	 * @param {Object} form 	 The current variation form.
+	 * @param {Object} variation The current variation found.
+	 */
+	setHAFWButton( form, variation ) {
+		if ( ! form || ! variation || ! hvsfwLocal.plugin.isHAFWActive ) {
+			return;
+		}
+
+		const thumbnailElem = form.closest( 'li.product.product-type-variable' );
+		if ( ! thumbnailElem ) {
+			return;
+		}
+
+		const productId = form.getAttribute( 'data-product_id' );
+		if ( ! productId ) {
+			return;
+		}
+
+		const btnContainerElem = thumbnailElem.querySelector( '.hafw-swatch-btn' );
+		if ( ! btnContainerElem ) {
+			return;
+		}
+
+		const btnDefaultElem = btnContainerElem.querySelector( '.hafw-vpl' );
+		const btnSimpleElem = btnContainerElem.querySelector( '.hafw-spl' );
+		if ( ! btnDefaultElem || ! btnSimpleElem ) {
+			return;
+		}
+
+		if ( variation.is_purchasable && variation.is_in_stock ) {
+			btnSimpleElem.setAttribute( 'data-variation_id', variation.variation_id );
+			btnSimpleElem.setAttribute( 'data-product_sku', variation.sku );
+			btnContainerElem.setAttribute( 'data-type', 'simple' );
+		} else {
+			btnContainerElem.setAttribute( 'data-type', 'default' );
+		}
+
+		console.log( btnContainerElem );
+		console.log( variation );
+	},
+
+	/**
+	 * Set the add to cart button in archive or shop page.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param {Object} swatch 	 The current swatch updated. 	 
+	 * @param {Object} variation The current variation found.
+	 */
+	setButton( swatch, variation ) {
+		if ( ! swatch || ! variation ) {
+			return;
+		}
+
+		const parentElem = swatch.closest( 'li.product.product-type-variable' );
+		if ( ! parentElem ) {
+			return;
+		}
+
+		const isHAFWActive = hvsfwLocal.plugin.isHAFWActive;
+		const buttonSelector = ( isHAFWActive ? '.hafw-add-to-cart-btn' : '.hvsfw-js-loop-add-to-cart-btn' );
+
+		const buttonElem = parentElem.querySelector( buttonSelector );
+		if ( ! buttonElem ) {
+			return;
+		}
+
+		if ( isHAFWActive ) {
+
+		} else {
+
+		}
+
+		console.log( buttonSelector );
+	},
+
+	/**
+	 * Implement an AJAX add to cart event in archive or shop page.
+	 *
+	 * @since 1.0.0
+	 */
+	onAjaxAdd() {
+		hvsfw.fn.eventListener( 'click', '.hvsfw-js-loop-add-to-cart-btn', async function( e ) {
+			e.preventDefault();
+			const target = e.target;
+			const isAvailable = target.getAttribute( 'data-is-available' );
+			if ( isAvailable !== 'yes' ) {
+				return;
+			}
+
+			let availableText = target.getAttribute( 'data-available-text' );
+			availableText = ( availableText !== '' ? availableText : 'Add To Cart' );
+
+			let unavailableText = target.getAttribute( 'data-unavailable-text' );
+			unavailableText = ( unavailableText !== '' ? unavailableText : 'Select options' );
+
+
+		});
 	},
 };
 
@@ -370,4 +549,5 @@ hvsfw.domReady = {
 
 hvsfw.domReady.execute( function() {
 	hvsfw.swatch.init();
+	hvsfw.addToCart.init();
 } );

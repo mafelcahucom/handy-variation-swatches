@@ -2,7 +2,9 @@
 namespace HVSFW\Client;
 
 use HVSFW\Inc\Traits\Singleton;
+use HVSFW\Inc\Traits\Security;
 use HVSFW\Inc\Utility;
+use HVSFW\Inc\Plugins;
 use HVSFW\Client\Inc\Helper;
 
 defined( 'ABSPATH' ) || exit;
@@ -20,6 +22,11 @@ final class Swatch {
 	 * Inherit Singleton.
 	 */
 	use Singleton;
+
+    /**
+     * Inherit Security.
+     */
+    use Security;
 
     /**
      * Holds the settings.
@@ -45,8 +52,20 @@ final class Swatch {
         // Render the variation attributes in shop page.
         if ( $this->settings['gn_sp_enable'] == true ) {
             add_action( 'woocommerce_after_shop_loop_item', [ $this, 'render_shop_page_swatches' ], 10 );
+
+            // Shop page add to cart button.
+            if ( ! Plugins::is_active( 'handy-add-to-cart' ) ) {
+                add_action( 'wp_ajax_hvsfw_add_to_cart', [ $this, 'add_to_cart' ] );
+                add_action( 'wp_ajax_nopriv_hvsfw_add_to_cart', [ $this, 'add_to_cart' ] );
+
+                add_filter( 'woocommerce_loop_add_to_cart_args', [ $this, 'modify_add_to_cart_args' ], 10, 2 );
+            }
         }
+
+        // Modify the product's available variation.
+        add_filter( 'woocommerce_available_variation', [ $this, 'modify_available_variations' ], 100, 3 );
     }
+
 
     /**
      * Override the default dropdown variation attribute to swatches.
@@ -423,8 +442,6 @@ final class Swatch {
         $term      = $args['term'];
         $option    = $args['option'];
         $attribute = $args['attribute'];
-
-        //Helper::log( $option );
 
         // Set background color.
         if ( ! isset( $term['value'] ) ) {
@@ -816,5 +833,61 @@ final class Swatch {
         }
 
         return $style;
+    }
+
+    /**
+     * Perform AJAX add to cart in archive or shop page.
+     *
+     * @since 1.0.0
+     *
+     * @return json
+     */
+    public function add_to_cart() {
+        if ( ! self::is_security_passed( $_POST ) ) {
+            wp_send_json_error([
+                'error' => 'SECURITY_ERROR'
+            ]);
+        }
+
+        wp_send_json_success( 'HAHAHAHA' );
+    }
+
+    /**
+     * Modify the woocommerce add to cart button in archive or shop page.
+     *
+     * @since 1.0.0
+     * 
+     * @param  array   $args     The current wp parse arguments.
+     * @param  object  $product  The wc_product object.
+     * @return array
+     */
+    public function modify_add_to_cart_args( $args, $product ) {
+        if ( $product->is_type( 'variable' ) ) {
+            $args['class']                               .= ' hvsfw-js-loop-add-to-cart-btn';
+            $args['attributes']['data-is-available']     = 'no';
+            $args['attributes']['data-available-text']   = 'Add To Cart';
+            $args['attributes']['data-unavailable-text'] = esc_attr( $product->add_to_cart_text() );
+        }
+
+        return $args;
+    }
+
+    /**
+     * Modify the woocommerce product's available variations.
+     *
+     * @since 1.0.0
+     * 
+     * @param  array   $fields     Contain the fields used in add to cart form variation.
+     * @param  object  $product    The current target product.
+     * @param  object  $variation  The current target product's available variations.
+     * @return array
+     */
+    public function modify_available_variations( $fields, $product, $variation ) {
+        // Remove out of stock product variation.
+        if ( $this->settings['gn_disable_item_oos'] ) {
+            return $variation->is_in_stock() ? $fields : false;
+        }
+
+        return $fields;
     }
 }

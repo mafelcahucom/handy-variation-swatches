@@ -309,7 +309,7 @@ final class Style {
         ";
 
         // Term Disable Style.
-        if ( $settings['gn_disable_item_oos'] ) {
+        if ( ! empty( $settings['gn_disable_item_style'] ) ) {
             $disable_item_style   = $settings['gn_disable_item_style'];
             $is_crossed           = in_array( $disable_item_style, [ 'crossed-out', 'blurred-crossed' ] );
             $is_blurred           = in_array( $disable_item_style, [ 'blurred', 'blurred-crossed' ] );
