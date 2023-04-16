@@ -57,6 +57,19 @@ final class SettingApi {
                 'choices'  => [ 'hidden', 'blurred', 'crossed-out', 'blurred-crossed' ]
             ],
 
+            // gn_nc.
+            'gn_nc_enable_notice'           => [
+                'type'    => 'switch',
+                'default' => 1
+            ],
+            'gn_nc_auto_hide'               => [
+                'type'    => 'switch',
+                'default' => 1
+            ],
+            'gn_nc_duration'                => [
+                'type'    => 'number',
+                'default' => 5000
+            ],
 
             // gn_pp.
             'gn_pp_enable'                  => [

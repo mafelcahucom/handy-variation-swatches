@@ -49,21 +49,21 @@ final class Swatch {
         // Override the default dropdown variation to swatches.
         add_filter( 'woocommerce_dropdown_variation_attribute_options_html', [ $this, 'custom_swatch_variation_attribute' ], 100, 2 );
 
+        // Modify the product's available variation.
+        add_filter( 'woocommerce_available_variation', [ $this, 'modify_available_variations' ], 100, 3 );
+
         // Render the variation attributes in shop page.
         if ( $this->settings['gn_sp_enable'] == true ) {
             add_action( 'woocommerce_after_shop_loop_item', [ $this, 'render_shop_page_swatches' ], 10 );
 
             // Shop page add to cart button.
             if ( ! Plugins::is_active( 'handy-add-to-cart' ) ) {
-                add_action( 'wp_ajax_hvsfw_add_to_cart', [ $this, 'add_to_cart' ] );
-                add_action( 'wp_ajax_nopriv_hvsfw_add_to_cart', [ $this, 'add_to_cart' ] );
+                add_action( 'wp_ajax_hvsfw_variation_add_to_cart', [ $this, 'variation_add_to_cart' ] );
+                add_action( 'wp_ajax_nopriv_hvsfw_variation_add_to_cart', [ $this, 'variation_add_to_cart' ] );
 
                 add_filter( 'woocommerce_loop_add_to_cart_args', [ $this, 'modify_add_to_cart_args' ], 10, 2 );
             }
         }
-
-        // Modify the product's available variation.
-        add_filter( 'woocommerce_available_variation', [ $this, 'modify_available_variations' ], 100, 3 );
     }
 
 
@@ -836,23 +836,6 @@ final class Swatch {
     }
 
     /**
-     * Perform AJAX add to cart in archive or shop page.
-     *
-     * @since 1.0.0
-     *
-     * @return json
-     */
-    public function add_to_cart() {
-        if ( ! self::is_security_passed( $_POST ) ) {
-            wp_send_json_error([
-                'error' => 'SECURITY_ERROR'
-            ]);
-        }
-
-        wp_send_json_success( 'HAHAHAHA' );
-    }
-
-    /**
      * Modify the woocommerce add to cart button in archive or shop page.
      *
      * @since 1.0.0
@@ -889,5 +872,102 @@ final class Swatch {
         }
 
         return $fields;
+    }
+
+    /**
+     * Adding product variation to cart.
+     *
+     * @since 1.0.0
+     *
+     * @return json
+     */
+    public function variation_add_to_cart() {
+        if ( ! self::is_security_passed( $_POST ) ) {
+            wp_send_json_error([
+                'error' => 'SECURITY_ERROR'
+            ]);
+        }
+
+        if ( self::has_post_empty_data( $_POST, [ 'productId', 'variationId', 'quantity' ] ) ) {
+            wp_send_json_error([
+                'error' => 'MISSING_DATA_ERROR'
+            ]);
+        }
+
+        $product_id           = apply_filters( 'woocommerce_add_to_cart_product_id', absint( $_POST['productId'] ) );
+        $quantity             = ( absint( $_POST['quantity'] ) <= 0 ? 1 : absint( $_POST['quantity'] ) );
+        $variation_id         = absint( $_POST['variationId'] );
+        $variation_attributes = [];
+
+        // Validate product.
+        $product = wc_get_product( $product_id );
+        if ( ! $product ) {
+            wc_add_notice( 'The product you are trying to add to the cart is not found.', 'error' );
+            wp_send_json_success([
+                'response' => 'FAILED_ADDING_TO_CART',
+                'notice'   => wc_print_notices( true )
+            ]);
+        }
+
+        // Validate product status.
+        if ( get_post_status( $product_id ) !== 'publish' ) {
+            wc_add_notice( 'The product you are trying to add is not yet publish.', 'error' );
+            wp_send_json_success([
+                'response' => 'FAILED_ADDING_TO_CART',
+                'notice'   => wc_print_notices( true )
+            ]);
+        }
+
+        // Validate product type.
+        if ( ! $product->is_type( 'variable' ) ) {
+            wc_add_notice( 'The product you are trying to add is not a variable product type.', 'error' );
+            wp_send_json_success([
+                'response' => 'FAILED_ADDING_TO_CART',
+                'notice'   => wc_print_notices( true )
+            ]);
+        }
+
+        // Validate product variation.
+        if ( ! Helper::is_valid_variation_id( $variation_id, $product ) ) {
+            wc_add_notice( 'The product variation you are trying to add to the cart is not found.', 'error' );
+            wp_send_json_success([
+                'response' => 'FAILED_ADDING_TO_CART',
+                'notice'   => wc_print_notices( true )
+            ]);
+        }
+
+        // Get product variation.
+        $variation = wc_get_product( $variation_id );
+        if ( ! $variation ) {
+            wc_add_notice( 'The product variation you are trying to add to the cart is not found.', 'error' );
+            wp_send_json_success([
+                'response' => 'FAILED_ADDING_TO_CART',
+                'notice'   => wc_print_notices( true )
+            ]);
+        }
+
+        // Get product variation attributes.
+        $variation_attributes = wc_get_product_variation_attributes( $variation_id );
+
+        // Adding to cart.
+        $passed_validation = apply_filters( 'woocommerce_add_to_cart_validation', true, $product_id, $quantity, $variation_id, $variation_attributes );
+        $is_added_to_cart  = WC()->cart->add_to_cart( $product_id, $quantity, $variation_id, $variation_attributes );
+        if ( $passed_validation && $is_added_to_cart ) {
+            $product_thumbnail = Helper::get_product_small_thumbnail( 'variable', $product, $variation );
+            Helper::custom_add_to_cart_message_success( $variation->get_name() );
+            wp_send_json_success([
+                'response'          => 'SUCCESSFULLY_ADDED_TO_CART',
+                'notice'            => wc_print_notices( true ),
+                'product_name'      => $variation->get_name(),
+                'product_thumbnail' => $product_thumbnail,
+                'cart_hash'         => WC()->cart->get_cart_hash(),
+                'fragments'         => apply_filters( 'woocommerce_add_to_cart_fragments', [] )
+            ]);
+        } else {
+            wp_send_json_success([
+                'response' => 'FAILED_ADDING_TO_CART',
+                'notice'   => wc_print_notices( true )
+            ]);
+        }
     }
 }

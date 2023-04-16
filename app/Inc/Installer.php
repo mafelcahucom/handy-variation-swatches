@@ -66,6 +66,11 @@ final class Installer {
             'gn_disable_item_oos'           => 1,
             'gn_disable_item_style'         => 'blurred-crossed',
 
+            // gn_nc.
+            'gn_nc_enable_notice'           => 1,
+            'gn_nc_auto_hide'               => 1,
+            'gn_nc_duration'                => 5000,
+
             // gn_pp.
             'gn_pp_enable'                  => 1,
 

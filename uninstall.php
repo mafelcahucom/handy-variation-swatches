@@ -15,14 +15,14 @@
 if ( ! function_exists( 'hvsfw_uninstall' ) ) {
     function hvsfw_uninstall() {
         /**
-         * Delete option _hivfw_main_settings.
+         * Delete option _hvsfw_main_settings.
          *
          * @since 1.0.0
          */
         delete_option( '_hvsfw_main_settings' );
 
         /**
-         * Delete option _hivfw_plugin_version.
+         * Delete option _hvsfw_plugin_version.
          *
          * @since 1.0.0
          */

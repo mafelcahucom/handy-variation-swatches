@@ -160,6 +160,44 @@ echo Component::get_header( $args['page_title'] ); ?>
         echo Component::get_card_closing();
 
         /**
+         * Notice - Card Opening.
+         */
+        echo Component::get_card_opening([
+            'title' => 'Notice',
+            'class' => 'hd-mb-50'
+        ]);
+
+        echo Field::get_switch_field([
+            'name'  => 'gn_nc_enable_notice',
+            'group' => 'general_setting_group',
+            'value' => $settings['gn_nc_enable_notice'],
+            'label' => 'Enable WooCommerce Notice',
+            'description' => 'Enable this to use the default woocommerce notice. Note this setting is only applicable in this plugin only, other plugin that are using woocommerce notice will not be affected.',
+        ]);
+
+        echo Field::get_switch_field([
+            'name'  => 'gn_nc_auto_hide',
+            'group' => 'general_setting_group',
+            'value' => $settings['gn_nc_auto_hide'],
+            'label' => 'Enable Auto Hide',
+            'description' => 'Enable this to hide the notice automatically.',
+        ]);
+
+        echo Field::get_number_field([
+            'name'  => 'gn_nc_duration',
+            'group' => 'general_setting_group',
+            'value' => $settings['gn_nc_duration'],
+            'label' => 'Duration',
+            'description' => 'Set the total milliseconds before the notice will automatically hide. Note this will only be applied if you enable auto hide.',
+            'placeholder' => 'Duration'
+        ]);
+
+        /**
+         * Notice - Card Closing.
+         */
+        echo Component::get_card_closing();
+
+        /**
          * Product Single Page - Card Opening.
          */
         echo Component::get_card_opening([

@@ -787,6 +787,16 @@ final class Style {
                 border-radius: {$settings['tl_image_br']} !important;
             }
         ";
+
+        // Add To Cart Button.
+        $class .= "
+            .hvsfw-js-loop-add-to-cart-btn.loading {
+                cursor: wait !important;
+            }
+            .hvsfw-js-loop-add-to-cart-btn.added {
+                cursor: not-allowed !important;
+            }
+        ";
         
         // Additional CSS.
         if ( ! empty( $settings['ad_stg_additional_css'] ) ) {

@@ -123,10 +123,19 @@ final class Client {
             'crafter' => 'Y35qwbAlyt+y60cldwAatUDyxikpRb30wBPT9Y1Xymk=',
             'url'     => admin_url( 'admin-ajax.php' ),
             'plugin'  => [
-                'isHAFWActive' => Plugins::is_active( 'handy-add-to-cart' )
+                'isHAFWActive'  => Plugins::is_active( 'handy-add-to-cart' ),
+                'isHATFWActive' => Plugins::is_active( 'handy-added-to-cart-toaster-notifier' ),
+                'isHAPFWActive' => Plugins::is_active( 'handy-added-to-cart-popup-notifier' )
+            ],
+            'setting' => [
+                'notice' => [
+                    'duration'   => $this->settings['gn_nc_duration'],
+                    'isEnabled'  => $this->settings['gn_nc_enable_notice'],
+                    'isAutoHide' => $this->settings['gn_nc_auto_hide']
+                ]
             ],
             'nonce'   => [
-                'addToCart' => wp_create_nonce( 'hvsfw_add_to_cart' )
+                'variationAddToCart' => wp_create_nonce( 'hvsfw_variation_add_to_cart' )
             ]
         ]);
     }
