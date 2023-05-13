@@ -4,9 +4,11 @@ namespace HVSFW\Client;
 use HVSFW\Inc\Traits\Singleton;
 use HVSFW\Inc\Plugins;
 use HVSFW\Client\Inc\Helper;
+use HVSFW\Client\Filters;
 use HVSFW\Client\Actions;
 use HVSFW\Client\Style;
 use HVSFW\Client\Swatch;
+use HVSFW\Client\Blocks\Blocks;
 
 use HVSFW\Client\Reset; // DELETE IN PROD
 
@@ -68,9 +70,11 @@ final class Client {
      */
     private static function get_classes() {
         return [
+            Filters::class,
             Actions::class,
             Style::class,
             Swatch::class,
+            Blocks::class,
             Reset::class
         ];
     }
@@ -115,7 +119,7 @@ final class Client {
         }
 
         // Client js.
-        wp_register_script( 'hvsfw-client-js', Helper::get_asset_src( 'js/hvsfw-client.min.js' ), $client_dependency, '1.0.0', true );
+        wp_register_script( 'hvsfw-client-js', Helper::get_asset_src( 'js/hvsfw-client.min.js' ), $client_dependency, Helper::get_asset_version( 'js/hvsfw-client.min.js' ), true );
         wp_enqueue_script( 'hvsfw-client-js' );
 
         // Localize variables.

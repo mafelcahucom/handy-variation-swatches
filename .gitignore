@@ -1,3 +1,5 @@
 /node_modules/
 /app/Client/Reset.php
+/app/Client/Blocks/VariationFilter/node_modules
+/app/Client/Blocks/VariationFilter/package-lock.json
 note.txt

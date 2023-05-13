@@ -53,6 +53,26 @@ final class Helper {
     }
 
     /**
+     * Return the client asset version.
+     *
+     * @since 1.0.0
+     * 
+     * @param string  $file  Target filename.
+     * @return string
+     */
+    public static function get_asset_version( $file ) {
+        $version = '1.0.0';
+        if ( ! empty( $file ) ) {
+            $settings = get_option( '_hvsfw_main_settings' );
+            if ( $settings['ad_opt_enable_cache'] ) {
+                $version = filemtime( HVSFW_PLUGIN_PATH . 'assets/client/dist/' . $file );
+            }
+        }
+
+        return $version;
+    }
+
+    /**
      * Render client view.
      *
      * @since 1.0.0

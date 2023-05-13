@@ -799,11 +799,18 @@ final class Style {
         ";
         
         // Additional CSS.
-        if ( ! empty( $settings['ad_stg_additional_css'] ) ) {
-            $class .= $settings['ad_stg_additional_css'];
+        if ( ! empty( $settings['ad_add_custom_css'] ) ) {
+            $class .= $settings['ad_add_custom_css'];
         }
 
+        // Compose Style.
         $style = '<style id="hvsfw-internal-style">'. $class .'</style>';
-        echo $this->minify_internal_css( $style );
+
+        // Minify CSS.
+        if ( $settings['ad_opt_enable_minify'] ) {
+            $style = $this->minify_internal_css( $style );
+        }
+        
+        echo $style;
     }
 }

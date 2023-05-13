@@ -1,0 +1,25 @@
+.hbvf-field {
+    .components-color-palette__custom-color {
+        &-name {
+            display: none;
+        }
+
+        &-value {
+            margin-left: 0;
+        }
+    }
+
+    .components-border-control {
+        .components-base-control {
+            margin-bottom: 0px;
+        }
+    }
+}
+
+.components-panel__body .hbvf-field:not(:last-child) {
+	margin-bottom: 24px;
+}
+
+.components-grid .hbvf-field {
+    margin-bottom: 0 !important;
+}

@@ -1374,26 +1374,67 @@ echo Component::get_header( $args['page_title'] ); ?>
         ]);
 
         /**
-         * Advance - Card Opening.
+         * Optimization - Card Opening.
          */
         echo Component::get_card_opening([
-            'title' => 'Advanced Settings',
+            'title' => 'Optimization',
+            'class' => 'hd-mb-50'
+        ]);
+
+        echo Field::get_note_field([
+            'title' => 'Instruction',
+            'message' => 'Note that all settings here are used to enhance the performance of this plugin on the front-end side. This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.'
+        ]);
+
+        echo Field::get_switch_field([
+            'name'  => 'ad_opt_enable_cache',
+            'group' => 'advanced_setting_group',
+            'value' => $settings['ad_opt_enable_cache'],
+            'label' => 'Enable Caching',
+            'description' => 'Enable this to cache the external styles and scripts.',
+        ]);
+
+        echo Field::get_switch_field([
+            'name'  => 'ad_opt_enable_minify',
+            'group' => 'advanced_setting_group',
+            'value' => $settings['ad_opt_enable_minify'],
+            'label' => 'Enable CSS & JS Minification',
+            'description' => 'Enable this to minify the internal and external styles and scripts.',
+        ]);
+
+        echo Field::get_switch_field([
+            'name'  => 'ad_opt_enable_defer',
+            'group' => 'advanced_setting_group',
+            'value' => $settings['ad_opt_enable_defer'],
+            'label' => 'Enable Deffered JS',
+            'description' => 'Enable this to load external scripts in deffered way.',
+        ]);
+
+        /**
+         * Optimization - Card Closing.
+         */
+        echo Component::get_card_closing();
+
+        /**
+         * Additional - Card Opening.
+         */
+        echo Component::get_card_opening([
+            'title' => 'Additional',
             'class' => 'hd-mb-50'
         ]);
 
         echo Field::get_textarea_field([
-            'name'  => 'ad_stg_additional_css',
+            'name'  => 'ad_add_custom_css',
             'group' => 'advanced_setting_group',
-            'value' => $settings['ad_stg_additional_css'],
-            'label' => 'Addtional CSS',
-            'description' => 'Add your own CSS code here to customize the appearance of popup components at the front-end.'
+            'value' => $settings['ad_add_custom_css'],
+            'label' => 'Custom CSS',
+            'description' => 'Add your own CSS code here to customize the appearance of variation swatche components at the front-end.'
         ]);
 
         /**
-         * Advance - Card Closing.
+         * Additional - Card Closing.
          */
         echo Component::get_card_closing();
-
 
         /**
          * Save button settings - advanced_setting_group

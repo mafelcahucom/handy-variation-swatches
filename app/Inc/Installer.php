@@ -177,8 +177,13 @@ final class Installer {
             'tl_image_mx_ht'                => 'auto',
             'tl_image_br'                   => '4px',
 
-            // ad_stg.
-            'ad_stg_additional_css'         => ''
+            // ad_add.
+            'ad_add_custom_css'             => '',
+
+            // ad_opt.
+            'ad_opt_enable_cache'           => 1,
+            'ad_opt_enable_minify'          => 1,
+            'ad_opt_enable_defer'           => 1,
         ];
 
         // Insert settings in wp_options table.
