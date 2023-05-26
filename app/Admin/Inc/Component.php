@@ -3,7 +3,6 @@ namespace HVSFW\Admin\Inc;
 
 use HVSFW\Inc\Traits\Singleton;
 use HVSFW\Admin\Inc\Helper;
-use HVSFW\Admin\Inc\Component;
 
 defined( 'ABSPATH' ) || exit;
 

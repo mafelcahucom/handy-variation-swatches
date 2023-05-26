@@ -1,36 +1,36 @@
 /*!************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/components/Section/section.scss ***!
   \************************************************************************************************************************************************************************************************************************************************************/
-.components-panel__body .hbvf-section:not(:last-child) {
+.components-panel__body .hvsfw-vf-section:not(:last-child) {
   margin-bottom: 24px;
 }
 /*!********************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/components/Field/field.scss ***!
   \********************************************************************************************************************************************************************************************************************************************************/
-.hbvf-field .components-color-palette__custom-color-name {
+.hvsfw-vf-field .components-color-palette__custom-color-name {
   display: none;
 }
-.hbvf-field .components-color-palette__custom-color-value {
+.hvsfw-vf-field .components-color-palette__custom-color-value {
   margin-left: 0;
 }
-.hbvf-field .components-border-control .components-base-control {
+.hvsfw-vf-field .components-border-control .components-base-control {
   margin-bottom: 0px;
 }
 
-.components-panel__body .hbvf-field:not(:last-child) {
+.components-panel__body .hvsfw-vf-field:not(:last-child) {
   margin-bottom: 24px;
 }
 
-.components-grid .hbvf-field {
+.components-grid .hvsfw-vf-field {
   margin-bottom: 0 !important;
 }
 /*!******************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/components/SearchList/searchlist.scss ***!
   \******************************************************************************************************************************************************************************************************************************************************************/
-.hbvf-srl__mb-15 {
+.hvsfw-vf-srl__mb-15 {
   margin-bottom: 15px;
 }
-.hbvf-srl__label {
+.hvsfw-vf-srl__label {
   display: block;
   margin-bottom: 8px;
   font-size: 11px;
@@ -38,41 +38,41 @@
   line-height: 1.4;
   text-transform: uppercase;
 }
-.hbvf-srl__search-input {
+.hvsfw-vf-srl__search-input {
   width: 100%;
 }
-.hbvf-srl__list {
-  margin: 0;
-  padding: 0;
+.hvsfw-vf-srl__list {
+  margin: 0 !important;
+  padding: 0 !important;
   max-height: 200px;
-  list-style: none;
+  list-style: none !important;
   border: 1px solid #f0f0f0;
   overflow-y: auto;
 }
-.hbvf-srl__list__item {
+.hvsfw-vf-srl__list__item {
   margin: 0;
   border-bottom: 1px solid #f0f0f0;
 }
-.hbvf-srl__list__item:last-child {
+.hvsfw-vf-srl__list__item:last-child {
   border-bottom: 0;
 }
-.hbvf-srl__list__item[state=active] label {
+.hvsfw-vf-srl__list__item[state=active] label {
   background-color: #f0f0f0;
 }
-.hbvf-srl__list__item label {
+.hvsfw-vf-srl__list__item label {
   display: flex;
   align-items: center;
   padding: 10px 15px;
   font-size: 13px;
   color: #757575;
 }
-.hbvf-srl__list__item label:hover, .hbvf-srl__list__item label:focus {
+.hvsfw-vf-srl__list__item label:hover, .hvsfw-vf-srl__list__item label:focus {
   background-color: #f0f0f0;
 }
-.hbvf-srl__list__item label input {
+.hvsfw-vf-srl__list__item label input {
   margin: 0 8px 0 0;
 }
-.hbvf-srl__placeholder {
+.hvsfw-vf-srl__placeholder {
   padding: 10px 15px;
   font-size: 13px;
   color: #757575;
@@ -81,19 +81,65 @@
 /*!******************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/components/SwatchList/swatchlist.scss ***!
   \******************************************************************************************************************************************************************************************************************************************************************/
-.hbvf-swatch-list {
-  padding: 0;
-  margin: 0;
-  list-style: none;
+.hvsfw-vf-swatch-list {
+  padding: 0 !important;
+  margin: 0 !important;
+  list-style: none !important;
 }
-.hbvf-swatch-list span {
+.hvsfw-vf-swatch-list span {
   cursor: pointer;
 }
 /*!**********************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/components/SwatchSelect/swatchselect.scss ***!
   \**********************************************************************************************************************************************************************************************************************************************************************/
-select.hbvf-swatch-select {
+select.hvsfw-vf-swatch-select {
   max-width: unset;
+}
+/*!**********************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/components/SwatchButton/swatchbutton.scss ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************/
+.hvsfw-vf-swatch-button {
+  display: flex;
+  flex-wrap: wrap;
+}
+.hvsfw-vf-swatch-button__box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+/*!********************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/components/SwatchColor/swatchcolor.scss ***!
+  \********************************************************************************************************************************************************************************************************************************************************************/
+.hvsfw-vf-swatch-color {
+  display: flex;
+  flex-wrap: wrap;
+}
+.hvsfw-vf-swatch-color__box {
+  padding: 3px;
+  cursor: pointer;
+}
+.hvsfw-vf-swatch-color__color {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+}
+/*!********************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/components/SwatchImage/swatchimage.scss ***!
+  \********************************************************************************************************************************************************************************************************************************************************************/
+.hvsfw-vf-swatch-image {
+  display: flex;
+  flex-wrap: wrap;
+}
+.hvsfw-vf-swatch-image__box {
+  padding: 3px;
+  cursor: pointer;
+}
+.hvsfw-vf-swatch-image__image {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  border-radius: inherit;
 }
 /*!****************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/editor.scss ***!
@@ -103,5 +149,10 @@ select.hbvf-swatch-select {
  *
  * Replace them with your own styles or remove the file completely.
  */
+.hvsfw-vf *,
+.hvsfw-vf *:before,
+.hvsfw-vf *:after {
+  box-sizing: border-box;
+}
 
 /*# sourceMappingURL=index.css.map*/

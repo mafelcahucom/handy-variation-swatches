@@ -9,13 +9,6 @@
 const data = {
 
     /**
-     * Holds the timeout for size cleartimeout event.
-     * 
-     * @since 1.0.0
-     */
-    timeout: null,
-
-    /**
      * Holds the list of font weight and its label
      * 
      * @since 1.0.0

@@ -1,3 +1,6 @@
+/**
+ * Internal dependencies
+ */
 import colorPickerModule from './modules/color-picker.js';
 import imagePickerModule from './modules/image-picker.js';
 import tooltipFieldModule from './modules/tooltip-field.js';

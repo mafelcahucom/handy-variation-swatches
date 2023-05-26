@@ -31,6 +31,8 @@ const SearchList = ( { attributes, setAttributes, label } ) => {
      * perform a simple search filter.
      * 
      * @since 1.0.0
+     * 
+     * @param {Object} e The target element event.
      */
     const handleKeyword = ( e ) => {
         setKeyword( e.target.value );
@@ -47,6 +49,8 @@ const SearchList = ( { attributes, setAttributes, label } ) => {
      * Handle the attribute radio button onChange event.
      * 
      * @since 1.0.0
+     * 
+     * @param {Object} e The target element event.
      */
     const handleAttributeRadio = ( e ) => {
         setAttributes( { settings: { ...settings, attribute: e.target.value } } );
@@ -68,8 +72,8 @@ const SearchList = ( { attributes, setAttributes, label } ) => {
      * 
      * @since 1.0.0
      * 
-     * @param {String} value The value of the radio button. 
-     * @return {Boolean} If radio is checked.
+     * @param {string} value The value of the radio button. 
+     * @return {boolean} If radio is checked.
      */
     const isRadioChecked = ( value ) => {
         return settings.attribute === value;
@@ -80,8 +84,8 @@ const SearchList = ( { attributes, setAttributes, label } ) => {
      * 
      * @since 1.0.0
      * 
-     * @param {String} value The value of the current item. 
-     * @return {String} The new item state.
+     * @param {string} value The value of the current item. 
+     * @return {string} The new item state.
      */
     const getItemState = ( value ) => {
         return settings.attribute === value ? 'active' : 'default';
@@ -92,7 +96,7 @@ const SearchList = ( { attributes, setAttributes, label } ) => {
      * 
      * @since 1.0.0
      * 
-     * @return {String} The placeholder message.
+     * @return {string} The placeholder message.
      */
     const getPlaceholderMessage = () => {
         if ( searchList.state === 'loading' ) {
@@ -107,10 +111,10 @@ const SearchList = ( { attributes, setAttributes, label } ) => {
     };
 
 	return (
-        <div className='hbvf-search-list'>
-            <div className='hbvf-srl__mb-15'>
+        <div className='hvsfw-vf-search-list'>
+            <div className='hvsfw-vf-srl__mb-15'>
                 { label && (
-                    <label className='hbvf-srl__label'>
+                    <label className='hvsfw-vf-srl__label'>
                         { __(
                             label,
                             'variation-filter'
@@ -119,21 +123,25 @@ const SearchList = ( { attributes, setAttributes, label } ) => {
                 ) }
                 <input 
                     type="text" 
-                    className='hbvf-srl__search-input'
+                    className='hvsfw-vf-srl__search-input'
                     disabled={ attributeData.isEmpty() ? 'disabled' : '' }
                     onChange={ handleKeyword }
                 />
             </div>
             { getAttributeOptions().length > 0 ? (
-                <ul className='hbvf-srl__list'>
+                <ul className='hvsfw-vf-srl__list'>
                     { getAttributeOptions().map( ( option, index ) => {
                         return (
-                            <li className='hbvf-srl__list__item' state={ getItemState( option.value ) } key={ index }>
-                                <label htmlFor={ `hbvf-attribute-${ blockId }-${ index }` }>
+                            <li 
+                                className='hvsfw-vf-srl__list__item' 
+                                state={ getItemState( option.value ) } 
+                                key={ index }
+                            >
+                                <label htmlFor={ `hvsfw-vf-attribute-${ blockId }-${ index }` }>
                                     <input 
                                         type='radio'
-                                        id={ `hbvf-attribute-${ blockId }-${ index }` }
-                                        name={ `hbvf-attribute-${ blockId }` }
+                                        id={ `hvsfw-vf-attribute-${ blockId }-${ index }` }
+                                        name={ `hvsfw-vf-attribute-${ blockId }` }
                                         value={ option.value }
                                         checked={ isRadioChecked( option.value ) }
                                         onChange={ handleAttributeRadio }
@@ -145,7 +153,7 @@ const SearchList = ( { attributes, setAttributes, label } ) => {
                     } ) }
                 </ul>
             ):(
-                <p className='hbvf-srl__placeholder'>
+                <p className='hvsfw-vf-srl__placeholder'>
                     { __(
                         getPlaceholderMessage(),
                         'variation-filter'

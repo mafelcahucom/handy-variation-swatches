@@ -124,25 +124,6 @@ final class Style {
     }
 
     /**
-     * Minify the internal css.
-     *
-     * @since 1.0.0
-     * 
-     * @param  string  $css  The internal css to be minify.
-     * @return string
-     */
-    private function minify_internal_css( $css ) {
-        $css = preg_replace( '/\s+/', ' ', $css );
-        $css = preg_replace( '/\/\*[^\!](.*?)\*\//', '', $css );
-        $css = preg_replace( '/(,|:|;|\{|}) /', '$1', $css );
-        $css = preg_replace( '/ (,|;|\{|})/', '$1', $css );
-        $css = preg_replace( '/(:| )0\.([0-9]+)(%|em|ex|px|in|cm|mm|pt|pc)/i', '${1}.${2}${3}', $css );
-        $css = preg_replace( '/(:| )(\.?)0(%|em|ex|px|in|cm|mm|pt|pc)/i', '${1}0', $css );
-
-        return trim( $css );
-    }
-
-    /**
      * Custom Internal Css.
      *
      * @since 1.0.0
@@ -797,6 +778,105 @@ final class Style {
                 cursor: not-allowed !important;
             }
         ";
+
+        // Variation Filter.
+        $class .= "
+            .hvsfw-vf *,
+            .hvsfw-vf *:before,
+            .hvsfw-vf *:after {
+                box-sizing: border-box;
+            }
+
+            .hvsfw-vf-link {
+                cursor: pointer !important;
+                text-decoration: none !important;
+            }
+            .hvsfw-vf-link > * {
+                pointer-events: none;
+            }
+
+            .hvsfw-vf-title {
+                display: block;
+            }
+
+            .hvsfw-vf-swatch-list__ul {
+                padding: 0;
+                margin: 0;
+                list-style: none;
+            }
+
+            .hvsfw-vf-swatch-select {
+                position: relative;
+            }
+            .hvsfw-vf-swatch-select__select {
+                width: 100%;
+                height: 100%;
+            }
+            .hvsfw-vf-swatch-select__clear-btn {
+                position: absolute;
+                top: 50%;
+                right: 25px;
+                display: none;
+                padding: 0;
+                width: fit-content;
+                height: fit-content;
+                font-size: 0;
+                cursor: pointer;
+                background: transparent;
+                border: 0;
+                -webkit-transform: translateY(-50%);
+                    -ms-transform: translateY(-50%);
+                        transform: translateY(-50%);
+            }
+            .hvsfw-vf-swatch-select__clear-btn > * {
+                pointer-events: none;
+            }
+            .hvsfw-vf-swatch-select[data-state='active'] button {
+                display: block;
+            }
+            .hvsfw-vf-swatch-select__clear-btn > svg {
+                width: 15px;
+                height: 15px;
+            }
+
+            .hvsfw-vf-swatch-button {
+                display: flex;
+                flex-wrap: wrap;
+            }
+            .hvsfw-vf-swatch-button__box {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .hvsfw-vf-swatch-color {
+                display: flex;
+                flex-wrap: wrap;
+            }
+            .hvsfw-vf-swatch-color__box {
+                padding: 3px;
+            }
+            .hvsfw-vf-swatch-color__color {
+                width: 100%;
+                height: 100%;
+                border: 1px solid #e1e1e1;
+                border-radius: inherit;
+            }
+
+            .hvsfw-vf-swatch-image {
+                display: flex;
+                flex-wrap: wrap;
+            }
+            .hvsfw-vf-swatch-image__box {
+                padding: 3px;
+            }
+            .hvsfw-vf-swatch-image__image {
+                width: 100%;
+                height: 100%;
+                background-size: cover;
+                border-radius: inherit;
+            }
+        ";
         
         // Additional CSS.
         if ( ! empty( $settings['ad_add_custom_css'] ) ) {
@@ -808,7 +888,7 @@ final class Style {
 
         // Minify CSS.
         if ( $settings['ad_opt_enable_minify'] ) {
-            $style = $this->minify_internal_css( $style );
+            $style = Helper::minify_css( $style );
         }
         
         echo $style;

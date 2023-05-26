@@ -45,18 +45,18 @@ const SwatchList = ( { attributes } ) => {
      * 
      * @since 1.0.0
      * 
-     * @return {Object}
+     * @return {Object} Contains the style.
      */
     const getInlineStyle = () => {
-        const { colorActive, marginBottom, ...rest } = list;
-        return rest;
+        const { colorActive, marginBottom, ...style } = list;
+        return style;
     };
 
     return (
-        <ul className='hbvf-swatch-list'>
-            { terms.map( ( term ) => {
+        <ul className='hvsfw-vf-swatch-list'>
+            { terms.map( ( term, index ) => {
                 return (
-                    <li style={ { marginBottom: list.marginBottom } }>
+                    <li style={ { marginBottom: list.marginBottom } } key={ index }>
                         <span 
                             style={ getInlineStyle() }
                             onMouseEnter={ handleMouseEnter }

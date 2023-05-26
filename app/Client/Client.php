@@ -8,6 +8,7 @@ use HVSFW\Client\Filters;
 use HVSFW\Client\Actions;
 use HVSFW\Client\Style;
 use HVSFW\Client\Swatch;
+use HVSFW\Client\Widgets\Widgets;
 use HVSFW\Client\Blocks\Blocks;
 
 use HVSFW\Client\Reset; // DELETE IN PROD
@@ -74,6 +75,7 @@ final class Client {
             Actions::class,
             Style::class,
             Swatch::class,
+            Widgets::class,
             Blocks::class,
             Reset::class
         ];

@@ -13,7 +13,7 @@ const data = {
 	 * 
 	 * @since 1.0.0
 	 * 
-	 * @return {Boolean} Check if not empty attributes.
+	 * @return {boolean} Check if not empty attributes.
 	 */
 	isEmpty: () => {
 		return data.getAll().length === 0;
@@ -24,7 +24,8 @@ const data = {
 	 * 
 	 * @since 1.0.0
 	 * 
-	 * @param {String} name The name of the product attribute.
+	 * @param {string} name The name of the product attribute.
+	 * @return {boolean} If the attribute name is found.
 	 */
 	isFound: ( name ) => {
 		if ( ! name ) {
@@ -42,7 +43,7 @@ const data = {
 	 * @return {Array} Converted array attributes.
 	 */
 	getAll: () => {
-        const attributes = window.hbvfData.productAttributes;
+        const attributes = window.hvsfwVfData.productAttributes;
         if ( attributes === null || attributes === undefined ) {
             return [];
         }
@@ -57,7 +58,7 @@ const data = {
 	 * 
 	 * @since 1.0.0
 	 * 
-	 * @param {String} name The name of the product attribute.
+	 * @param {string} name The name of the product attribute.
 	 */
 	get: ( name ) => {
 		if ( ! name || data.getAll().length === 0 ) {

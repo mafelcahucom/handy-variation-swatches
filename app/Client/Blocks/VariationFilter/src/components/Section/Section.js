@@ -12,13 +12,13 @@ import './section.scss';
  * 
  * @component
  * @param {Object}  children The children component 
- * @param {Boolean} isShow   The component show state.
+ * @param {boolean} isShow   The component show state.
  */
 const Section = ( { children, isShow = true } ) => {
 	const display = isShow ? 'block' : 'none';
 	
 	return (
-		<div className='hbvf-section' style={ { display: display } }>
+		<div className='hvsfw-vf-section' style={ { display: display } }>
 			{ children }
 		</div>
 	);

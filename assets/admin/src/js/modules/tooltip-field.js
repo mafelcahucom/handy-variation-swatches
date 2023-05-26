@@ -1,3 +1,6 @@
+/**
+ * Internal dependencies
+ */
 import imagePickerModule from './image-picker.js';
 
 /**

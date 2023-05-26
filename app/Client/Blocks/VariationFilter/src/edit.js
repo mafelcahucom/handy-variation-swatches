@@ -2,7 +2,7 @@
  * External dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { useState, useEffect } from '@wordpress/element';
+import { useEffect } from '@wordpress/element';
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
 import {
 	Flex,
@@ -26,8 +26,8 @@ import {
 /**
  * Internal dependencies
  */
-import getFetch from './lib/getFetch';
 import { helper } from './utils/Helper';
+import { getFetch } from './lib/getFetch';
 import { generalData } from './data/generalData';
 import { attributeData } from './data/attributeData';
 import {
@@ -35,7 +35,10 @@ import {
 	Field,
 	SearchList,
 	SwatchList,
-	SwatchSelect
+	SwatchSelect,
+	SwatchButton,
+	SwatchColor,
+	SwatchImage
 } from './components';
 import './editor.scss';
 
@@ -54,7 +57,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		searchList,
 		title, 
 		list,
-		select
+		select,
+		button,
+		color,
+		image
 	} = attributes;
 
 	const hasAttribute = attributeData.isFound( settings.attribute );
@@ -64,33 +70,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	 * 
 	 * @since 1.0.0
 	 * 
-	 * @param {String} objectName 	The target object name in setAttributes.
-	 * @param {String} propertyName The target property key of object.
-	 * @param {String} newValue		The new value from input. 
+	 * @param {string} objectName 	The target object name in setAttributes.
+	 * @param {string} propertyName The target property key of object.
+	 * @param {string} newValue		The new value from input. 
 	 */
 	const handleValue = ( objectName, propertyName, newValue ) => {
 		const { [ objectName ]: object } = attributes;
 		setAttributes( { [ objectName ]: { ...object, [ propertyName ]: newValue } } );
-	};
-
-	/**
-	 * Handle multiple input size.
-	 * 
-	 * @since 1.0.0
-	 * 
-	 * @param {String} objectName 	The target object name in setAttributes
-	 * @param {String} propertyName The target property key of object.
-	 * @param {String} newSize		The new size from input size. 
-	 */
-	const handleSize = ( objectName, propertyName, newSize ) => {
-		const { [ objectName ]: object } = attributes;
-		setAttributes( { [ objectName ]: { ...object, [ propertyName ]: newSize } } );
-
-		clearTimeout( generalData.timeout );
-		generalData.timeout = setTimeout( () => {
-			const validatedSize = helper.getValidateUnitSize( newSize );
-			setAttributes( { [ objectName ]: { ...object, [ propertyName ]: validatedSize } } );
-		}, 1000 );
 	};
 
 	/**
@@ -99,7 +85,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	 * 
 	 * @since 1.0.0
 	 * 
-	 * @return {String} The final display type.
+	 * @return {string} The final display type.
 	 */
 	const getDisplayType = () => {
 		const { attribute, displayType } = settings;
@@ -107,8 +93,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		if ( displayType === 'swatch' ) {
 			const currentAttribute = attributeData.get( attribute );
 			if ( ! helper.isObjectEmpty( currentAttribute ) ) {
-				const displayTypes = [ 'button', 'color', 'image', 'select' ];
-				if ( displayTypes.includes( currentAttribute.attribute_type ) ) {
+				const types = [ 'button', 'color', 'image', 'select' ];
+				if ( types.includes( currentAttribute.attribute_type ) ) {
 					return currentAttribute.attribute_type;
 				}
 			}
@@ -122,7 +108,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	 * 
 	 * @since 1.0.0
 	 * 
-	 * @return {String} The title text.
+	 * @return {string} The title text.
 	 */
 	const getTitleText = () => {
 		if ( title.text !== null ) {
@@ -175,28 +161,25 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		 * @since 1.0.0
 		 */
 		const setProductAttributes = async () => {
-			if ( window.hbvfData.productAttributes === undefined ) {
+			if ( window.hvsfwVfData.productAttributes === undefined ) {
 				const res = await getFetch( {
-					nonce: hbvfData.nonce.getProductAttributes,
-					action: 'hbvf_get_product_attributes'
+					nonce: hvsfwVfData.nonce.getProductAttributes,
+					action: 'hvsfw_vf_get_product_attributes'
 				} );
 
 				if ( res.success === true && res.data.response === 'SUCCESS' ) {
 					setAttributes( { productAttributes: res.data.attributes } );
-					window.hbvfData.productAttributes = res.data.attributes;
+					window.hvsfwVfData.productAttributes = res.data.attributes;
 				}
 			} else {
-				setAttributes( { productAttributes: window.hbvfData.productAttributes } );
+				setAttributes( { productAttributes: window.hvsfwVfData.productAttributes } );
 			}
 
 			// Update searchList component state.
 			setAttributes( { searchList: { ...searchList, state: 'default' } } );
-
-			console.log( attributeData.getAll() );
 		};
 		setProductAttributes();
 
-		
 	}, [ productAttributes ] );
 
 	return (
@@ -219,7 +202,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					</Section>
 					<Section isShow={ hasAttribute }>
 						<PanelBody title="General" initialOpen={ false }>
-							<Field>
+							<Field isShow={ [ 'list', 'select', 'button' ].includes( getDisplayType() ) }>
 								<ToggleControl
 									label={ __(
 										'Show Product Count',
@@ -275,14 +258,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 										'variation-filter'
 									) }
 									help={
-										settings.queryType === 'AND' ? (
+										settings.queryType === 'and' ? (
 											__(
-												'Choose to return filter results for all of the attributes selected.',
+												'Choose to return filter results for any of the attributes selected.',
 												'variation-filter'
 											)
 										):(
 											__(
-												'Choose to return filter results for any of the attributes selected.',
+												'Choose to return filter results for all of the attributes selected.',
 												'variation-filter'
 											)
 									) }
@@ -290,16 +273,16 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 									onChange={ ( value ) => handleValue( 'settings', 'queryType', value ) }
 								>
 									<ToggleGroupControlOption 
-										value="OR"
+										value="or"
 										label={ __(
-											'OR',
+											'Or',
 											'variation-filter'
 										) }
 									/>
 									<ToggleGroupControlOption 
-										value="AND"
+										value="and"
 										label={ __(
-											'AND',
+											'And',
 											'variation-filter'
 										) }
 									/>
@@ -376,7 +359,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							</Field>
 						</PanelBody>
 					</Section>
-					<Section>
+					<Section isShow={ getDisplayType() === 'list' }>
 						<PanelBody title="List Style" initialOpen={ false }>
 							<Field>
 								<UnitControl
@@ -457,7 +440,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							</Field>
 						</PanelBody>
 					</Section>
-					<Section>
+					<Section isShow={ getDisplayType() === 'select' }>
 						<PanelBody title="Select Style" initialOpen={ false }>
 							<Field>
 								<Grid>
@@ -566,23 +549,461 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							</Field>
 						</PanelBody>
 					</Section>
+					<Section isShow={ getDisplayType() === 'button' }>
+						<PanelBody title="Button Style" initialOpen={ false }>
+							<Field>
+								<ToggleGroupControl
+									label={ __(
+										'Shape',
+										'variation-filter'
+									) }
+									value={ button.shape }
+									onChange={ ( value ) => handleValue( 'button', 'shape', value ) }
+								>
+									<ToggleGroupControlOption 
+										value="square"
+										label={ __(
+											'Square',
+											'variation-filter'
+										) }
+									/>
+									<ToggleGroupControlOption 
+										value="circle"
+										label={ __(
+											'Circle',
+											'variation-filter'
+										) }
+									/>
+									<ToggleGroupControlOption 
+										value="custom"
+										label={ __(
+											'Custom',
+											'variation-filter'
+										) }
+									/>
+								</ToggleGroupControl>
+							</Field>
+							<Field>
+								<Grid>
+									<Field>
+										<UnitControl 
+											label={ __(
+												'Width',
+												'variation-filter'
+											) }
+											value={ button.width }
+											onChange={ ( value ) => handleValue( 'button', 'width', value ) }
+										/>
+									</Field>
+									<Field>
+										<UnitControl 
+											label={ __(
+												'Height',
+												'variation-filter'
+											) }
+											value={ button.height }
+											onChange={ ( value ) => handleValue( 'button', 'height', value ) }
+										/>
+									</Field>
+								</Grid>
+							</Field>
+							<Field>
+								<Grid>
+									<Field>
+										<UnitControl 
+											label={ __(
+												'Font Size',
+												'variation-filter'
+											) }
+											value={ button.fontSize }
+											onChange={ ( value ) => handleValue( 'button', 'fontSize', value ) }
+										/>
+									</Field>
+									<Field>
+										<SelectControl
+											label={ __(
+												'Font Weight',
+												'variation-filter'
+											) }
+											value={ button.fontWeight }
+											options={ generalData.fontWeightChoices }
+											onChange={ ( value ) => handleValue( 'button', 'fontWeight', value ) }
+										/>
+									</Field>
+								</Grid>
+							</Field>
+							<Field>
+								<BoxControl
+									label={ __(
+										'Padding',
+										'variation-filter'
+									) }
+									values={ button.padding }
+									onChange={ ( value ) => handleValue( 'button', 'padding', value ) }
+								/>
+							</Field>
+							<Field>
+								<BorderBoxControl
+									label={ __(
+										'Border',
+										'variation-filter'
+									) }
+									value={ button.border }
+									onChange={ ( value ) => handleValue( 'button', 'border', value ) }
+								/>
+							</Field>
+							<Field>
+								<BorderBoxControl
+									label={ __(
+										'Active Border',
+										'variation-filter'
+									) }
+									value={ button.borderActive }
+									onChange={ ( value ) => handleValue( 'button', 'borderActive', value ) }
+								/>
+							</Field>
+							<Field isShow={ button.shape === 'custom' }>
+								<UnitControl 
+									label={ __(
+										'Border Radius',
+										'variation-filter'
+									) }
+									value={ button.borderRadius }
+									onChange={ ( value ) => handleValue( 'button', 'borderRadius', value ) }
+								/>
+							</Field>
+							<Field>
+								<UnitControl 
+									label={ __(
+										'Gap',
+										'variation-filter'
+									) }
+									value={ button.gap }
+									onChange={ ( value ) => handleValue( 'button', 'gap', value ) }
+								/>
+							</Field>
+							<Field>
+								<Flex gap="12px">
+									<FlexItem isBlock={ true }>
+										<Field>
+											<BaseControl 
+												label={ __(
+													'Text Color',
+													'variation-filter'
+												) }
+											>
+												<ColorPalette 
+													value={ button.color }
+													clearable={ false }
+													onChange={ ( value ) => handleValue( 'button', 'color', value ) }
+												/>
+											</BaseControl>
+										</Field>
+									</FlexItem>
+									<FlexItem isBlock={ true }>
+										<Field>
+											<BaseControl 
+												label={ __(
+													'Text Active Color',
+													'variation-filter'
+												) }
+											>
+												<ColorPalette 
+													value={ button.colorActive }
+													clearable={ false }
+													onChange={ ( value ) => handleValue( 'button', 'colorActive', value ) }
+												/>
+											</BaseControl>
+										</Field>
+									</FlexItem>
+								</Flex>
+							</Field>
+							<Field>
+								<Flex gap="12px">
+									<FlexItem isBlock={ true }>
+										<Field>
+											<BaseControl 
+												label={ __(
+													'Background Color',
+													'variation-filter'
+												) }
+											>
+												<ColorPalette 
+													value={ button.backgroundColor }
+													clearable={ false }
+													onChange={ ( value ) => handleValue( 'button', 'backgroundColor', value ) }
+												/>
+											</BaseControl>
+										</Field>
+									</FlexItem>
+									<FlexItem isBlock={ true }>
+										<Field>
+											<BaseControl 
+												label={ __(
+													'Background Active Color',
+													'variation-filter'
+												) }
+											>
+												<ColorPalette 
+													value={ button.backgroundColorActive }
+													clearable={ false }
+													onChange={ ( value ) => handleValue( 'button', 'backgroundColorActive', value ) }
+												/>
+											</BaseControl>
+										</Field>
+									</FlexItem>
+								</Flex>
+							</Field>
+						</PanelBody>
+					</Section>
+					<Section isShow={ getDisplayType() === 'color' }>
+						<PanelBody title="Color Style" initialOpen={ false }>
+							<Field>
+								<ToggleGroupControl
+									label={ __(
+										'Shape',
+										'variation-filter'
+									) }
+									value={ color.shape }
+									onChange={ ( value ) => handleValue( 'color', 'shape', value ) }
+								>
+									<ToggleGroupControlOption 
+										value="square"
+										label={ __(
+											'Square',
+											'variation-filter'
+										) }
+									/>
+									<ToggleGroupControlOption 
+										value="circle"
+										label={ __(
+											'Circle',
+											'variation-filter'
+										) }
+									/>
+									<ToggleGroupControlOption 
+										value="custom"
+										label={ __(
+											'Custom',
+											'variation-filter'
+										) }
+									/>
+								</ToggleGroupControl>
+							</Field>
+							<Field isShow={ color.shape !== 'custom' }>
+								<UnitControl 
+									label={ __(
+										'Size',
+										'variation-filter'
+									) }
+									value={ color.size }
+									onChange={ ( value ) => handleValue( 'color', 'size', value ) }
+								/>
+							</Field>
+							<Field isShow={ color.shape === 'custom' }>
+								<Grid>
+									<Field>
+										<UnitControl 
+											label={ __(
+												'Width',
+												'variation-filter'
+											) }
+											value={ color.width }
+											onChange={ ( value ) => handleValue( 'color', 'width', value ) }
+										/>
+									</Field>
+									<Field>
+										<UnitControl 
+											label={ __(
+												'Height',
+												'variation-filter'
+											) }
+											value={ color.height }
+											onChange={ ( value ) => handleValue( 'color', 'height', value ) }
+										/>
+									</Field>
+								</Grid>
+							</Field>
+							<Field>
+								<BorderBoxControl
+									label={ __(
+										'Border',
+										'variation-filter'
+									) }
+									value={ color.border }
+									onChange={ ( value ) => handleValue( 'color', 'border', value ) }
+								/>
+							</Field>
+							<Field>
+								<BorderBoxControl
+									label={ __(
+										'Active Border',
+										'variation-filter'
+									) }
+									value={ color.borderActive }
+									onChange={ ( value ) => handleValue( 'color', 'borderActive', value ) }
+								/>
+							</Field>
+							<Field isShow={ color.shape === 'custom' }>
+								<UnitControl 
+									label={ __(
+										'Border Radius',
+										'variation-filter'
+									) }
+									value={ color.borderRadius }
+									onChange={ ( value ) => handleValue( 'color', 'borderRadius', value ) }
+								/>
+							</Field>
+							<Field>
+								<UnitControl 
+									label={ __(
+										'Gap',
+										'variation-filter'
+									) }
+									value={ color.gap }
+									onChange={ ( value ) => handleValue( 'color', 'gap', value ) }
+								/>
+							</Field>
+						</PanelBody>
+					</Section>
+					<Section isShow={ getDisplayType() === 'image' }>
+						<PanelBody title="Image Style" initialOpen={ false }>
+							<Field>
+								<ToggleGroupControl
+									label={ __(
+										'Shape',
+										'variation-filter'
+									) }
+									value={ image.shape }
+									onChange={ ( value ) => handleValue( 'image', 'shape', value ) }
+								>
+									<ToggleGroupControlOption 
+										value="square"
+										label={ __(
+											'Square',
+											'variation-filter'
+										) }
+									/>
+									<ToggleGroupControlOption 
+										value="circle"
+										label={ __(
+											'Circle',
+											'variation-filter'
+										) }
+									/>
+									<ToggleGroupControlOption 
+										value="custom"
+										label={ __(
+											'Custom',
+											'variation-filter'
+										) }
+									/>
+								</ToggleGroupControl>
+							</Field>
+							<Field isShow={ image.shape !== 'custom' }>
+								<UnitControl 
+									label={ __(
+										'Size',
+										'variation-filter'
+									) }
+									value={ image.size }
+									onChange={ ( value ) => handleValue( 'image', 'size', value ) }
+								/>
+							</Field>
+							<Field isShow={ image.shape === 'custom' }>
+								<Grid>
+									<Field>
+										<UnitControl 
+											label={ __(
+												'Width',
+												'variation-filter'
+											) }
+											value={ image.width }
+											onChange={ ( value ) => handleValue( 'image', 'width', value ) }
+										/>
+									</Field>
+									<Field>
+										<UnitControl 
+											label={ __(
+												'Height',
+												'variation-filter'
+											) }
+											value={ image.height }
+											onChange={ ( value ) => handleValue( 'image', 'height', value ) }
+										/>
+									</Field>
+								</Grid>
+							</Field>
+							<Field>
+								<BorderBoxControl
+									label={ __(
+										'Border',
+										'variation-filter'
+									) }
+									value={ image.border }
+									onChange={ ( value ) => handleValue( 'image', 'border', value ) }
+								/>
+							</Field>
+							<Field>
+								<BorderBoxControl
+									label={ __(
+										'Active Border',
+										'variation-filter'
+									) }
+									value={ image.borderActive }
+									onChange={ ( value ) => handleValue( 'image', 'borderActive', value ) }
+								/>
+							</Field>
+							<Field isShow={ image.shape === 'custom' }>
+								<UnitControl 
+									label={ __(
+										'Border Radius',
+										'variation-filter'
+									) }
+									value={ image.borderRadius }
+									onChange={ ( value ) => handleValue( 'image', 'borderRadius', value ) }
+								/>
+							</Field>
+							<Field>
+								<UnitControl 
+									label={ __(
+										'Gap',
+										'variation-filter'
+									) }
+									value={ image.gap }
+									onChange={ ( value ) => handleValue( 'image', 'gap', value ) }
+								/>
+							</Field>
+						</PanelBody>
+					</Section>
 				</Panel>
 			</InspectorControls>
 
 			<div { ...blockProps }>
 				{ hasAttribute ? (
-					<div className='hbvf'>
+					<div className='hvsfw-vf'>
 						{ getTitleText() && (
-							<label className='hbvf-title' style={ getTitleStyle() }>
+							<label className='hvsfw-vf-title' style={ getTitleStyle() }>
 								{ getTitleText() }
 							</label>
 						) }
-						<div className='hbvf-swatch'>
-							<SwatchList attributes={ attributes } />
-							<SwatchSelect attributes={ attributes } />
+						<div className='hvsfw-vf-swatch'>
+							{ ( () => {
+								switch ( getDisplayType() ) {
+									case 'list':
+										return <SwatchList attributes={ attributes } />
+									case 'select':
+										return <SwatchSelect attributes={ attributes } />
+									case 'button':
+										return <SwatchButton attributes={ attributes } />
+									case 'color':
+										return <SwatchColor attributes={ attributes } />
+									case 'image':
+										return <SwatchImage attributes={ attributes } />
+								}
+							})()}
 						</div>
 					</div>
-					
 				):(
 					<Placeholder
 						icon='filter'

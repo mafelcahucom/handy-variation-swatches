@@ -1,0 +1,15 @@
+.hvsfw-vf-swatch-color {
+    display: flex;
+    flex-wrap: wrap;
+
+    &__box {
+        padding: 3px;
+        cursor: pointer;
+    }
+
+    &__color {
+        width: 100%;
+        height: 100%;
+        border-radius: inherit;
+    }
+}

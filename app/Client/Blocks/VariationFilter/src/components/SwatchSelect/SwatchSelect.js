@@ -17,32 +17,36 @@ import './swatchselect.scss';
  */
 const SwatchSelect = ( { attributes } ) => {
 	const { settings, select } = attributes;
-    const terms = attributeData.get( settings.attribute ).terms;
+    const attribute = attributeData.get( settings.attribute );
+    const terms = attribute.terms;
 
     /**
      * Return the list inline style.
      * 
      * @since 1.0.0
      * 
-     * @return {Object}
+     * @return {Object} Contains the style.
      */
     const getInlineStyle = () => {
-        let { padding, border, ...rest } = select;
+        let { padding, border, ...style } = select;
 
         if ( ! helper.isObjectEmpty( select.padding ) ) {
-            rest.padding = helper.getPadding( select.padding );
+            style.padding = helper.getPadding( select.padding );
         }
         
         if ( ! helper.isObjectEmpty( select.border ) ) {
             const borders = helper.getBorders( select.border );
-            rest = { ...rest, ...borders };   
+            style = { ...style, ...borders };   
         }
         
-        return rest;
+        return style;
     };
 
     return (
-        <select className='hbvf-swatch-select' style={ getInlineStyle() }>
+        <select className='hvsfw-vf-swatch-select' style={ getInlineStyle() }>
+            <option>
+                Select { attribute.attribute_label }
+            </option>
             { terms.map( ( term, index ) => {
                 return (
                     <option key={ index }>

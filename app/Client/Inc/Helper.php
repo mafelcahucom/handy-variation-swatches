@@ -339,6 +339,25 @@ final class Helper {
     }
 
     /**
+     * Return the minified version of internal css.
+     *
+     * @since 1.0.0
+     * 
+     * @param  string  $css  The internal css to be minify.
+     * @return string
+     */
+	public static function minify_css( $css ) {
+        $css = preg_replace( '/\s+/', ' ', $css );
+        $css = preg_replace( '/\/\*[^\!](.*?)\*\//', '', $css );
+        $css = preg_replace( '/(,|:|;|\{|}) /', '$1', $css );
+        $css = preg_replace( '/ (,|;|\{|})/', '$1', $css );
+        $css = preg_replace( '/(:| )0\.([0-9]+)(%|em|ex|px|in|cm|mm|pt|pc)/i', '${1}.${2}${3}', $css );
+        $css = preg_replace( '/(:| )(\.?)0(%|em|ex|px|in|cm|mm|pt|pc)/i', '${1}0', $css );
+
+        return trim( $css );
+    }
+
+    /**
      * Add a custom add to cart message success based on product names.
      *
      * @since 1.0.0
@@ -352,6 +371,7 @@ final class Helper {
         
         wc_add_notice( '<a href="'. wc_get_cart_url() .'" tabindex="1" class="button wc-forward">View cart</a> '. esc_html( $product_name ) .' have been added to your cart.', 'success' );
     }
+    
 
 
 

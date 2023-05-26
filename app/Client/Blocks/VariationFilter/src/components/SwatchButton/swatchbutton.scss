@@ -1,0 +1,11 @@
+.hvsfw-vf-swatch-button {
+    display: flex;
+    flex-wrap: wrap;
+
+    &__box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+}

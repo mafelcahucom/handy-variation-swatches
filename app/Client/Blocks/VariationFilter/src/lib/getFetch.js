@@ -5,11 +5,11 @@
  * 
  * @author Mafel John Cahucom
  * 
- * @type {Function}
+ * @async
  * @param {Object} params Containing the parameters.
- * @return {Object} Fetch response
+ * @return {Promise} Fetch response
  */
-const getFetch = async ( params ) => {
+const data = async ( params ) => {
     let result = {
         success: false,
         data: {
@@ -23,7 +23,7 @@ const getFetch = async ( params ) => {
     }
 
     try {
-        const response = await fetch( hbvfData.url, {
+        const response = await fetch( hvsfwVfData.url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -41,4 +41,4 @@ const getFetch = async ( params ) => {
     return result;
 };
 
-export default getFetch;
+export { data as getFetch };

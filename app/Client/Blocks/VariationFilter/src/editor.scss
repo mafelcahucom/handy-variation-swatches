@@ -3,3 +3,10 @@
  *
  * Replace them with your own styles or remove the file completely.
  */
+ .hvsfw-vf {
+    *,
+    *:before,
+    *:after {
+        box-sizing: border-box;
+    }
+ }

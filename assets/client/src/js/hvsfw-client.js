@@ -1,4 +1,9 @@
 /**
+ * Internal dependencies
+ */
+import variationFilter from "./modules/variation-filter";
+
+/**
  * Strict mode.
  *
  * @since 1.0.0
@@ -905,6 +910,7 @@ hvsfw.domReady = {
 };
 
 hvsfw.domReady.execute( function() {
+	variationFilter.init();
 	hvsfw.swatch.init();
 	hvsfw.addToCart.init();
 } );

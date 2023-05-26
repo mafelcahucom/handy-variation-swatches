@@ -146,6 +146,69 @@ function clientJsTask( done ) {
 }
 gulp.task( 'client_js_task', clientJsTask );
 
+
+/**
+ * Variation Filter Widget CSS Task - compiling scss into minified css
+ * and add sourcemap.
+ *
+ * @since 1.0.0
+ */
+var vf_css_src   = './app/Client/Widgets/VariationFilter/assets/src/scss/*.scss';
+var vf_css_dist  = './app/Client/Widgets/VariationFilter/assets/dist/css/';
+var vf_css_watch = 'app/Client/Widgets/VariationFilter/assets/src/scss/**/*.scss';
+function vfCssTask( done ) {
+	gulp.src( vf_css_src )
+		.pipe( gulp_sourcemap.init() )
+		.pipe( gulp_sass({ 
+			outputStyle: 'compressed' 
+		}).on( 'error', gulp_sass.logError ))
+		.pipe( gulp_autoprefixer({
+			cascade: false
+		}))
+		.pipe( gulp_rename({
+			suffix: '.min'
+		}))
+		.pipe( gulp_sourcemap.write( './' ) )
+		.pipe( gulp.dest( vf_css_dist ) );
+	done();
+}
+gulp.task( 'vf_css_task', vfCssTask );
+
+/**
+ * Variation Filter Widget JS Task - compiling javascript and convert into babel
+ * and minify and add sourcemap.
+ *
+ * @since 1.0.0
+ */
+var vf_js_folder = 'app/Client/Widgets/VariationFilter/assets/src/js/';
+var vf_js_dist   = './app/Client/Widgets/VariationFilter/assets/dist/js/';
+var vf_js_files  = [ 'main.js' ];
+var vf_js_watch  = 'app/Client/Widgets/VariationFilter/assets/src/js/*.js'; 
+function vfJsTask( done ) {
+	vf_js_files.map( function( file ) {
+		return browserify({
+			entries: [ vf_js_folder + file ]
+		})
+		.transform( babelify, {
+			presets: ['@babel/env']
+		})
+		.bundle()
+		.pipe( vinyl_source( file ) )
+		.pipe( gulp_rename({
+			suffix: '.min'
+		}))
+		.pipe( vinyl_buffer() )
+		.pipe( gulp_sourcemap.init({
+			loadMaps: true
+		}))
+		.pipe( gulp_uglify() )
+		.pipe( gulp_sourcemap.write( './' ) )
+		.pipe( gulp.dest( vf_js_dist ) );
+	});
+	done();
+}
+gulp.task( 'client_js_task', clientJsTask );
+
 /**
  * Bundle task - budle multiple files into single. Note only
  * use during deploying in the production.
@@ -172,5 +235,7 @@ function watchTask() {
 	gulp.watch( client_css_watch, clientCssTask );
 	gulp.watch( admin_js_watch, adminJsTask );
 	gulp.watch( client_js_watch, clientJsTask );
+	gulp.watch( vf_css_watch, vfCssTask );
+	gulp.watch( vf_js_watch, vfJsTask );
 }
 gulp.task( 'watch', gulp.series( watchTask ) );

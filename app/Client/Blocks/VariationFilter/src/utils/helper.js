@@ -54,8 +54,8 @@ const data = {
 	 * 
 	 * @since 1.0.0
 	 * 
-	 * @param {String} string Contains the string to be modified.
-	 * @return {String} Capitalize first character. 
+	 * @param {string} string Contains the string to be modified.
+	 * @return {string} Capitalize first character. 
 	 */
 	getUcFirst: ( string ) => {
 		return string.charAt( 0 ).toUpperCase() + string.slice( 1 );
@@ -67,7 +67,7 @@ const data = {
 	 * @since 1.0.0
 	 * 
 	 * @param {Object} padding Contains the top, right, bottom and left value.
-	 * @return {String} Single line padding value.
+	 * @return {string} Single line padding value.
 	 */
 	getPadding: ( padding ) => {
 		if ( data.isObjectEmpty( padding ) ) {
@@ -90,17 +90,17 @@ const data = {
 	 * @since 1.0.0
 	 * 
 	 * @param {Object} border Contains the width, style and color value.
-	 * @return {String} Single line border value.
+	 * @return {string} Single line border value.
 	 */
 	getBorder: ( border ) => {
 		if ( data.isObjectEmpty( border ) ) {
-			return '0px none #000';
+			return '0px none #000000';
 		}
 
 		const {
 			width = ( width !== undefined ? width : '0px' ),
 			style = ( style !== undefined ? style : 'none' ),
-			color = ( color !== undefined ? color : '#000' )
+			color = ( color !== undefined ? color : '#000000' )
 		} = border;
 
 		return `${ width } ${ style } ${ color }`;
@@ -116,7 +116,7 @@ const data = {
 	 */
 	getBorders: ( borders ) => {
 		if ( data.isObjectEmpty( borders ) ) {
-			return { border: '0px none #000' };
+			return { border: '0px none #000000' };
 		}
 
 		const value = {};
@@ -130,6 +130,57 @@ const data = {
 		}
 
 		return value;
+	},
+
+	/**
+	 * Set the border property on an element.
+	 * 
+	 * @since 1.0.0
+	 * 
+	 * @param {Object} element Contains the element to be modified. 
+	 * @param {Object} borders Contains the border top, right, bottom and left.
+	 */
+	setBorder: ( element, borders ) => {
+		if ( ! element || data.isObjectEmpty( borders ) ) {
+			return;
+		}
+
+		if ( Object.keys( borders ).length === 4 ) {
+			Object.entries( borders ).forEach( ( border ) => {
+				element.style[ border[0] ] = border[1];
+			});
+		} else {
+			element.style.border = borders.border;
+		}
+	},
+
+	/**
+	 * Return the linear gradient color or stripe color.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param {Array} colors Containing the list of colors.
+	 * @return {string} The gradient background color.
+	 */
+	getLinearColor( colors ) {
+		if ( colors.length === 0 || ! Array.isArray( colors ) ) {
+			return '#ffffff';
+		}
+
+		let value = '-45deg, ';
+		const count = colors.length;
+		const length = ( 100 / count );
+
+		colors.forEach( function( color, index ) {
+			index = ( index + 1 );
+			const end = ( length * index );
+			const start = ( end - length );
+
+			value += `${ color } ${ start }%, ${ color } ${ end }% `;
+			value += ( index < count ? ',' : '' );
+		} );
+
+		return `repeating-linear-gradient( ${ value } )`;
 	},
 };
 

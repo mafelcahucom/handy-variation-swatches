@@ -2,8 +2,7 @@
 namespace HVSFW\Client\Blocks\VariationFilter;
 
 use HVSFW\Inc\Traits\Singleton;
-use HVSFW\Client\Blocks\VariationFilter\Inc\BlockHelper;
-use HVSFW\Client\Blocks\VariationFilter\Inc\BlockApi;
+use HVSFW\Client\Blocks\VariationFilter\Inc\BlockEvents;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -27,10 +26,15 @@ final class VariationFilter {
      * @since 1.0.0
      */
     protected function __construct() {
+		if ( ! function_exists( 'register_block_type' ) ) {
+			return;
+		}
+
+		// Register Block.
 		add_action( 'init', [ $this, 'register_block' ] );
 
-		// Register BlockAPI.
-		BlockApi::get_instance();
+		// Register Block Events.
+		BlockEvents::get_instance();
     }
 
 	/**
@@ -55,11 +59,10 @@ final class VariationFilter {
 	 * @since 1.0.0
 	 */
 	public function localize_data() {
-		wp_localize_script( 'create-block-variation-filter-editor-script', 'hbvfData', [
-			'attributes' => BlockHelper::get_attributes(),
-			'url'		 => admin_url( 'admin-ajax.php' ),
-			'nonce' 	 => [
-				'getProductAttributes' => wp_create_nonce( 'hbvf_get_product_attributes' )
+		wp_localize_script( 'create-block-variation-filter-editor-script', 'hvsfwVfData', [
+			'url'   => admin_url( 'admin-ajax.php' ),
+			'nonce' => [
+				'getProductAttributes' => wp_create_nonce( 'hvsfw_vf_get_product_attributes' )
 			]
 		]);
 	}

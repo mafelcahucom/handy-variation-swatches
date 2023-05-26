@@ -311,6 +311,75 @@ final class Utility {
     }
 
     /**
+	 * Return the registered attributes in wp_woocommerce_attribute_taxonomies.
+	 *
+	 * @since 1.0.0
+	 * 
+	 * @return array
+	 */
+	public static function get_available_attributes() {
+		global $wpdb;
+		$table  	= $wpdb->prefix . 'woocommerce_attribute_taxonomies';
+		$attributes = $wpdb->get_results( "SELECT * FROM $table", 'ARRAY_A' );
+
+		if ( count( $attributes ) > 0 ) {
+			foreach ( $attributes as $key => $attribute ) {
+				$taxonomy_name				 = 'pa_' . $attribute['attribute_name'];
+				$attributes[ $key ]['terms'] = get_terms( $taxonomy_name, [
+					'hide_empty' => 1
+				]);
+
+				if ( count( $attributes[ $key ]['terms'] ) > 0 ) {
+					foreach ( $attributes[ $key ]['terms'] as $sub_key => $term ) {
+						$meta_data = null;
+						if ( $attribute['attribute_type'] === 'color' ) {
+							$meta_data = self::get_swatch_color( $term->term_id );
+						}
+
+						if ( $attribute['attribute_type'] === 'image' ) {
+							$image_id 	= self::get_swatch_image( $term->term_id );
+							$image_size = self::get_swatch_image_size( $term->term_id );
+							$meta_data 	= self::get_swatch_image_by_attachment_id( $image_id, $image_size );
+						}
+						
+						$attributes[ $key ]['terms'][ $sub_key ]->meta = $meta_data;
+					}
+				}
+			}
+
+			$attributes = array_filter( $attributes, function( $attribute ) {
+				return ! empty( $attribute['terms'] );
+			});
+		}
+		
+		return ( $attributes !== null ? $attributes : [] );
+	}
+
+	/**
+	 * Return a certain attribute by attribute name from get_available_attributes().
+	 * 
+	 * @since 1.0.0
+	 *
+	 * @param  string  $attribute_name  The name of target attribute.
+	 * @return array
+	 */
+	public static function get_attribute( $attribute_name ) {
+		$attribute = [];
+		if ( empty( $attribute_name ) ) {
+			return $attribute;
+		}
+
+		$attributes = self::get_available_attributes();
+		if ( ! empty( $attributes ) ) {
+			$attribute = array_values( array_filter( $attributes, function( $attribute ) use ( $attribute_name ) {
+				return $attribute['attribute_name'] === $attribute_name;
+			}));
+		}
+
+		return ( ! empty( $attribute ) ? $attribute[0] : [] );
+	}
+
+    /**
      * Return a converted slug string.
      *
      * @since 1.0.0

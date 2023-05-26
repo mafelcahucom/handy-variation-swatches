@@ -1,21 +1,20 @@
 <?php
 namespace HVSFW\Client\Blocks\VariationFilter\Inc;
 
-use HVSFW\Client\Blocks\Blocks;
 use HVSFW\Inc\Traits\Singleton;
 use HVSFW\Inc\Traits\Security;
-use HVSFW\Client\Blocks\VariationFilter\Inc\BlockHelper;
+use HVSFW\Inc\Utility;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Block API.
+ * Block Events.
  *
  * @since 	1.0.0
  * @version 1.0.0
  * @author Mafel John Cahucom
  */
-final class BlockApi {
+final class BlockEvents {
 
 	/**
 	 * Inherit Singleton.
@@ -33,7 +32,7 @@ final class BlockApi {
      * @since 1.0.0
      */
     protected function __construct() {
-        add_action( 'wp_ajax_hbvf_get_product_attributes', [ $this, 'get_product_attributes' ] );
+        add_action( 'wp_ajax_hvsfw_vf_get_product_attributes', [ $this, 'get_product_attributes' ] );
     }
 
     /**
@@ -52,7 +51,7 @@ final class BlockApi {
 
         wp_send_json_success([
             'response'   => 'SUCCESS',
-            'attributes' => BlockHelper::get_attributes()
+            'attributes' => Utility::get_available_attributes()
         ]);
     }
 }

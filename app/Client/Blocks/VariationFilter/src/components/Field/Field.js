@@ -12,13 +12,13 @@ import './field.scss';
  * 
  * @component
  * @param {Object}  children The children component 
- * @param {Boolean} isShow   The component show state.
+ * @param {boolean} isShow   The component show state.
  */
 const Field = ( { children, isShow = true } ) => {
 	const display = isShow ? 'block' : 'none';
 	
 	return (
-		<div className='hbvf-field' style={ { display: display } }>
+		<div className='hvsfw-vf-field' style={ { display: display } }>
 			{ children }
 		</div>
 	);
