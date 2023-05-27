@@ -3,6 +3,7 @@ namespace HVSFW\Admin\Variation;
 
 use HVSFW\Inc\Traits\Singleton;
 use HVSFW\Inc\Utility;
+use HVSFW\Inc\Validator;
 use HVSFW\Admin\Inc\Helper;
 
 defined( 'ABSPATH' ) || exit;
@@ -247,7 +248,7 @@ final class TermMeta {
             }
 
             foreach ( $colors as $color ) {
-                $meta_value[] = Helper::validate_color([
+                $meta_value[] = Validator::validate_color([
                     'value'   => $color,
                     'default' => '#ffffff'
                 ]);
@@ -288,7 +289,7 @@ final class TermMeta {
             return;
         }
 
-        $meta_value['type'] = Helper::validate_select([
+        $meta_value['type'] = Validator::validate_select([
             'value'   => $_POST['hvsfw_tooltip_type'],
             'default' => 'none',
             'choices' => [ 'none', 'text', 'html', 'image' ]

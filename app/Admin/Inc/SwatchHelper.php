@@ -2,6 +2,7 @@
 namespace HVSFW\Admin\Inc;
 
 use HVSFW\Inc\Traits\Singleton;
+use HVSFW\Inc\Validator;
 use HVSFW\Admin\Inc\Helper;
 
 defined( 'ABSPATH' ) || exit;
@@ -226,19 +227,19 @@ final class SwatchHelper {
             if ( isset( $args['setting'][ $post_key ] ) ) {
                 switch ( $field['type'] ) {
                     case 'size':
-                        $validated[ $key ] = Helper::validate_size([
+                        $validated[ $key ] = Validator::validate_size([
                             'value'   => $args['setting'][ $post_key ],
                             'default' => $field['default'] 
                         ]);
                         break;
                     case 'color':
-                        $validated[ $key ] = Helper::validate_color([
+                        $validated[ $key ] = Validator::validate_color([
                             'value'   => $args['setting'][ $post_key ],
                             'default' => $field['default']
                         ]);
                         break;
                     case 'select':
-                        $validated[ $key ] = Helper::validate_select([
+                        $validated[ $key ] = Validator::validate_select([
                             'value'   => $args['setting'][ $post_key ],
                             'default' => $field['default'],
                             'choices' => $field['choices']

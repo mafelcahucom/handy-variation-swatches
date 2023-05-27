@@ -58,6 +58,15 @@ final class Form {
      */
     private static $display_type = '';
 
+    /**
+     * Holds the field's schema.
+     * 
+     * @since 1.0.0
+     *
+     * @var array
+     */
+    private static $schema = [];
+
 	/**
      * Protected class constructor to prevent direct object creation.
      *
@@ -70,7 +79,7 @@ final class Form {
      * 
      * @since 1.0.0
      *
-     * @param  array  $args  Contains the arguments for rendering widget form.
+     * @param  array  $args  Contains the arguments for rendering form.
      * $args = [
      *     'instance'   => (array)  The available instance of the form.
      *     'field_id'   => (string) Contains the unique widget prefix.
@@ -87,7 +96,8 @@ final class Form {
         self::$instance     = ( ! empty( $args['instance'] ) ? $args['instance'] : [] );
         self::$field_id     = ( ! empty( $args['field_id'] ) ? $args['field_id'] : '' );
         self::$field_name   = ( ! empty( $args['field_name'] ) ? $args['field_name'] : '' );
-        self::$display_type = self::get_display_type();
+        self::$schema       = LocalHelper::get_fields_schema();
+        self::$display_type = LocalHelper::get_display_type( self::$instance );
 
         ob_start();
         ?>
@@ -155,6 +165,8 @@ final class Form {
      * @return HTMLElement
      */
     private static function general_form() {
+        $schema = self::$schema['general'];
+
         ob_start();
         ?>
         <div class="hvsfw-vf-form">
@@ -164,22 +176,22 @@ final class Form {
                 echo self::get_select_field([
                     'name'    => '[general][show_count]',
                     'label'   => 'Show Product Count',
-                    'default' => 'yes',
-                    'options' => [ 'yes', 'no' ]
+                    'default' => $schema['show_count']['default'],
+                    'options' => $schema['show_count']['choices']
                 ]);
 
                 echo self::get_select_field([
                     'name'    => '[general][display_type]',
                     'label'   => 'Display Type',
-                    'default' => 'swatch',
-                    'options' => [ 'swatch', 'select', 'list' ]
+                    'default' => $schema['display_type']['default'],
+                    'options' => $schema['display_type']['choices']
                 ]);
 
                 echo self::get_select_field([
                     'name'    => '[general][query_type]',
                     'label'   => 'Query Type',
-                    'default' => 'or',
-                    'options' => [ 'or', 'and' ]
+                    'default' => $schema['query_type']['default'],
+                    'options' => $schema['query_type']['choices']
                 ]);
             ?>
         </div>
@@ -195,6 +207,8 @@ final class Form {
      * @return HTMLElement
      */
     private static function title_form() {
+        $schema = self::$schema['title'];
+
         ob_start();
         ?>
         <div class="hvsfw-vf-form">
@@ -202,38 +216,38 @@ final class Form {
                 echo self::get_text_field([
                     'name'    => '[title][text]',
                     'label'   => 'Title',
-                    'default' => 'Filter by'
+                    'default' => $schema['text']['default']
                 ]);
 
                 echo self::get_size_field([
                     'name'    => '[title][font_size]',
                     'label'   => 'Font Size',
-                    'default' => '22px'
+                    'default' => $schema['font_size']['default']
                 ]);
 
                 echo self::get_select_field([
                     'name'    => '[title][font_weight]',
                     'label'   => 'Font Weight',
-                    'default' => '500',
-                    'options' => LocalHelper::get_font_weights()
+                    'default' => $schema['font_weight']['default'],
+                    'options' => $schema['font_weight']['choices']
                 ]);
 
                 echo self::get_size_field([
                     'name'    => '[title][line_height]',
                     'label'   => 'Line Height',
-                    'default' => '26px'
+                    'default' => $schema['line_height']['default']
                 ]);
 
                 echo self::get_size_field([
                     'name'    => '[title][margin_bottom]',
                     'label'   => 'Margin Bottom',
-                    'default' => '20px'
+                    'default' => $schema['margin_bottom']['default']
                 ]);
 
                 echo self::get_color_field([
                     'name'    => '[title][color]',
                     'label'   => 'Color',
-                    'default' => '#000000'
+                    'default' => $schema['color']['default']
                 ]);
             ?>
         </div>
@@ -249,6 +263,8 @@ final class Form {
      * @return HTMLElement
      */
     private static function list_form() {
+        $schema = self::$schema['list'];
+
         ob_start();
         ?>
         <div class="hvsfw-vf-form">
@@ -256,26 +272,26 @@ final class Form {
                 echo self::get_size_field([
                     'name'    => '[list][font_size]',
                     'label'   => 'Font Size',
-                    'default' => '16px'
+                    'default' => $schema['font_size']['default']
                 ]);
 
                 echo self::get_select_field([
                     'name'    => '[list][font_weight]',
                     'label'   => 'Font Weight',
-                    'default' => '400',
-                    'options' => LocalHelper::get_font_weights()
+                    'default' => $schema['font_weight']['default'],
+                    'options' => $schema['font_weight']['choices']
                 ]);
 
                 echo self::get_size_field([
                     'name'    => '[list][line_height]',
                     'label'   => 'Line Height',
-                    'default' => '20px'
+                    'default' => $schema['line_height']['default']
                 ]);
 
                 echo self::get_size_field([
                     'name'    => '[list][margin_bottom]',
                     'label'   => 'Margin Bottom',
-                    'default' => '5px'
+                    'default' => $schema['margin_bottom']['default']
                 ]);
 
                 echo self::get_grid_field([
@@ -284,12 +300,12 @@ final class Form {
                         self::get_color_field([
                             'name'    => '[list][color]',
                             'label'   => 'Text Color',
-                            'default' => '#000000'
+                            'default' => $schema['color']['default']
                         ]),
                         self::get_color_field([
                             'name'    => '[list][color_active]',
                             'label'   => 'Text Color Active',
-                            'default' => '#0071F2'
+                            'default' => $schema['color_active']['default']
                         ])
                     ]
                 ]);
@@ -307,6 +323,8 @@ final class Form {
      * @return HTMLElement
      */
     private static function select_form() {
+        $schema = self::$schema['select'];
+
         ob_start();
         ?>
         <div class="hvsfw-vf-form">
@@ -317,12 +335,12 @@ final class Form {
                         self::get_size_field([
                             'name'    => '[select][width]',
                             'label'   => 'Width',
-                            'default' => '100%'
+                            'default' => $schema['width']['default']
                         ]),
                         self::get_size_field([
                             'name'    => '[select][height]',
                             'label'   => 'Height',
-                            'default' => '30px'
+                            'default' => $schema['height']['default']
                         ])
                     ]
                 ]);
@@ -333,13 +351,13 @@ final class Form {
                         self::get_size_field([
                             'name'    => '[select][font_size]',
                             'label'   => 'Font Size',
-                            'default' => '14px'
+                            'default' => $schema['font_size']['default']
                         ]),
                         self::get_select_field([
                             'name'    => '[select][font_weight]',
                             'label'   => 'Font Weight',
-                            'default' => '400',
-                            'options' => LocalHelper::get_font_weights()
+                            'default' => $schema['font_weight']['default'],
+                            'options' => $schema['font_weight']['choices']
                         ])
                     ]
                 ]);
@@ -350,22 +368,22 @@ final class Form {
                         self::get_size_field([
                             'name'    => '[select][padding_top]',
                             'label'   => 'Padding Top',
-                            'default' => '0px'
+                            'default' => $schema['padding_top']['default']
                         ]),
                         self::get_size_field([
                             'name'    => '[select][padding_right]',
                             'label'   => 'Padding Right',
-                            'default' => '24px'
+                            'default' => $schema['padding_right']['default']
                         ]),
                         self::get_size_field([
                             'name'    => '[select][padding_bottom]',
                             'label'   => 'Padding Bottom',
-                            'default' => '0px'
+                            'default' => $schema['padding_bottom']['default']
                         ]),
                         self::get_size_field([
                             'name'    => '[select][padding_left]',
                             'label'   => 'Padding Left',
-                            'default' => '8px'
+                            'default' => $schema['padding_left']['default']
                         ])
                     ]
                 ]);
@@ -376,12 +394,12 @@ final class Form {
                         self::get_color_field([
                             'name'    => '[select][color]',
                             'label'   => 'Text Color',
-                            'default' => '#000000'
+                            'default' => $schema['color']['default']
                         ]),
                         self::get_color_field([
                             'name'    => '[select][background_color]',
                             'label'   => 'Background Color',
-                            'default' => '#ffffff'
+                            'default' => $schema['background_color']['default']
                         ])
                     ]
                 ]);
@@ -392,18 +410,18 @@ final class Form {
                         self::get_size_field([
                             'name'    => '[select][border_width]',
                             'label'   => 'Border Width',
-                            'default' => '1px'
+                            'default' => $schema['border_width']['default']
                         ]),
                         self::get_select_field([
                             'name'    => '[select][border_style]',
                             'label'   => 'Border Style',
-                            'default' => 'solid',
-                            'options' => LocalHelper::get_border_styles()
+                            'default' => $schema['border_style']['default'],
+                            'options' => $schema['border_style']['choices']
                         ]),
                         self::get_color_field([
                             'name'    => '[select][border_color]',
                             'label'   => 'Border Color',
-                            'default' => '#000000'
+                            'default' => $schema['border_color']['default']
                         ]),
                     ]
                 ]);
@@ -421,6 +439,8 @@ final class Form {
      * @return HTMLElement
      */
     private static function button_form() {
+        $schema = self::$schema['button'];
+
         ob_start();
         ?>
         <div class="hvsfw-vf-form">
@@ -428,8 +448,8 @@ final class Form {
                 echo self::get_select_field([
                     'name'    => '[button][shape]',
                     'label'   => 'Shape',
-                    'default' => 'square',
-                    'options' => [ 'square', 'circle', 'custom' ]
+                    'default' => $schema['shape']['default'],
+                    'options' => $schema['shape']['choices']
                 ]);
 
                 echo self::get_grid_field([
@@ -438,12 +458,12 @@ final class Form {
                         self::get_size_field([
                             'name'    => '[button][width]',
                             'label'   => 'Width',
-                            'default' => '40px'
+                            'default' => $schema['width']['default']
                         ]),
                         self::get_size_field([
                             'name'    => '[button][height]',
                             'label'   => 'Height',
-                            'default' => '40px'
+                            'default' => $schema['height']['default']
                         ])
                     ]
                 ]);
@@ -454,13 +474,13 @@ final class Form {
                         self::get_size_field([
                             'name'    => '[button][font_size]',
                             'label'   => 'Font Size',
-                            'default' => '14px'
+                            'default' => $schema['font_size']['default']
                         ]),
                         self::get_select_field([
                             'name'    => '[button][font_weight]',
                             'label'   => 'Font Weight',
-                            'default' => '400',
-                            'options' => LocalHelper::get_font_weights()
+                            'default' => $schema['font_weight']['default'],
+                            'options' => $schema['font_weight']['choices']
                         ])
                     ]
                 ]);
@@ -471,22 +491,22 @@ final class Form {
                         self::get_size_field([
                             'name'    => '[button][padding_top]',
                             'label'   => 'Padding Top',
-                            'default' => '5px'
+                            'default' => $schema['padding_top']['default']
                         ]),
                         self::get_size_field([
                             'name'    => '[button][padding_right]',
                             'label'   => 'Padding Right',
-                            'default' => '5px'
+                            'default' => $schema['padding_right']['default']
                         ]),
                         self::get_size_field([
                             'name'    => '[button][padding_bottom]',
                             'label'   => 'Padding Bottom',
-                            'default' => '5px'
+                            'default' => $schema['padding_bottom']['default']
                         ]),
                         self::get_size_field([
                             'name'    => '[button][padding_left]',
                             'label'   => 'Padding Left',
-                            'default' => '5px'
+                            'default' => $schema['padding_left']['default']
                         ])
                     ]
                 ]);
@@ -497,22 +517,22 @@ final class Form {
                         self::get_color_field([
                             'name'    => '[button][text_color]',
                             'label'   => 'Text Color',
-                            'default' => '#000000'
+                            'default' => $schema['text_color']['default']
                         ]),
                         self::get_color_field([
-                            'name'    => '[button][text_active_color]',
+                            'name'    => '[button][text_color_active]',
                             'label'   => 'Text Color Active',
-                            'default' => '#0071F2'
+                            'default' => $schema['text_color_active']['default']
                         ]),
                         self::get_color_field([
                             'name'    => '[button][background_color]',
                             'label'   => 'Background Color',
-                            'default' => '#ffffff'
+                            'default' => $schema['background_color']['default']
                         ]),
                         self::get_color_field([
                             'name'    => '[button][background_color_active]',
                             'label'   => 'Background Color Active',
-                            'default' => '#ffffff'
+                            'default' => $schema['background_color_active']['default']
                         ]),
                     ]
                 ]);
@@ -523,23 +543,23 @@ final class Form {
                         self::get_size_field([
                             'name'    => '[button][border_width]',
                             'label'   => 'Border Width',
-                            'default' => '1px'
+                            'default' => $schema['border_width']['default']
                         ]),
                         self::get_select_field([
                             'name'    => '[button][border_style]',
                             'label'   => 'Border Style',
-                            'default' => 'solid',
-                            'options' => LocalHelper::get_border_styles()
+                            'default' => $schema['border_style']['default'],
+                            'options' => $schema['border_style']['choices']
                         ]),
                         self::get_color_field([
                             'name'    => '[button][border_color]',
                             'label'   => 'Border Color',
-                            'default' => '#000000'
+                            'default' => $schema['border_color']['default']
                         ]),
                         self::get_color_field([
                             'name'    => '[button][border_color_active]',
                             'label'   => 'Border Color Active',
-                            'default' => '#0071F2'
+                            'default' => $schema['border_color_active']['default']
                         ]),
                     ]
                 ]);
@@ -547,14 +567,14 @@ final class Form {
                 echo self::get_size_field([
                     'name'    => '[button][border_radius]',
                     'label'   => 'Border Radius',
-                    'default' => '0px',
+                    'default' => $schema['border_radius']['default'],
                     'is_show' => self::is_show_field( '[button][shape]', 'custom', 'no', '==' )
                 ]);
 
                 echo self::get_size_field([
                     'name'    => '[button][gap]',
                     'label'   => 'Gap',
-                    'default' => '10px'
+                    'default' => $schema['gap']['default']
                 ]);
             ?>
         </div>
@@ -570,6 +590,8 @@ final class Form {
      * @return HTMLElement
      */
     private static function color_form() {
+        $schema = self::$schema['color'];
+
         ob_start();
         ?>
         <div class="hvsfw-vf-form">
@@ -577,14 +599,14 @@ final class Form {
                 echo self::get_select_field([
                     'name'    => '[color][shape]',
                     'label'   => 'Shape',
-                    'default' => 'square',
-                    'options' => [ 'square', 'circle', 'custom' ]
+                    'default' => $schema['shape']['default'],
+                    'options' => $schema['shape']['choices']
                 ]);
 
                 echo self::get_size_field([
                     'name'    => '[color][size]',
                     'label'   => 'Size',
-                    'default' => '40px',
+                    'default' => $schema['size']['default'],
                     'is_show' => self::is_show_field( '[color][shape]', 'custom', 'yes', '!=' )
                 ]);
 
@@ -595,12 +617,12 @@ final class Form {
                         self::get_size_field([
                             'name'    => '[color][width]',
                             'label'   => 'Width',
-                            'default' => '40px'
+                            'default' => $schema['width']['default']
                         ]),
                         self::get_size_field([
                             'name'    => '[color][height]',
                             'label'   => 'Height',
-                            'default' => '40px'
+                            'default' => $schema['height']['default']
                         ])
                     ]
                 ]);
@@ -611,23 +633,23 @@ final class Form {
                         self::get_size_field([
                             'name'    => '[color][border_width]',
                             'label'   => 'Border Width',
-                            'default' => '1px'
+                            'default' => $schema['border_width']['default']
                         ]),
                         self::get_select_field([
                             'name'    => '[color][border_style]',
                             'label'   => 'Border Style',
-                            'default' => 'solid',
-                            'options' => LocalHelper::get_border_styles()
+                            'default' => $schema['border_style']['default'],
+                            'options' => $schema['border_style']['choices']
                         ]),
                         self::get_color_field([
                             'name'    => '[color][border_color]',
                             'label'   => 'Border Color',
-                            'default' => '#000000'
+                            'default' => $schema['border_color']['default']
                         ]),
                         self::get_color_field([
                             'name'    => '[color][border_color_active]',
                             'label'   => 'Border Color Active',
-                            'default' => '#0071F2'
+                            'default' => $schema['border_color_active']['default']
                         ]),
                     ]
                 ]);
@@ -635,14 +657,14 @@ final class Form {
                 echo self::get_size_field([
                     'name'    => '[color][border_radius]',
                     'label'   => 'Border Radius',
-                    'default' => '0px',
+                    'default' => $schema['border_radius']['default'],
                     'is_show' => self::is_show_field( '[color][shape]', 'custom', 'no', '==' )
                 ]);
 
                 echo self::get_size_field([
                     'name'    => '[color][gap]',
                     'label'   => 'Gap',
-                    'default' => '10px'
+                    'default' => $schema['gap']['default']
                 ]);
             ?>
         </div>
@@ -658,6 +680,8 @@ final class Form {
      * @return HTMLElement
      */
     private static function image_form() {
+        $schema = self::$schema['image'];
+
         ob_start();
         ?>
         <div class="hvsfw-vf-form">
@@ -665,14 +689,14 @@ final class Form {
                 echo self::get_select_field([
                     'name'    => '[image][shape]',
                     'label'   => 'Shape',
-                    'default' => 'square',
-                    'options' => [ 'square', 'circle', 'custom' ]
+                    'default' => $schema['shape']['default'],
+                    'options' => $schema['shape']['choices']
                 ]);
 
                 echo self::get_size_field([
                     'name'    => '[image][size]',
                     'label'   => 'Size',
-                    'default' => '40px',
+                    'default' => $schema['size']['default'],
                     'is_show' => self::is_show_field( '[image][shape]', 'custom', 'yes', '!=' )
                 ]);
 
@@ -683,12 +707,12 @@ final class Form {
                         self::get_size_field([
                             'name'    => '[image][width]',
                             'label'   => 'Width',
-                            'default' => '40px'
+                            'default' => $schema['width']['default']
                         ]),
                         self::get_size_field([
                             'name'    => '[image][height]',
                             'label'   => 'Height',
-                            'default' => '40px'
+                            'default' => $schema['height']['default']
                         ])
                     ]
                 ]);
@@ -699,23 +723,23 @@ final class Form {
                         self::get_size_field([
                             'name'    => '[image][border_width]',
                             'label'   => 'Border Width',
-                            'default' => '1px'
+                            'default' => $schema['border_width']['default']
                         ]),
                         self::get_select_field([
                             'name'    => '[image][border_style]',
                             'label'   => 'Border Style',
-                            'default' => 'solid',
-                            'options' => LocalHelper::get_border_styles()
+                            'default' => $schema['border_style']['default'],
+                            'options' => $schema['border_style']['choices']
                         ]),
                         self::get_color_field([
                             'name'    => '[image][border_color]',
                             'label'   => 'Border Color',
-                            'default' => '#000000'
+                            'default' => $schema['border_color']['default']
                         ]),
                         self::get_color_field([
                             'name'    => '[image][border_color_active]',
                             'label'   => 'Border Color Active',
-                            'default' => '#0071F2'
+                            'default' => $schema['border_color_active']['default']
                         ]),
                     ]
                 ]);
@@ -723,14 +747,14 @@ final class Form {
                 echo self::get_size_field([
                     'name'    => '[image][border_radius]',
                     'label'   => 'Border Radius',
-                    'default' => '0px',
+                    'default' => $schema['border_radius']['default'],
                     'is_show' => self::is_show_field( '[image][shape]', 'custom', 'no', '==' )
                 ]);
 
                 echo self::get_size_field([
                     'name'    => '[image][gap]',
                     'label'   => 'Gap',
-                    'default' => '10px'
+                    'default' => $schema['gap']['default']
                 ]);
             ?>
         </div>
@@ -778,11 +802,11 @@ final class Form {
      *
      * @param  array  $args  Containing the arguments for creating size field.
      * $args = [
-     *     'name'    => (string) The name of the size field.
-     *     'default' => (string) The default value of the size field. 
-     *     'label'   => (string) The label of the size field.
-     *     'class'   => (string) The additional class of size field.
-     *     'is_show' => (string) The visibility state of the size field [yes, no].
+     *     'name'    => (string)  The name of the size field.
+     *     'default' => (string)  The default value of the size field. 
+     *     'label'   => (string)  The label of the size field.
+     *     'class'   => (string)  The additional class of size field.
+     *     'is_show' => (string)  The visibility state of the size field [yes, no].
      * ]
      * @return HTMLElement
      */
@@ -799,6 +823,15 @@ final class Form {
         $value      = self::get_value( $name, $default );
         $field_id   = self::field_id( $name );
         $field_name = self::field_name( $name );
+
+        // For [title][text] only.
+        if ( $name === '[title][text]' ) {
+            if ( ! isset( self::$instance['title']['text'] ) ) {
+                $value = $default;
+            } else {
+                $value = self::get_value( $name );
+            }
+        }
 
         ob_start();
         ?>
@@ -1027,41 +1060,6 @@ final class Form {
         $value    = self::$instance;
         $is_found = ( isset( $value[ $keys[0] ][ $keys[1] ] ) && ! empty( $value[ $keys[0] ][ $keys[1] ] ) );
         return ( $is_found ? $value[ $keys[0] ][ $keys[1] ] : $default );
-    }
-
-    /**
-     * Return the final display type based on block display_type and
-	 * product attribute_type.
-     * 
-     * @since 1.0.0
-     *
-     * @return string
-     */
-    private static function get_display_type() {
-        $attribute_name = self::get_value( '[general][attribute]' );
-        if ( empty( $attribute_name ) ) {
-            return '';
-        }
-
-        $attribute = Utility::get_attribute( $attribute_name );
-        if ( empty( $attribute ) ) {
-            return '';
-        }
-
-        $display_type = self::get_value( '[general][display_type]' );
-        if ( empty( $display_type ) ) {
-            return '';
-        }
-
-        if ( $display_type !== 'swatch' ) {
-            return $display_type;
-        }
-
-        if ( in_array( $attribute['attribute_type'], [ 'button', 'color', 'image' ] ) ) {
-            return $attribute['attribute_type'];
-        }
-
-        return 'select';
     }
 
     /**

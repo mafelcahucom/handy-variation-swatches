@@ -112,6 +112,7 @@ final class BlockRender {
             color:         {$setting['color']};
             font-size:     {$setting['fontSize']};
             font-weight:   {$setting['fontWeight']};
+            line-height:   {$setting['lineHeight']};
             margin-bottom: {$setting['marginBottom']};
         ");
 
@@ -230,7 +231,6 @@ final class BlockRender {
             {$styles['box']}
             color:      {$setting['colorActive']} !important;
             background: {$setting['backgroundColorActive']} !important;
-            {$this->get_borders( $setting['borderActive'] )}
         ");
 
         if ( ! empty( $setting['borderActive'] ) ) {

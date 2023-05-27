@@ -3,8 +3,11 @@ namespace HVSFW\Client\Widgets\VariationFilter;
 
 use WP_Widget;
 use HVSFW\Inc\Traits\Singleton;
+use HVSFW\Inc\Validator;
 use HVSFW\Client\Inc\Helper;
+use HVSFW\Client\Widgets\VariationFilter\Inc\LocalHelper;
 use HVSFW\Client\Widgets\VariationFilter\Form;
+use HVSFW\Client\Widgets\VariationFilter\Widget;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -79,7 +82,7 @@ class VariationFilter extends WP_Widget {
             return;
         }
 
-        wp_register_style( 'hvsfw-variation-filter-css', $this->get_asset_src( 'css/main.min.css' ), [], '1.0.0', 'all' );
+        wp_register_style( 'hvsfw-variation-filter-css', LocalHelper::get_asset_src( 'css/main.min.css' ), [], '1.0.0', 'all' );
 
         wp_enqueue_style( 'wp-color-picker' );
         wp_enqueue_style( 'hvsfw-variation-filter-css' );
@@ -98,7 +101,7 @@ class VariationFilter extends WP_Widget {
         }
 
         $dependency = [ 'jquery', 'wp-color-picker' ];
-        wp_register_script( 'hvsfw-variation-filter-js', $this->get_asset_src( 'js/main.min.js' ), $dependency, '1.0.0', true );
+        wp_register_script( 'hvsfw-variation-filter-js', LocalHelper::get_asset_src( 'js/main.min.js' ), $dependency, '1.0.0', true );
 
         wp_enqueue_script( 'hvsfw-variation-filter-js' );
     }
@@ -128,8 +131,63 @@ class VariationFilter extends WP_Widget {
 	 * @return array
 	 */
 	public function update( $new_instance, $old_instance ) {
-        Helper::log( $new_instance );
+        $schemas      = LocalHelper::get_fields_schema();
+        $display_type = LocalHelper::get_display_type( $new_instance );
+        $to_store     = [ 'general', 'title', $display_type ];
 
+        // Validate all fields.
+        foreach ( $schemas as $parent_key => $fields ) {
+            foreach ( $fields as $child_key => $schema ) {
+                $new_value  = '';
+                $is_to_save = ( in_array( $parent_key, $to_store ) && isset( $new_instance[ $parent_key ][ $child_key ] ) ? true : false );
+                if ( $is_to_save ) {
+                    $current_value = $new_instance[ $parent_key ][ $child_key ];
+                    switch ( $schema['type'] ) {
+                        case 'text':
+                            $new_value = Validator::validate_text([
+                                'value'   => $current_value,
+                                'default' => $schema['default'],
+                                'empty'   => $schema['empty']
+                            ]);
+                            break;
+                        case 'select':
+                            $new_value = Validator::validate_select([
+                                'value'   => $current_value,
+                                'default' => $schema['default'],
+                                'choices' => $schema['choices']
+                            ]);
+                            break;
+                        case 'size':
+                            $new_value = Validator::validate_size([
+                                'value'   => $current_value,
+                                'default' => $schema['default']
+                            ]);
+                            break;
+                        case 'color':
+                            $new_value = Validator::validate_color([
+                                'value'   => $current_value,
+                                'default' => $schema['default']
+                            ]);
+                            break;
+                    }
+                } else {
+                    $new_value = $schema['default'];
+                }
+
+                $new_instance[ $parent_key ][ $child_key ] = $new_value;
+            }
+        }
+
+        // Validate attribute field.
+        $attribute_choices = LocalHelper::get_attribute_choices();
+        if ( ! empty( $attribute_choices ) ) {
+            $new_instance['general']['attribute'] = Validator::validate_select([
+                'value'   => $new_instance['general']['attribute'],
+                'default' => '',
+                'choices' => $attribute_choices
+            ]);
+        }
+        
         return $new_instance;
     }
 
@@ -142,18 +200,10 @@ class VariationFilter extends WP_Widget {
 	 * @param  array  $instance  Holds all the instances.
 	 */
 	public function widget( $args, $instance ) {
-        echo '<H1>Hello</h1>';
-    }
-
-    /**
-     * Returns the base url.
-     *
-     * @since 1.0.0
-     * 
-     * @param string  $file  Target filename.
-     * @return string
-     */
-    private function get_asset_src( $file ) {
-        return HVSFW_PLUGIN_URL . 'app/Client/Widgets/VariationFilter/assets/dist/' . $file;
+        echo $args['before_widget'];
+		echo Widget::render([
+            'instance' => $instance
+        ]);
+		echo $args['after_widget'];
     }
 }

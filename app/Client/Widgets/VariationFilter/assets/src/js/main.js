@@ -221,7 +221,12 @@ hvsfw.variationFilter = {
 	 * @since 1.0.0
 	 */
 	setColorPickerField() {
-		jQuery( '.hvsfw-vf-color' ).wpColorPicker();
+		jQuery( '.hvsfw-vf-color' ).wpColorPicker({
+			change: function( event, ui ) {
+				jQuery( event.target ).val( ui.color.toString() );
+				jQuery( event.target ).trigger( 'change' );
+			}
+		});
 	},
 
 	/**
@@ -256,11 +261,15 @@ hvsfw.variationFilter = {
 	 */
 	onWidgetUpdated() {
 		jQuery( document ).on( 'widget-updated', function( e, widget ) {
-			// Bind wpColorPicker again.
 			if ( widget[0] ) {
 				const id = widget[0].getAttribute( 'id' );
 				if ( id ) {
-					jQuery( `#${ id } .hvsfw-vf-color` ).wpColorPicker();
+					jQuery( `#${ id } .hvsfw-vf-color` ).wpColorPicker({
+						change: function( event, ui ) {
+							jQuery( event.target ).val( ui.color.toString() );
+							jQuery( event.target ).trigger( 'change' );
+						}
+					});
 				}
 			}
 		});

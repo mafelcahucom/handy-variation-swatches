@@ -3,7 +3,7 @@ namespace HVSFW\Admin\Variation;
 
 use HVSFW\Inc\Traits\Singleton;
 use HVSFW\Inc\Traits\Security;
-use HVSFW\Inc\Utility;
+use HVSFW\Inc\Validator;
 use HVSFW\Admin\Inc\Helper;
 use HVSFW\Admin\Inc\SwatchHelper;
 use HVSFW\Admin\Variation\ProductMetaView;
@@ -354,7 +354,7 @@ final class ProductMeta {
             // Store attribute type.
             $validated[ $attr ]['type'] = 'select';
             if ( isset( $swatch['type'] ) ) {
-                $validated[ $attr ]['type'] = Helper::validate_select([
+                $validated[ $attr ]['type'] = Validator::validate_select([
                     'value'   => $swatch['type'],
                     'default' => 'select',
                     'choices' => [ 'default', 'select', 'button', 'color', 'image', 'assorted' ]
@@ -366,7 +366,7 @@ final class ProductMeta {
             // Store attribute custom.
             $validated[ $attr ]['custom'] = 'yes';
             if ( isset( $swatch['custom'] ) ) {
-                $validated[ $attr ]['custom'] = Helper::validate_select([
+                $validated[ $attr ]['custom'] = Validator::validate_select([
                     'value'   => $swatch['custom'],
                     'default' => 'yes',
                     'choices' => [ 'yes', 'no' ]
@@ -398,7 +398,7 @@ final class ProductMeta {
                     $validated[ $attr ]['term'][ $key ]['style'] = [];
                     if ( $attribute_type === 'assorted' ) {
                         // Type.
-                        $validated[ $attr ]['term'][ $key ]['type'] = Helper::validate_select([
+                        $validated[ $attr ]['term'][ $key ]['type'] = Validator::validate_select([
                             'value'   => $term['type'],
                             'default' => 'button',
                             'choices' => [ 'button', 'color', 'image' ]
@@ -429,7 +429,7 @@ final class ProductMeta {
                         if ( $term_type === 'color' ) {
                             if ( isset( $term_value['color'] ) && ! empty( $term_value['color'] ) && is_array( $term_value['color'] ) ) {
                                 foreach ( $term_value['color'] as $color ) {
-                                    $validated[ $attr ]['term'][ $key ]['value']['color'][] = Helper::validate_color([
+                                    $validated[ $attr ]['term'][ $key ]['value']['color'][] = Validator::validate_color([
                                         'value'   => $color,
                                         'default' => '#ffffff'
                                     ]);
@@ -447,7 +447,7 @@ final class ProductMeta {
 
                             $validated[ $attr ]['term'][ $key ]['value']['image_size'] = 'thumbnail';
                             if ( isset( $term_value['image_size'] ) ) {
-                                $validated[ $attr ]['term'][ $key ]['value']['image_size'] = Helper::validate_select([
+                                $validated[ $attr ]['term'][ $key ]['value']['image_size'] = Validator::validate_select([
                                     'value'   => $term_value['image_size'],
                                     'default' => 'thumbnail',
                                     'choices' => array_column( Helper::get_image_sizes(), 'value' )
@@ -470,7 +470,7 @@ final class ProductMeta {
                                 unset( $tooltip_choices[1] );
                             }
 
-                            $validated[ $attr ]['term'][ $key ]['tooltip']['type'] = Helper::validate_select([
+                            $validated[ $attr ]['term'][ $key ]['tooltip']['type'] = Validator::validate_select([
                                 'value'   => $term_tooltip['type'],
                                 'default' => 'none',
                                 'choices' => $tooltip_choices
