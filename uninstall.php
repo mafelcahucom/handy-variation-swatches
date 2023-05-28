@@ -14,6 +14,8 @@
  */
 if ( ! function_exists( 'hvsfw_uninstall' ) ) {
     function hvsfw_uninstall() {
+        global $wpdb;
+
         /**
          * Delete option _hvsfw_main_settings.
          *
@@ -33,26 +35,29 @@ if ( ! function_exists( 'hvsfw_uninstall' ) ) {
          *
          * @since 1.0.0
          */
-        $attribute_ids = get_option( '_hvsfw_swatch_attribute_ids' );
-        if ( ! empty( $attribute_ids ) ) {
-            foreach ( $attribute_ids as $attribute_id ) {
-                delete_option( "_hvsfw_swatch_attribute_setting_$attribute_id" );
-            }
-        }
+        $option_table = $wpdb->prefix . 'options';
+        $wpdb->query( $wpdb->prepare( "DELETE FROM $option_table WHERE option_name LIKE '%_hvsfw_swatch_attribute_setting_%'" ) );
 
         /**
-         * Deleting option _hvsfw_swatch_attribute_ids.
-         *
+         * Deleting post meta _hvsfw_swatches.
+         * 
          * @since 1.0.0
          */
-        delete_option( '_hvsfw_swatch_attribute_ids' );
-
+        $post_meta_table = $wpdb->prefix . 'postmeta';
+        $wpdb->delete( $post_meta_table, [ 'meta_key', '_hvsfw_swatches' ] );
 
         /**
-         * ############
-         * MAKE A QUERY WHERE TO DELETE ALL TERM META BY KEYWORD.
-         * ############
+         * Deleting term meta _hvsfw_value, _hvsfw_tooltip, _hvsfw_colors,
+         * _hvsfw_image, _hvsfw_image_size.
+         * 
+         * @since 1.0.0
          */
+        $term_meta_table = $wpdb->prefix . 'termmeta';
+        $wpdb->delete( $term_meta_table, [ 'meta_key', '_hvsfw_value' ] );
+        $wpdb->delete( $term_meta_table, [ 'meta_key', '_hvsfw_tooltip' ] );
+        $wpdb->delete( $term_meta_table, [ 'meta_key', '_hvsfw_colors' ] );
+        $wpdb->delete( $term_meta_table, [ 'meta_key', '_hvsfw_image' ] );
+        $wpdb->delete( $term_meta_table, [ 'meta_key', '_hvsfw_image_size' ] );
     }
     hvsfw_uninstall();
 }

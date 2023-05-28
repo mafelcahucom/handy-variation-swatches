@@ -26,9 +26,14 @@ final class Widgets {
      * @since 1.0.0
      */
     protected function __construct() {
+        // Set main settings.
+        $settings = get_option( '_hvsfw_main_settings' );
+
         /**
          * Load Variation Filter Widget.
          */
-        VariationFilter::get_instance();
+        if ( $settings['gn_vf_enable_widget'] == true ) {
+            VariationFilter::get_instance();
+        }
     }
 }

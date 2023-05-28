@@ -1,6 +1,7 @@
 <?php
 namespace HVSFW\Client\Blocks\VariationFilter\Inc;
 
+use HVSFW\Inc\Traits\Singleton;
 use HVSFW\Inc\Utility;
 use HVSFW\Client\Inc\Helper;
 use HVSFW\Client\Inc\SwatchFilter;
@@ -17,13 +18,18 @@ defined( 'ABSPATH' ) || exit;
 final class BlockRender {
 
     /**
+	 * Inherit Singleton.
+	 */
+	use Singleton;
+
+    /**
      * Holds the block attributes.
      *
      * @since 1.0.0
      * 
      * @var array
      */
-    private $attributes = [];
+    private static $attributes = [];
 
     /**
      * Holds the selected variation attribute.
@@ -32,64 +38,62 @@ final class BlockRender {
      *
      * @var array
      */
-    private $attribute = [];
+    private static $attribute = [];
 
     /**
      * Holds the block wrapper.
      *
      * @var string
      */
-    private $block_wrapper = '';
+    private static $block_wrapper = '';
 
     /**
-     * Initialize.
-     * 
+     * Protected class constructor to prevent direct object creation.
+     *
      * @since 1.0.0
      */
-	public function __construct( $args = [] ) {
-        $this->attributes    = $args['attributes'];
-        $this->block_wrapper = $args['block_wrapper'];
-
-        $selected_attribute = $this->attributes['settings']['attribute'];
-        if ( ! empty( $selected_attribute ) ) {
-            $this->attribute  = Utility::get_attribute( $selected_attribute );
-            if ( ! empty( $this->attribute ) ) {
-                echo $this->render();
-            }
-        }
-    }
+    protected function __construct() {}
 
     /**
      * Return the block front-end component.
      * 
      * @since 1.0.0
      *
+     * @param  array  $args  Contains all the arguments for rendering block.
+     * $args = [
+     *      'attributes'    => (array) Contains the block attributes.
+     *      'block_wrapper' => (string) Contains the main block wrapper.
+     * ]
      * @return HTMLElement
      */
-    private function render() {
+    public static function render( $args = [] ) {
+        if ( ! isset( $args['attributes'] ) || empty( $args['attributes'] ) ) {
+            return;
+        }
+
+        self::$attributes    = $args['attributes'];
+        self::$block_wrapper = ( isset( $args['block_wrapper'] ) ? $args['block_wrapper'] : '' );
+
+        $selected_attribute = self::$attributes['settings']['attribute'];
+        if ( empty( $selected_attribute ) ) {
+            return;
+        }
+
+        self::$attribute = Utility::get_attribute( $selected_attribute );
+        if ( empty( self::$attribute ) ) {
+            return;
+        }
+
         ob_start();
         ?>
-        <div <?php echo $this->block_wrapper; ?>>
+        <div <?php echo self::$block_wrapper; ?>>
             <div class="hvsfw-vf">
-                <?php echo $this->get_title(); ?>
+                <?php echo self::get_title(); ?>
                 <div class="hvsfw-vf-swatch">
                     <?php
-                        switch ( $this->get_display_type() ) {
-                            case 'list':
-                                echo $this->get_swatch_list();
-                                break;
-                            case 'select':
-                                echo $this->get_swatch_select();
-                                break;
-                            case 'button':
-                                echo $this->get_swatch_button();
-                                break;
-                            case 'color':
-                                echo $this->get_swatch_color();
-                                break;
-                            case 'image':
-                                echo $this->get_swatch_image();
-                                break;
+                        $swatch_method = 'get_swatch_'. self::get_display_type();
+                        if ( method_exists( __CLASS__, $swatch_method ) ) {
+                            echo call_user_func( [ __CLASS__, $swatch_method ] );
                         }
                     ?>
                 </div>
@@ -106,8 +110,8 @@ final class BlockRender {
      *
      * @return HTMLElement
      */
-    private function get_title() {
-        $setting = $this->attributes['title'];
+    private static function get_title() {
+        $setting = self::$attributes['title'];
         $style   = Helper::minify_css("
             color:         {$setting['color']};
             font-size:     {$setting['fontSize']};
@@ -129,8 +133,8 @@ final class BlockRender {
      *
      * @return HTMLElement
      */
-    private function get_swatch_list() {
-        $setting      = $this->attributes['list'];
+    private static function get_swatch_list() {
+        $setting      = self::$attributes['list'];
         $styles['li'] = Helper::minify_css("
             margin-bottom: {$setting['marginBottom']};
         ");
@@ -151,9 +155,9 @@ final class BlockRender {
         ");
 
         return SwatchFilter::get_swatch_list_component([
-            'attribute'  => $this->attribute,
-            'query_type' => $this->attributes['settings']['queryType'],
-            'show_count' => $this->attributes['settings']['showCount'],
+            'attribute'  => self::$attribute,
+            'query_type' => self::$attributes['settings']['queryType'],
+            'show_count' => self::$attributes['settings']['showCount'],
             'styles'     => $styles
         ]);
     }
@@ -165,8 +169,11 @@ final class BlockRender {
      *
      * @return HTMLElement
      */
-    private function get_swatch_select() {
-        $setting = $this->attributes['select'];
+    private static function get_swatch_select() {
+        $setting = self::$attributes['select'];
+        $padding = self::get_padding( $setting['padding'] );
+        $borders = self::get_borders( $setting['border'] );
+
         $styles  = [
             'parent' => Helper::minify_css("
                 width:  {$setting['width']};
@@ -177,8 +184,8 @@ final class BlockRender {
                 font-size:        {$setting['fontSize']};
                 font-weight:      {$setting['fontWeight']};
                 background-color: {$setting['backgroundColor']};
-                padding:          {$this->get_padding( $setting['padding'] )};
-                {$this->get_borders( $setting['border'] )}
+                padding:          {$padding};
+                {$borders}
             "),
             'button' => Helper::minify_css("
                 fill: {$setting['color']};
@@ -186,9 +193,9 @@ final class BlockRender {
         ];
 
         return SwatchFilter::get_swatch_select_component([
-            'attribute'  => $this->attribute,
-            'query_type' => $this->attributes['settings']['queryType'],
-            'show_count' => $this->attributes['settings']['showCount'],
+            'attribute'  => self::$attribute,
+            'query_type' => self::$attributes['settings']['queryType'],
+            'show_count' => self::$attributes['settings']['showCount'],
             'styles'     => $styles
         ]);
     }
@@ -200,8 +207,12 @@ final class BlockRender {
      *
      * @return HTMLElement
      */
-    private function get_swatch_button() {
-        $setting          = $this->attributes['button'];
+    private static function get_swatch_button() {
+        $setting        = self::$attributes['button'];
+        $padding        = self::get_padding( $setting['padding'] );
+        $borders        = self::get_borders( $setting['border'] );
+        $active_borders = self::get_borders( $setting['borderActive'] );
+
         $styles['parent'] = Helper::minify_css("
             gap: {$setting['gap']};
         ");
@@ -213,7 +224,7 @@ final class BlockRender {
             font-size:   {$setting['fontSize']};
             font-weight: {$setting['fontWeight']};
             background:  {$setting['backgroundColor']};
-            padding:     {$this->get_padding( $setting['padding'] )};
+            padding:     {$padding};
         ");
 
         if ( $setting['shape'] === 'custom' ) {
@@ -235,20 +246,20 @@ final class BlockRender {
 
         if ( ! empty( $setting['borderActive'] ) ) {
             $styles['box:active'] .= Helper::minify_css("
-                {$this->get_borders( $setting['borderActive'] )}
+                {$active_borders}
             ");
         }
 
         if ( ! empty( $setting['border'] ) ) {
             $styles['box'] .= Helper::minify_css("
-                {$this->get_borders( $setting['border'] )}
+                {$borders}
             ");
         }
 
         return SwatchFilter::get_swatch_button_component([
-            'attribute'  => $this->attribute,
-            'query_type' => $this->attributes['settings']['queryType'],
-            'show_count' => $this->attributes['settings']['showCount'],
+            'attribute'  => self::$attribute,
+            'query_type' => self::$attributes['settings']['queryType'],
+            'show_count' => self::$attributes['settings']['showCount'],
             'styles'     => $styles
         ]);
     }
@@ -260,8 +271,11 @@ final class BlockRender {
      *
      * @return HTMLElement
      */
-    private function get_swatch_color() {
-        $setting          = $this->attributes['color'];
+    private static function get_swatch_color() {
+        $setting        = self::$attributes['color'];
+        $borders        = self::get_borders( $setting['border'] );
+        $active_borders = self::get_borders( $setting['borderActive'] );
+
         $styles['parent'] = Helper::minify_css("
             gap: {$setting['gap']};
         ");
@@ -287,19 +301,19 @@ final class BlockRender {
 
         if ( ! empty( $setting['borderActive'] ) ) {
             $styles['box:active'] .= Helper::minify_css("
-                {$this->get_borders( $setting['borderActive'] )}
+                {$active_borders}
             ");
         }
 
         if ( ! empty( $setting['border'] ) ) {
             $styles['box'] .= Helper::minify_css("
-                {$this->get_borders( $setting['border'] )}
+                {$borders}
             ");
         }
 
         return SwatchFilter::get_swatch_color_component([
-            'attribute'  => $this->attribute,
-            'query_type' => $this->attributes['settings']['queryType'],
+            'attribute'  => self::$attribute,
+            'query_type' => self::$attributes['settings']['queryType'],
             'styles'     => $styles
         ]);
     }
@@ -311,8 +325,11 @@ final class BlockRender {
      *
      * @return HTMLElement
      */
-    private function get_swatch_image() {
-        $setting          = $this->attributes['image'];
+    private static function get_swatch_image() {
+        $setting        = self::$attributes['image'];
+        $borders        = self::get_borders( $setting['border'] );
+        $active_borders = self::get_borders( $setting['borderActive'] );
+
         $styles['parent'] = Helper::minify_css("
             gap: {$setting['gap']};
         ");
@@ -338,19 +355,19 @@ final class BlockRender {
 
         if ( ! empty( $setting['borderActive'] ) ) {
             $styles['box:active'] .= Helper::minify_css("
-                {$this->get_borders( $setting['borderActive'] )}
+                {$active_borders}
             ");
         }
 
         if ( ! empty( $setting['border'] ) ) {
             $styles['box'] .= Helper::minify_css("
-                {$this->get_borders( $setting['border'] )}
+                {$borders}
             ");
         }
 
         return SwatchFilter::get_swatch_image_component([
-            'attribute'  => $this->attribute,
-            'query_type' => $this->attributes['settings']['queryType'],
+            'attribute'  => self::$attribute,
+            'query_type' => self::$attributes['settings']['queryType'],
             'styles'     => $styles
         ]);
     }
@@ -363,9 +380,9 @@ final class BlockRender {
      *
      * @return string
      */
-    private function get_display_type() {
-        $display_type   = $this->attributes['settings']['displayType'];
-        $attribute_type = $this->attribute['attribute_type'];
+    private static function get_display_type() {
+        $display_type   = self::$attributes['settings']['displayType'];
+        $attribute_type = self::$attribute['attribute_type'];
 
         if ( $display_type === 'swatch' ) {
             $types = [ 'button', 'color', 'image', 'select' ];
@@ -385,7 +402,7 @@ final class BlockRender {
      * @param  array  $padding  Contains the top, right, bottom and left value.
      * @return string
      */
-    private function get_padding( $padding ) {
+    private static function get_padding( $padding ) {
         if ( empty( $padding ) ) {
             return '0px 0px 0px 0px';
         }
@@ -406,7 +423,7 @@ final class BlockRender {
      * @param  array  $border  Contains the width, style and color value.
      * @return string
      */
-    private function get_border( $border ) {
+    private static function get_border( $border ) {
         if ( empty( $border ) ) {
             return '0px none #000000';
         }
@@ -426,7 +443,7 @@ final class BlockRender {
      * @param  array  $border  Contains the border top, right, bottom and left.
      * @return string
      */
-    private function get_borders( $borders ) {
+    private static function get_borders( $borders ) {
         if ( empty( $borders ) ) {
             return 'border: 0px none #000000;';
         }
@@ -434,10 +451,10 @@ final class BlockRender {
         $value = '';
         if ( count( $borders ) === 4 ) {
             foreach ( $borders as $key => $border ) {
-                $value .= "border-{$key}: {$this->get_border( $border )};";
+                $value .= 'border-'. $key .': '. self::get_border( $border ) .';';
             }
         } else {
-            $value = "border: {$this->get_border( $borders )};";
+            $value = 'border: '. self::get_border( $borders ) .';';
         }
 
         return $value;

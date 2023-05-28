@@ -1,6 +1,6 @@
 {
     "name": "mafeljohncahucom/handy-variation-swatches",
-    "description": "A WordPress plugin for adding variation swatches in WooCommerce.",
+    "description": "Handy Variation Swatches For WooCommerce will let you replace the default dropdown variation into more detailed and engaging variation (button, radio, color and image) swatches.",
     "type": "wordpress-plugin",
     "license": "GPL",
     "authors": [

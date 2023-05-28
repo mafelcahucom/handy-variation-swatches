@@ -910,7 +910,7 @@ hvsfw.domReady = {
 };
 
 hvsfw.domReady.execute( function() {
-	variationFilter.init();
-	hvsfw.swatch.init();
-	hvsfw.addToCart.init();
+	variationFilter.init(); // Handle variation filter block and widget events.
+	hvsfw.swatch.init(); // Handle variation swatch events.
+	hvsfw.addToCart.init(); // Handle ajax add to cart event.
 } );

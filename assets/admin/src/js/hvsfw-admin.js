@@ -1044,11 +1044,11 @@ hvsfw.importerExporter = {
 			} );
 
 			if ( res.success === true ) {
-				hvsfw.fn.createTextFile( 'handy-itemized-variation-for-woocommerce-settings.txt', res.data.settings );
+				hvsfw.fn.createTextFile( 'handy-variation-swatches-for-woocommerce-settings.txt', res.data.settings );
 				hvsfw.toaster.show( {
 					color: 'success',
 					title: 'Settings Successfully Exported',
-					content: 'Itemized variation settings has successfully exported.',
+					content: 'Variation swatches settings has successfully exported.',
 				} );
 			} else {
 				hvsfw.prompt.errorMessage( res.data.error );
@@ -1115,7 +1115,7 @@ hvsfw.importerExporter = {
 					hvsfw.toaster.show( {
 						color: 'success',
 						title: 'Settings Successfully Imported',
-						content: 'Itemized variation settings has successfully imported.',
+						content: 'Variation swatches settings has successfully imported.',
 					} );
 				} else {
 					hvsfw.prompt.errorMessage( res.data.error );

@@ -26,9 +26,14 @@ final class Blocks {
      * @since 1.0.0
      */
     protected function __construct() {
+        // Set main settings.
+        $settings = get_option( '_hvsfw_main_settings' );
+
         /**
          * Load Variation Filter Block.
          */
-        VariationFilter::get_instance();
+        if ( $settings['gn_vf_enable_block'] == true ) {
+            VariationFilter::get_instance();
+        }
     }
 }

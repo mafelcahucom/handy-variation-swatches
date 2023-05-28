@@ -4,7 +4,6 @@ namespace HVSFW\Client\Widgets\VariationFilter;
 use WP_Widget;
 use HVSFW\Inc\Traits\Singleton;
 use HVSFW\Inc\Validator;
-use HVSFW\Client\Inc\Helper;
 use HVSFW\Client\Widgets\VariationFilter\Inc\LocalHelper;
 use HVSFW\Client\Widgets\VariationFilter\Form;
 use HVSFW\Client\Widgets\VariationFilter\Widget;
@@ -12,7 +11,7 @@ use HVSFW\Client\Widgets\VariationFilter\Widget;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Register Variation Filter Widget.
+ * Variation Filter Widget.
  *
  * @since 	1.0.0
  * @version 1.0.0

@@ -2,11 +2,11 @@
 use HVSFW\Client\Blocks\VariationFilter\Inc\BlockRender;
 
 /**
- * Render Block Dynamically.
+ * Render Block Front-end.
  * 
  * @since 1.0.0
  */
-new BlockRender([
-	'attributes' 	=> $attributes,
-	'block_wrapper' => get_block_wrapper_attributes()
+echo BlockRender::render([
+	'attributes' => $attributes,
+	'bloc_wrapper' => get_block_wrapper_attributes()
 ]);

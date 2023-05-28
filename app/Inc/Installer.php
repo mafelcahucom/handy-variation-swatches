@@ -66,17 +66,21 @@ final class Installer {
             'gn_disable_item_oos'           => 1,
             'gn_disable_item_style'         => 'blurred-crossed',
 
-            // gn_nc.
-            'gn_nc_enable_notice'           => 1,
-            'gn_nc_auto_hide'               => 1,
-            'gn_nc_duration'                => 5000,
-
             // gn_pp.
             'gn_pp_enable'                  => 1,
 
             // gn_sp.
             'gn_sp_enable'                  => 1,
             'gn_sp_attribute_limit'         => 0,
+
+            // gn_vf.
+            'gn_vf_enable_widget'           => 1,
+            'gn_vf_enable_block'            => 1,
+
+            // gn_nc.
+            'gn_nc_enable_notice'           => 1,
+            'gn_nc_auto_hide'               => 1,
+            'gn_nc_duration'                => 5000,
             
             // gs_pp.
             'gs_pp_sw_label_position'       => 'block',
@@ -127,8 +131,6 @@ final class Installer {
             'bn_b_clr'                      => 'rgba(0,0,0,1)',
             'bn_b_hv_clr'                   => 'rgba(0,113,242,1)',
             'bn_br'                         => '0px',
-            'bn_gap_row'                    => '10px',
-            'bn_gap_col'                    => '10px',
 
             // cr.
             'cr_shape'                      => 'square',
@@ -140,8 +142,6 @@ final class Installer {
             'cr_b_clr'                      => 'rgba(0,0,0,1)',
             'cr_b_hv_clr'                   => 'rgba(0,113,242,1)',
             'cr_br'                         => '0px',
-            'cr_gap_row'                    => '10px',
-            'cr_gap_col'                    => '10px',
 
             // im.
             'im_shape'                      => 'square',
@@ -153,9 +153,6 @@ final class Installer {
             'im_b_clr'                      => 'rgba(0,0,0,1)',
             'im_b_hv_clr'                   => 'rgba(0,113,242,1)',
             'im_br'                         => '0px',
-            'im_gap'                        => '10px',
-            'im_gap_row'                    => '10px',
-            'im_gap_col'                    => '10px',
 
             // tl.
             'tl_mn_wd'                      => '100px',

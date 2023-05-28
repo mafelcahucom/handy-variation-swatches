@@ -2,7 +2,6 @@
 namespace HVSFW\Client;
 
 use HVSFW\Inc\Traits\Singleton;
-use HVSFW\Client\Inc\Helper;
 
 defined( 'ABSPATH' ) || exit;
 

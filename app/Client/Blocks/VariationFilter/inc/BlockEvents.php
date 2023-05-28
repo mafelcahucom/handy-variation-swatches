@@ -32,6 +32,7 @@ final class BlockEvents {
      * @since 1.0.0
      */
     protected function __construct() {
+        // Return available product attribtues.
         add_action( 'wp_ajax_hvsfw_vf_get_product_attributes', [ $this, 'get_product_attributes' ] );
     }
 

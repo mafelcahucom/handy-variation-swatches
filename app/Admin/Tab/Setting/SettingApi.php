@@ -57,6 +57,32 @@ final class SettingApi {
                 'choices'  => [ 'hidden', 'blurred', 'crossed-out', 'blurred-crossed' ]
             ],
 
+            // gn_pp.
+            'gn_pp_enable'                  => [
+                'type'    => 'switch',
+                'default' => 1
+            ],
+            
+            // gn_sp.
+            'gn_sp_enable'                  => [
+                'type'    => 'switch',
+                'default' => 1
+            ],
+            'gn_sp_attribute_limit'         => [
+                'type'     => 'number',
+                'default'  => 0
+            ],
+
+            // gn_vf.
+            'gn_vf_enable_widget'           => [
+                'type'    => 'switch',
+                'default' => 1
+            ],
+            'gn_vf_enable_block'            => [
+                'type'    => 'switch',
+                'default' => 1
+            ],
+
             // gn_nc.
             'gn_nc_enable_notice'           => [
                 'type'    => 'switch',
@@ -69,23 +95,6 @@ final class SettingApi {
             'gn_nc_duration'                => [
                 'type'    => 'number',
                 'default' => 5000
-            ],
-
-            // gn_pp.
-            'gn_pp_enable'                  => [
-                'type'    => 'switch',
-                'default' => 1
-            ],
-            
-
-            // gn_sp.
-            'gn_sp_enable'                  => [
-                'type'    => 'switch',
-                'default' => 1
-            ],
-            'gn_sp_attribute_limit'         => [
-                'type'     => 'number',
-                'default'  => 0
             ],
 
             // gs_pp.
@@ -274,14 +283,6 @@ final class SettingApi {
                 'type'     => 'size',
                 'default'  => '0px'
             ],
-            'bn_gap_row'                    => [
-                'type'     => 'size',
-                'default'  => '10px'
-            ],
-            'bn_gap_col'                    => [
-                'type'     => 'size',
-                'default'  => '10px'
-            ],
 
             // cr.
             'cr_shape'                      => [
@@ -322,14 +323,6 @@ final class SettingApi {
                 'type'     => 'size',
                 'default'  => '0px'
             ],
-            'cr_gap_row'                    => [
-                'type'     => 'size',
-                'default'  => '10px'
-            ],
-            'cr_gap_col'                    => [
-                'type'     => 'size',
-                'default'  => '10px'
-            ],
 
             // im.
             'im_shape'                      => [
@@ -369,14 +362,6 @@ final class SettingApi {
             'im_br'                         => [
                 'type'     => 'size',
                 'default'  => '0px'
-            ],
-            'im_gap_row'                    => [
-                'type'     => 'size',
-                'default'  => '10px'
-            ],
-            'im_gap_col'                    => [
-                'type'     => 'size',
-                'default'  => '10px'
             ],
 
             // tl.

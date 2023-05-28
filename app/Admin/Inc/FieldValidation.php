@@ -216,7 +216,7 @@ final class FieldValidation {
             'error'   => 'This field is required.'
         ];
 
-        if ( $args['value'] != '' && $args['value'] != null ) {
+        if ( $args['value'] !== '' && $args['value'] !== null ) {
             $number = filter_var( $args['value'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION );
             if ( is_numeric( $number ) ) {
                 $output = [

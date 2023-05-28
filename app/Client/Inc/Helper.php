@@ -392,8 +392,6 @@ final class Helper {
 
     // DELETE IN PROD.
     public static function log_attribute_data() {
-        $ids = get_option( '_hvsfw_swatch_attribute_ids' );
-        self::log( $ids );
         if ( empty( $ids ) ) {
             return;
         }
