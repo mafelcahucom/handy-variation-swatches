@@ -26,6 +26,7 @@ import {
 /**
  * Internal dependencies
  */
+import Icon from './icon';
 import { helper } from './utils/Helper';
 import { getFetch } from './lib/getFetch';
 import { generalData } from './data/generalData';
@@ -1006,7 +1007,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					</div>
 				):(
 					<Placeholder
-						icon='filter'
+						icon={ Icon }
 						label={ __(
 							'Handy Variation Filter',
 							'variation-filter'

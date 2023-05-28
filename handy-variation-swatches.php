@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name:   	  Handy Variation Swatches For WooCommerce
- * Description:   	  Handy Variation Swatches For WooCommerce will let you replace the default dropdown variation into more detailed and engaging variation (button, radio, color and image) swatches.
+ * Description:   	  Handy Variation Swatches For WooCommerce will let you replace the default dropdown variation into more detailed and engaging variation (button, color and image) swatches.
  * Author:        	  Mafel John Cahucom
  * Author URI:    	  https://www.facebook.com/mafeljohn.cahucom
  * Version:       	  1.0.0

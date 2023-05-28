@@ -5,7 +5,7 @@
 	"version": "0.1.0",
 	"title": "Handy Variation Filter",
 	"category": "widgets",
-	"icon": "filter",
+	"icon": "",
 	"description": "Show a list of variation swatches on the shop page to filter the products.",
 	"supports": {
 		"html": false
