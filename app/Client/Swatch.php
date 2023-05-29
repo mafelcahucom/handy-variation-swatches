@@ -361,23 +361,28 @@ final class Swatch {
         $css   = "";
         $style = $option['style'];
         if ( $option['is_default'] === 'no' ) {
-            $css .= "width: {$style['width']};";
-            $css .= "height: {$style['height']};";
-            $css .= "font-size: {$style['font_size']};";
-            $css .= "font-weight: {$style['font_weight']};";
-            $css .= "line-height: {$style['font_size']};";
-            $css .= "color: {$style['font_color']};";
-            $css .= "background-color: {$style['background_color']};";
-            $css .= "padding-top: {$style['padding_top']};";
-            $css .= "padding-bottom: {$style['padding_bottom']};";
-            $css .= "padding-left: {$style['padding_left']};";
-            $css .= "padding-right: {$style['padding_right']};";
-            $css .= "border-style: {$style['border_style']};";
-            $css .= "border-width: {$style['border_width']};";
-            $css .= "border-color: {$style['border_color']};";
+            $css .= Helper::minify_css("
+                min-width:        {$style['width']};
+                min-height:       {$style['height']};
+                font-size:        {$style['font_size']};
+                font-weight:      {$style['font_weight']};
+                line-height:      {$style['font_size']};
+                color:            {$style['font_color']};
+                background-color: {$style['background_color']};
+                padding-top:      {$style['padding_top']};
+                padding-bottom:   {$style['padding_bottom']};
+                padding-left:     {$style['padding_left']};
+                padding-right:    {$style['padding_right']};
+                border-style:     {$style['border_style']};
+                border-width:     {$style['border_width']};
+                border-color:     {$style['border_color']};
+            ");
+            
 
             if ( $style['shape'] === 'custom' ) {
-                $css .= "border-radius: {$style['border_radius']};";
+                $css .= Helper::minify_css("
+                    border-radius: {$style['border_radius']};
+                ");
             }
         }
 
@@ -397,17 +402,7 @@ final class Swatch {
 
         ob_start();
         ?>
-        <div class="hvsfw-term"
-             data-type="button"
-             data-enable="yes"
-             data-state="default"
-             data-attribute="<?php echo esc_attr( $attribute['slug'] ); ?>"
-             data-value="<?php echo esc_attr( $option['value'] ); ?>"
-             data-default="<?php echo esc_attr( $option['is_default'] ); ?>"
-             data-shape="<?php echo esc_attr( $style['shape'] ); ?>"
-             data-tooltip="<?php echo esc_attr( $tooltip['is_enabled'] ); ?>"
-             data-style="<?php echo esc_attr( $data_style ); ?>"
-             style="<?php echo esc_attr( $css ); ?>">
+        <div class="hvsfw-term" data-type="button" data-enable="yes" data-state="default" data-attribute="<?php echo esc_attr( $attribute['slug'] ); ?>" data-value="<?php echo esc_attr( $option['value'] ); ?>" data-default="<?php echo esc_attr( $option['is_default'] ); ?>" data-shape="<?php echo esc_attr( $style['shape'] ); ?>" data-tooltip="<?php echo esc_attr( $tooltip['is_enabled'] ); ?>" data-style="<?php echo esc_attr( $data_style ); ?>" style="<?php echo esc_attr( $css ); ?>">
             <?php 
                 echo esc_html( $term['value']['button_label'] );
                 if ( $tooltip['is_enabled'] === 'yes' && ! empty( $tooltip['html'] ) ) {
@@ -459,17 +454,23 @@ final class Swatch {
         $css   = "";
         $style = $option['style'];
         if ( $option['is_default'] === 'no' ) {
-            $css .= "border-style: {$style['border_style']};";
-            $css .= "border-width: {$style['border_width']};";
-            $css .= "border-color: {$style['border_color']};";
+            $css .= Helper::minify_css("
+                border-style: {$style['border_style']};
+                border-width: {$style['border_width']};
+                border-color: {$style['border_color']};
+            ");
 
             if ( $style['shape'] === 'custom' ) {
-                $css .= "width: {$style['width']};";
-                $css .= "height: {$style['height']};";
-                $css .= "border-radius: {$style['border_radius']};";
+                $css .= Helper::minify_css("
+                    width:         {$style['width']};
+                    height:        {$style['height']};
+                    border-radius: {$style['border_radius']};
+                ");
             } else {
-                $css .= "width: {$style['size']};";
-                $css .= "height: {$style['size']};";
+                $css .= Helper::minify_css("
+                    width:  {$style['size']};
+                    height: {$style['size']};
+                ");
             }
         }
 
@@ -485,17 +486,7 @@ final class Swatch {
         
         ob_start();
         ?>
-        <div class="hvsfw-term"
-             data-type="color"
-             data-enable="yes"
-             data-state="default"
-             data-attribute="<?php echo esc_attr( $attribute['slug'] ); ?>"
-             data-value="<?php echo esc_attr( $option['value'] ); ?>"
-             data-default="<?php echo esc_attr( $option['is_default'] ); ?>"
-             data-shape="<?php echo esc_attr( $style['shape'] ); ?>"
-             data-tooltip="<?php echo esc_attr( $tooltip['is_enabled'] ); ?>"
-             data-style="<?php echo esc_attr( $data_style ); ?>"
-             style="<?php echo esc_attr( $css ); ?>">
+        <div class="hvsfw-term" data-type="color" data-enable="yes" data-state="default" data-attribute="<?php echo esc_attr( $attribute['slug'] ); ?>" data-value="<?php echo esc_attr( $option['value'] ); ?>" data-default="<?php echo esc_attr( $option['is_default'] ); ?>" data-shape="<?php echo esc_attr( $style['shape'] ); ?>" data-tooltip="<?php echo esc_attr( $tooltip['is_enabled'] ); ?>" data-style="<?php echo esc_attr( $data_style ); ?>" style="<?php echo esc_attr( $css ); ?>">
             <?php
                 if ( $tooltip['is_enabled'] === 'yes' && ! empty( $tooltip['html'] ) ) {
                     echo $tooltip['html'];
@@ -549,17 +540,23 @@ final class Swatch {
         $css   = "";
         $style = $option['style'];
         if ( $option['is_default'] === 'no' ) {
-            $css .= "border-style: {$style['border_style']};";
-            $css .= "border-width: {$style['border_width']};";
-            $css .= "border-color: {$style['border_color']};";
+            $css .= Helper::minify_css("
+                border-style: {$style['border_style']};
+                border-width: {$style['border_width']};
+                border-color: {$style['border_color']};
+            ");
 
             if ( $style['shape'] === 'custom' ) {
-                $css .= "width: {$style['width']};";
-                $css .= "height: {$style['height']};";
-                $css .= "border-radius: {$style['border_radius']};";
+                $css .= Helper::minify_css("
+                    width:         {$style['width']};
+                    height:        {$style['height']};
+                    border-radius: {$style['border_radius']};
+                ");
             } else {
-                $css .= "width: {$style['size']};";
-                $css .= "height: {$style['size']};";
+                $css .= Helper::minify_css("
+                    width:  {$style['size']};
+                    height: {$style['size']};
+                ");
             }
         }
 
@@ -575,17 +572,7 @@ final class Swatch {
 
         ob_start();
         ?>
-        <div class="hvsfw-term"
-             data-type="image"
-             data-enable="yes"
-             data-state="default"
-             data-attribute="<?php echo esc_attr( $attribute['slug'] ); ?>"
-             data-value="<?php echo esc_attr( $option['value'] ); ?>"
-             data-default="<?php echo esc_attr( $option['is_default'] ); ?>"
-             data-shape="<?php echo esc_attr( $style['shape'] ); ?>"
-             data-tooltip="<?php echo esc_attr( $tooltip['is_enabled'] ); ?>"
-             data-style="<?php echo esc_attr( $data_style ); ?>"
-             style="<?php echo esc_attr( $css ); ?>">
+        <div class="hvsfw-term" data-type="image" data-enable="yes" data-state="default" data-attribute="<?php echo esc_attr( $attribute['slug'] ); ?>" data-value="<?php echo esc_attr( $option['value'] ); ?>" data-default="<?php echo esc_attr( $option['is_default'] ); ?>" data-shape="<?php echo esc_attr( $style['shape'] ); ?>" data-tooltip="<?php echo esc_attr( $tooltip['is_enabled'] ); ?>" data-style="<?php echo esc_attr( $data_style ); ?>" style="<?php echo esc_attr( $css ); ?>">
             <?php
                 if ( $tooltip['is_enabled'] === 'yes' && ! empty( $tooltip['html'] ) ) {
                     echo $tooltip['html'];
