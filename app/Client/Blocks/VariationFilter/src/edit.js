@@ -101,7 +101,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			}
 		}
 
-		return ( displayType !== 'swatch' ? displayType : 'select' );
+		return ( displayType !== 'swatch' ? displayType : '' );
 	};
 
 	/**

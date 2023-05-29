@@ -1214,7 +1214,7 @@ function Edit(_ref) {
         }
       }
     }
-    return displayType !== 'swatch' ? displayType : 'select';
+    return displayType !== 'swatch' ? displayType : '';
   };
 
   /**
