@@ -44,7 +44,7 @@ if ( ! function_exists( 'hvsfw_uninstall' ) ) {
          * @since 1.0.0
          */
         $post_meta_table = $wpdb->prefix . 'postmeta';
-        $wpdb->delete( $post_meta_table, [ 'meta_key', '_hvsfw_swatches' ] );
+        $wpdb->delete( $post_meta_table, [ 'meta_key' => '_hvsfw_swatches' ] );
 
         /**
          * Deleting term meta _hvsfw_value, _hvsfw_tooltip, _hvsfw_colors,
@@ -53,11 +53,11 @@ if ( ! function_exists( 'hvsfw_uninstall' ) ) {
          * @since 1.0.0
          */
         $term_meta_table = $wpdb->prefix . 'termmeta';
-        $wpdb->delete( $term_meta_table, [ 'meta_key', '_hvsfw_value' ] );
-        $wpdb->delete( $term_meta_table, [ 'meta_key', '_hvsfw_tooltip' ] );
-        $wpdb->delete( $term_meta_table, [ 'meta_key', '_hvsfw_colors' ] );
-        $wpdb->delete( $term_meta_table, [ 'meta_key', '_hvsfw_image' ] );
-        $wpdb->delete( $term_meta_table, [ 'meta_key', '_hvsfw_image_size' ] );
+        $wpdb->delete( $term_meta_table, [ 'meta_key' => '_hvsfw_value' ] );
+        $wpdb->delete( $term_meta_table, [ 'meta_key' => '_hvsfw_tooltip' ] );
+        $wpdb->delete( $term_meta_table, [ 'meta_key' => '_hvsfw_colors' ] );
+        $wpdb->delete( $term_meta_table, [ 'meta_key' => '_hvsfw_image' ] );
+        $wpdb->delete( $term_meta_table, [ 'meta_key' => '_hvsfw_image_size' ] );
     }
     hvsfw_uninstall();
 }
