@@ -1,14 +1,15 @@
 <?php
 /**
- * Plugin Name:   	  Handy Variation Swatches For WooCommerce
- * Description:   	  Handy Variation Swatches For WooCommerce will let you replace the default dropdown variation into more detailed and engaging variation (button, color and image) swatches.
- * Author:        	  Mafel John Cahucom
- * Author URI:    	  https://www.facebook.com/mafeljohn.cahucom
- * Version:       	  1.0.0
- * Text Domain:   	  handy-variation-swatches
- * Domain Path: 	  /languages
- * Requires WP:   	  3.0
- * License: GPLv2 or later
+ * Plugin Name:          Handy Variation Swatches For WooCommerce
+ * Description:          Handy Variation Swatches For WooCommerce will let you replace the default dropdown variation into more detailed and engaging variation (button, color and image) swatches.
+ * Author:               Mafel John Cahucom
+ * Author URI:           https://www.facebook.com/mafeljohn.cahucom
+ * Version:              1.0.0
+ * Text Domain:          handy-variation-swatches
+ * Domain Path:          /languages
+ * Requires at least:    5.8
+ * WC requires at least: 5.0.0
+ * License:              GPLv2 or later
  */
 
 // Exit if accessed directly.

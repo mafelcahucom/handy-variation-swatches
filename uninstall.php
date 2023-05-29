@@ -8,7 +8,7 @@
  */
 
 /**
- * Delete all the options and post meta used by itemized product variation.
+ * Delete all the data in database associated with variation swatches.
  *
  * @since 1.0.0
  */

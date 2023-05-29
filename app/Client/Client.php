@@ -11,8 +11,6 @@ use HVSFW\Client\Swatch;
 use HVSFW\Client\Widgets\Widgets;
 use HVSFW\Client\Blocks\Blocks;
 
-use HVSFW\Client\Reset; // DELETE IN PROD
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -76,8 +74,7 @@ final class Client {
             Style::class,
             Swatch::class,
             Widgets::class,
-            Blocks::class,
-            Reset::class
+            Blocks::class
         ];
     }
 

@@ -371,31 +371,4 @@ final class Helper {
 
         return $images;
     }
-
-    /**
-     * DELETE IN PRODUCTION.
-     * @param  [type] $log [description]
-     * @return [type]      [description]
-     */
-    public static function log( $log ) {
-        if (true === WP_DEBUG) {
-            if (is_array($log) || is_object($log)) {
-                error_log(print_r($log, true));
-            } else {
-                error_log($log);
-            }
-        }
-    }
-
-    // DELETE IN PROD.
-    public static function log_attribute_data() {
-        if ( empty( $ids ) ) {
-            return;
-        }
-
-        foreach ( $ids as $id ) {
-            self::log( "ID : $id" );
-            self::log( get_option( "_hvsfw_swatch_attribute_setting_$id" ) );
-        }
-    }
 }

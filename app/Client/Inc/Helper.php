@@ -371,34 +371,4 @@ final class Helper {
         
         wc_add_notice( '<a href="'. wc_get_cart_url() .'" tabindex="1" class="button wc-forward">View cart</a> '. esc_html( $product_name ) .' have been added to your cart.', 'success' );
     }
-    
-
-
-
-    /**
-     * DELETE IN PRODUCTION.
-     * @param  [type] $log [description]
-     * @return [type]      [description]
-     */
-    public static function log( $log ) {
-        if (true === WP_DEBUG) {
-            if (is_array($log) || is_object($log)) {
-                error_log(print_r($log, true));
-            } else {
-                error_log($log);
-            }
-        }
-    }
-
-    // DELETE IN PROD.
-    public static function log_attribute_data() {
-        if ( empty( $ids ) ) {
-            return;
-        }
-
-        foreach ( $ids as $id ) {
-            self::log( "ID : $id" );
-            self::log( get_option( "_hvsfw_swatch_attribute_setting_$id" ) );
-        }
-    }
 }
