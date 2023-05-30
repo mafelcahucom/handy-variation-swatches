@@ -118,7 +118,9 @@ final class Client {
         }
 
         // Client js.
-        wp_register_script( 'hvsfw-client-js', Helper::get_asset_src( 'js/hvsfw-client.min.js' ), $client_dependency, Helper::get_asset_version( 'js/hvsfw-client.min.js' ), true );
+        $client_src     = Helper::get_asset_src( 'js/hvsfw-client.min.js' );
+        $client_version = Helper::get_asset_version( 'js/hvsfw-client.min.js' );
+        wp_register_script( 'hvsfw-client-js', $client_src, $client_dependency, $client_version, true );
         wp_enqueue_script( 'hvsfw-client-js' );
 
         // Localize variables.
