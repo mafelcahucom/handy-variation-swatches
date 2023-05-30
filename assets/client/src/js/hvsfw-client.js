@@ -598,9 +598,9 @@ hvsfw.swatch = {
 	 * @since 1.0.0
 	 */
 	onResetVariation() {
-		jQuery( '.reset_variations' ).on( 'click', function( e ) {
+		hvsfw.fn.eventListener( 'click', '.reset_variations', function( e ) {
 			const target = e.target;
-
+			
 			// Product Single Page.
 			const variationForm = target.closest( '.variations_form' );
 			if ( variationForm ) {
