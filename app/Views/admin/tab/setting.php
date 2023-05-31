@@ -1462,7 +1462,7 @@ echo Component::get_header( $args['page_title'] ); ?>
             'group' => 'advanced_setting_group',
             'value' => $settings['ad_add_custom_css'],
             'label' => 'Custom CSS',
-            'description' => 'Add your own CSS code here to customize the appearance of variation swatche components at the front-end.'
+            'description' => 'Add your own CSS code here to customize the appearance of variation swatches components at the front-end.'
         ]);
 
         /**
