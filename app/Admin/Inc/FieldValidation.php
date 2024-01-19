@@ -8,16 +8,18 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Admin Field Validation.
  *
- * @since   1.0.0
+ * @since 	1.0.0
  * @version 1.0.0
- * @author Mafel John Cahucom
+ * @author  Mafel John Cahucom
  */
 final class FieldValidation {
 
-    /**
-     * Inherit Singleton.
-     */
-    use Singleton;
+	/**
+	 * Inherit Singleton.
+     * 
+     * @since 1.0.0
+	 */
+	use Singleton;
 
     /**
      * Protected class constructor to prevent direct object creation.
@@ -33,11 +35,11 @@ final class FieldValidation {
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Containing all the parameters for validating fields.
+     * @param  array  $args  Contains all the parameters for validating fields.
      * $args = [
-     *     'fields'        => (array) Containing all the new fields.
-     *     'current_value' => (array) Containing the fields value from get_option().
-     *     'field_rules'   => (array) Containing the set of rules for each fields.
+     *     'fields'        => (array) Contains the all the new fields.
+     *     'current_value' => (array) Contains the fields value from get_option().
+     *     'field_rules'   => (array) Contains the set of rules for each fields.
      * ]
      * @return array
      */
@@ -150,11 +152,11 @@ final class FieldValidation {
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Containing the parameter need to evaluate text field.
+     * @param  array  $args  Contains the parameter need to evaluate text field.
      * $args = [
-     *     'value'         => (string) The value of text field.
-     *     'max'           => (int)    The maximum character length.
-     *     'current_value' => (string) The current value from _hvsfw_main_settings.
+     *     'value'         => (string)  Contains the value of text field.
+     *     'max'           => (integer) Contains the maximum character length.
+     *     'current_value' => (string)  Contains the thee current value from _hvsfw_main_settings.
      * ]
      * @return array
      */
@@ -172,9 +174,13 @@ final class FieldValidation {
                     'value'   => $args['value']
                 ];
             } else {
-                $output['error'] = 'Total characters must not exceed in '. $args['max'] .'.';
+                $output['error'] = sprintf(
+                    __( 'Total characters must not exceed in %s.', HVSFW_PLUGIN_DOMAIN ),
+                    $args['max']
+                );
             }
         }
+
         return $output;
     }
 
@@ -183,9 +189,9 @@ final class FieldValidation {
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Containing the parameter need to evaluate textarea field.
+     * @param  array  $args  Contains the parameter need to evaluate textarea field.
      * $args = [
-     *     'value'         => (string) The value of textarea field.
+     *     'value' => (string) Contains the value of textarea field.
      * ]
      * @return array
      */
@@ -196,16 +202,15 @@ final class FieldValidation {
         ];
     }
 
-
     /**
      * Validate the value of number field.
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Containing the parameter need to evaluate number field.
+     * @param  array  $args  Contains the parameter need to evaluate number field.
      * $args = [
-     *     'value'         => (int) The value of number field.
-     *     'current_value' => (int) The current value from _hvsfw_main_settings.
+     *     'value'         => (integer) Contains the value of number field.
+     *     'current_value' => (integer) Contains the current value from _hvsfw_main_settings.
      * ]
      * @return array
      */
@@ -224,9 +229,10 @@ final class FieldValidation {
                     'value'   => round( $number )
                 ];
             } else {
-                $output['error'] = 'Invalid value. Please enter the appropriate value.';
+                $output['error'] = __( 'Invalid value. Please enter the appropriate value.', HVSFW_PLUGIN_DOMAIN );
             }
         }
+
         return $output;
     }
 
@@ -235,10 +241,10 @@ final class FieldValidation {
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Containing the parameter need to evaluate switch field.
+     * @param  array  $args  Contains the parameter need to evaluate switch field.
      * $args = [
-     *     'value'         => (boolean) The value of switch field.
-     *     'current_value' => (boolean) The current value from _hvsfw_main_settings.
+     *     'value'         => (boolean) Contains the value of switch field.
+     *     'current_value' => (boolean) Contains the current value from _hvsfw_main_settings.
      * ]
      * @return array
      */
@@ -246,7 +252,7 @@ final class FieldValidation {
         $output = [
             'success' => false,
             'value'   => $args['current_value'],
-            'error'   => 'Invalid value. Please enter the appropriate value.'
+            'error'   => __( 'Invalid value. Please enter the appropriate value.', HVSFW_PLUGIN_DOMAIN )
         ];
 
         if ( in_array( $args['value'], ['0', '1'] ) ) {
@@ -255,6 +261,7 @@ final class FieldValidation {
                 'value'   => $args['value']
             ];
         }
+
         return $output;
     }
 
@@ -263,11 +270,11 @@ final class FieldValidation {
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Containing the parameter need to evaluate select field.
+     * @param  array  $args  Contains the parameter need to evaluate select field.
      * $args = [
-     *     'value'         => (int|string) The value of select field.
-     *     'choices'       => (array)  Containing the choices in select field.
-     *     'current_value' => (int|string) The current value from _hvsfw_main_settings.
+     *     'value'         => (integer|string) Contains the value of select field.
+     *     'choices'       => (array)          Contains the choices in select field.
+     *     'current_value' => (integer|string) Contains the current value from _hvsfw_main_settings.
      * ]
      * @return array
      */
@@ -275,7 +282,7 @@ final class FieldValidation {
         $output = [
             'success' => false,
             'value'   => $args['current_value'],
-            'error'   => 'This field is required.'
+            'error'   => __( 'This field is required.', HVSFW_PLUGIN_DOMAIN )
         ];
 
         if ( ! empty( $args['value'] ) ) {
@@ -285,9 +292,10 @@ final class FieldValidation {
                     'value'   => $args['value']
                 ];
             } else {
-                $output['error'] = 'Invalid value. Please enter the appropriate value.';
+                $output['error'] = __( 'Invalid value. Please enter the appropriate value.', HVSFW_PLUGIN_DOMAIN );
             }
         }
+
         return $output;
     }
     
@@ -296,11 +304,11 @@ final class FieldValidation {
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Containing the parameter need to evaluate icon picker field.
+     * @param  array  $args  Contains the parameter need to evaluate icon picker field.
      * $args = [
-     *     'value'         => (string) The value of icon picker field.
-     *     'icons'         => (array)  Containing the list of icons in icon picker field.
-     *     'current_value' => (string) The current value from _hvsfw_main_settings.
+     *     'value'         => (string) Contains the value of icon picker field.
+     *     'icons'         => (array)  Contains the list of icons in icon picker field.
+     *     'current_value' => (string) Contains the current value from _hvsfw_main_settings.
      * ]
      * @return array
      */
@@ -308,7 +316,7 @@ final class FieldValidation {
         $output = [
             'success' => false,
             'value'   => $args['current_value'],
-            'error'   => 'This field is required.'
+            'error'   => __( 'This field is required.', HVSFW_PLUGIN_DOMAIN )
         ];
 
         if ( ! empty( $args['value'] ) ) {
@@ -318,9 +326,10 @@ final class FieldValidation {
                     'value'   => $args['value']
                 ];
             } else {
-                $output['error'] = 'Invalid icon. Please select the appropriate icon.';
+                $output['error'] = __( 'Invalid icon. Please select the appropriate icon.', HVSFW_PLUGIN_DOMAIN );
             }
         }
+
         return $output;
     }
 
@@ -329,11 +338,11 @@ final class FieldValidation {
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Containing the parameter need to evaluate image picker field.
+     * @param  array  $args  Contains the parameter need to evaluate image picker field.
      * $args = [
-     *     'value'         => (string) The value of image picker field.
-     *     'choices'       => (array)  Containing the list of images in image picker field.
-     *     'current_value' => (string) The current value from _hvsfw_main_settings.
+     *     'value'         => (string) Contains the value of image picker field.
+     *     'choices'       => (array)  Contains the list of images in image picker field.
+     *     'current_value' => (string) Contains the current value from _hvsfw_main_settings.
      * ]
      * @return array
      */
@@ -341,7 +350,7 @@ final class FieldValidation {
         $output = [
             'success' => false,
             'value'   => $args['current_value'],
-            'error'   => 'This field is required.'
+            'error'   => __( 'This field is required.', HVSFW_PLUGIN_DOMAIN )
         ];
 
         if ( ! empty( $args['value'] ) ) {
@@ -351,9 +360,10 @@ final class FieldValidation {
                     'value'   => $args['value']
                 ];
             } else {
-                $output['error'] = 'Invalid image. Please select the appropriate image.';
+                $output['error'] = __( 'Invalid image. Please select the appropriate image.', HVSFW_PLUGIN_DOMAIN );
             }
         }
+
         return $output;
     }
 
@@ -362,11 +372,11 @@ final class FieldValidation {
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Containing the parameter need to evalualoader picker field.
+     * @param  array  $args  Contains the parameter need to evalualoader picker field.
      * $args = [
-     *     'value'         => (string) The value loader picker field.
-     *     'choices'       => (array)  Containing the list of loaders choices.
-     *     'current_value' => (string) The current value from _hvsfw_main_settings.
+     *     'value'         => (string) Contains the value loader picker field.
+     *     'choices'       => (array)  Contains the list of loaders choices.
+     *     'current_value' => (string) Contains the current value from _hvsfw_main_settings.
      * ]
      * @return array
      */
@@ -374,7 +384,7 @@ final class FieldValidation {
         $output = [
             'success' => false,
             'value'   => $args['current_value'],
-            'error'   => 'This field is required.'
+            'error'   => __( 'This field is required.', HVSFW_PLUGIN_DOMAIN )
         ];
 
         if ( ! empty( $args['value'] ) ) {
@@ -384,9 +394,10 @@ final class FieldValidation {
                     'value'   => $args['value']
                 ];
             } else {
-                $output['error'] = 'Invalid loader. Please select the appropriate loader.';
+                $output['error'] = __( 'Invalid loader. Please select the appropriate loader.', HVSFW_PLUGIN_DOMAIN );
             }
         }
+
         return $output;
     }
 
@@ -395,10 +406,10 @@ final class FieldValidation {
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Containing the parameter need to evaluate color picker field.
+     * @param  array  $args  Contains the parameter need to evaluate color picker field.
      * $args = [
-     *     'value'         => (string) The value of color picker field.
-     *     'current_value' => (string) The current value from _hvsfw_main_settings.
+     *     'value'         => (string) Contains the value of color picker field.
+     *     'current_value' => (string) Contains the current value from _hvsfw_main_settings.
      * ]
      * @return array
      */
@@ -406,7 +417,7 @@ final class FieldValidation {
         $output = [
             'success' => false,
             'value'   => $args['current_value'],
-            'error'   => 'This field is required.'
+            'error'   => __( 'This field is required.', HVSFW_PLUGIN_DOMAIN )
         ];
 
         if ( ! empty( $args['value'] ) ) {
@@ -416,9 +427,10 @@ final class FieldValidation {
                     'value'   => $args['value']
                 ];
             } else {
-                $output['error'] = 'Invalid color format. Please enter the appropriate color format.';
+                $output['error'] = __( 'Invalid color format. Please enter the appropriate color format.', HVSFW_PLUGIN_DOMAIN );
             }
         }
+
         return $output;
     }
 
@@ -427,10 +439,10 @@ final class FieldValidation {
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Containing the parameter need to evaluate text field size.
+     * @param  array  $args  Contains the parameter need to evaluate text field size.
      * $args = [
-     *     'value'         => (string) The value of text field size.
-     *     'current_value' => (string) The current value from _hvsfw_main_settings.
+     *     'value'         => (string) Contains the value of text field size.
+     *     'current_value' => (string) Contains the current value from _hvsfw_main_settings.
      * ]
      * @return array
      */
@@ -438,7 +450,7 @@ final class FieldValidation {
         $output = [
             'success' => false,
             'value'   => $args['current_value'],
-            'error'   => 'This field is required.'
+            'error'   => __( 'This field is required.', HVSFW_PLUGIN_DOMAIN )
         ];
 
         if ( ! empty( $args['value'] ) ) {
@@ -467,10 +479,11 @@ final class FieldValidation {
                         'value'   => $number . $unit
                     ];
                 } else {
-                    $output['error'] = 'Invalid value. Please enter the appropriate value.';
+                    $output['error'] = __( 'Invalid value. Please enter the appropriate value.', HVSFW_PLUGIN_DOMAIN );
                 }
             }
         }
+        
         return $output;
     }
 }

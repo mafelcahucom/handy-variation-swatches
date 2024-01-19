@@ -1,8 +1,4 @@
-/**
- * Breakpoints.
- */
-
-// Extra large
+// Extra Large
 @mixin media-xlg {
 
 	@media ( min-width: 1201px ) {
@@ -50,11 +46,10 @@
 	}
 }
 
-// Extra small
+// Extra Small
 @mixin media-xs {
 
 	@media ( max-width: 400px ) {
 		@content;
 	}
 }
-

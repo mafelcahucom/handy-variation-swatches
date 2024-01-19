@@ -10,12 +10,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 	1.0.0
  * @version 1.0.0
- * @author Mafel John Cahucom
+ * @author  Mafel John Cahucom
  */
 final class Plugins {
 
     /**
      * Inherit Singleton.
+     * 
+     * @since 1.0.0
      */
     use Singleton;
 
@@ -116,7 +118,7 @@ final class Plugins {
      *
      * @since 1.0.0
      * 
-     * @param  string  $collection_slug  The slug (index) of the plugins in collections.
+     * @param  string  $collection_slug  Contains the slug (index) of the plugins in collections.
      * @return string
      */
     public static function get_path( $collection_slug ) {
@@ -137,7 +139,7 @@ final class Plugins {
      *
      * @since 1.0.0
      * 
-     * @param  string  $collection_slug  The slug of the plugins in collections.
+     * @param  string  $collection_slug  Contains the slug of the plugins in collections.
      * @return boolean
      */
     public static function is_active( $collection_slug ) {

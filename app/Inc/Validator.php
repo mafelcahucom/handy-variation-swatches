@@ -1,7 +1,6 @@
 <?php
 namespace HVSFW\Inc;
 
-use HVSFW\Client\Inc\Helper;
 use HVSFW\Inc\Traits\Singleton;
 
 defined( 'ABSPATH' ) || exit;
@@ -11,12 +10,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 	1.0.0
  * @version 1.0.0
- * @author Mafel John Cahucom
+ * @author  Mafel John Cahucom
  */
 final class Validator {
 
 	/**
 	 * Inherit Singleton.
+     * 
+     * @since 1.0.0
 	 */
 	use Singleton;
 
@@ -32,11 +33,11 @@ final class Validator {
      * 
      * @sinc 1.0.0
      *
-     * @param  array  $args  Containing the parameter need to evaluate text value.
+     * @param  array  $args  Contains the parameter need to evaluate text value.
      * $args = [
-     *      'value'   => (mixed)   Containing the current value.
-     *      'default' => (mixed)   Containing the default value.
-     *      'empty'   => (boolean) Flag if the value can be empty.
+     *      'value'   => (mixed)   Contains the current value.
+     *      'default' => (mixed)   Contains the default value.
+     *      'empty'   => (boolean) Contains the flag if the value can be empty.
      * ]
      * @return mixed
      */
@@ -58,11 +59,11 @@ final class Validator {
      *
      * @since 1.0.0
      * 
-     * @param  array  $args  Containing the parameter need to evaluate select value.
+     * @param  array  $args  Contains the parameter need to evaluate select value.
      * $args = [
-     *     'value'   => (mixed) Containing the current value.
-     *     'default' => (mixed) Containing the default value.
-     *     'choices' => (array) Containing the array of choices value.
+     *     'value'   => (mixed) Contains the current value.
+     *     'default' => (mixed) Contains the default value.
+     *     'choices' => (array) Contains the array of choices value.
      * ]
      * @return mixed
      */
@@ -82,10 +83,10 @@ final class Validator {
      *
      * @since 1.0.0
      * 
-     * @param  array  $args  Containing the parameter need to evaluate color value.
+     * @param  array  $args  Contains the parameter need to evaluate color value.
      * $args = [
-     *     'value'   => (string) Containing the current value.
-     *     'default' => (string) Containing the default value.
+     *     'value'   => (string) Contains the current value.
+     *     'default' => (string) Contains the default value.
      * ]
      * @return string
      */
@@ -105,10 +106,10 @@ final class Validator {
      *
      * @since 1.0.0
      * 
-     * @param  array  $args  Containing the parameter need to evaluate size value.
+     * @param  array  $args  Contains the parameter need to evaluate size value.
      * $args = [
-     *     'value'   => (string) Containing the current value.
-     *     'default' => (string) Containing the default value.
+     *     'value'   => (string) Contains the current value.
+     *     'default' => (string) Contains the default value.
      * ]
      * @return string
      */

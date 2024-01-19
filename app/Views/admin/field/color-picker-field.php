@@ -11,11 +11,11 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * $args = [
- *     'name'        => (string) The name of the color-picker field.
- *     'group'       => (string) The name of the group this color-picker field.
- *     'value'       => (string) The default value of the color-picker field.
- *     'label'       => (string) The label of the color-picker field.
- *     'description' => (string) The description of the color-picker field.
+ *     'name'        => (string) Contains the name of the color-picker field.
+ *     'group'       => (string) Contains the name of the group this color-picker field.
+ *     'value'       => (string) Contains the default value of the color-picker field.
+ *     'label'       => (string) Contains the label of the color-picker field.
+ *     'description' => (string) Contains the description of the color-picker field.
  *]
  **/
 
@@ -26,29 +26,33 @@ $label       = ( isset( $args['label'] ) ? $args['label'] : '' );
 $description = ( isset( $args['description'] ) ? $args['description'] : '' );
 $placeholder = ( isset( $args['placeholder'] ) ? $args['placeholder'] : '' );
 $hexa        = ( isset( $args['hexa'] ) ? $args['hexa'] : '#00000000' );
+
+if ( empty( $name ) || empty( $group ) ) {
+    return;
+}
 ?>
 
 <div id="hd-form-field-<?php echo esc_attr( $name ); ?>" class="hd-form-field" data-has-error="0">
     <div class="hd-form-field--color-picker-field">
+        <input type="hidden" id="<?php echo esc_attr( $name ) ?>" name="<?php echo esc_attr( $name ); ?>" data-input-group="<?php echo esc_attr( $group ); ?>" value="<?php echo esc_attr( $value ); ?>">
         <?php if ( ! empty( $label ) ): ?>
-            <label class="hd-title hd-mb-5" for="<?php echo esc_attr( $name ); ?>">
+            <label class="hd-form-field__label hd-mb-5" for="<?php echo esc_attr( $name ); ?>">
                 <?php echo esc_html( $label ); ?>
             </label>
         <?php endif; ?>
-
+        <div class="hd-color-picker-field">
+            <button type="button" class="hd-color-picker-field__btn" data-value="<?php echo esc_attr( $value ); ?>" data-input="<?php echo esc_attr( $name ); ?>" style="background-color: <?php echo esc_attr( $value ); ?>"></button>
+            <span class="hd-color-picker-field__label">
+                <?php echo esc_html( $hexa ); ?>
+            </span>
+        </div>
         <?php if ( ! empty( $description ) ): ?>
-            <p class="hd-text hd-mb-15">
+            <p class="hd-form-field__description">
                 <?php echo esc_html( $description ); ?>
             </p>
         <?php endif; ?>
-
-        <?php if ( ! empty( $name ) ): ?>
-            <div class="hd-color-picker-field">
-                <button type="button" class="hd-js-color-picker-btn hd-color-picker-field__btn" data-value="<?php echo esc_attr( $value ); ?>" data-input="<?php echo esc_attr( $name ); ?>" style="background-color: <?php echo esc_attr( $value ); ?>"></button>
-                <span><?php echo esc_html( $hexa ); ?></span>
-                <input type="hidden" id="<?php echo esc_attr( $name ) ?>" name="<?php echo esc_attr( $name ); ?>" data-input-group="<?php echo esc_attr( $group ); ?>" value="<?php echo esc_attr( $value ); ?>">
-            </div>
-        <?php endif; ?>
-        <p class="hd-form-field__error hd-clr-red hd-fs-13 hd-mt-15">Error Message</p>
+        <p class="hd-form-field__error">
+            <?php __( 'Error Message', HVSFW_PLUGIN_DOMAIN ); ?>
+        </p>
     </div>
 </div>

@@ -1,7 +1,16 @@
 /**
- * Internal dependencies
+ * Internal Modules.
  */
 import settingFieldModule from './modules/setting-field.js';
+
+/**
+ * Strict mode.
+ *
+ * @since 1.0.0
+ *
+ * @author Mafel John Cahucom
+ */
+'use strict';
 
 /**
  * Namespace.
@@ -9,7 +18,6 @@ import settingFieldModule from './modules/setting-field.js';
  * @since 1.0.0
  *
  * @type {Object}
- * @author Mafel John Cahucom
  */
 const hvsfw = hvsfw || {};
 
@@ -40,11 +48,9 @@ hvsfw.form = {
 	 */
 	colorPicker() {
 		const colorPickerElems = document.querySelectorAll( '.hvsfw-color-picker' );
-		if ( colorPickerElems.length === 0 ) {
-			return;
+		if ( colorPickerElems.length > 0 ) {
+			jQuery( '.hvsfw-color-picker' ).wpColorPicker();
 		}
-
-		jQuery( '.hvsfw-color-picker' ).wpColorPicker();
 	},
 
 	/**
@@ -55,17 +61,13 @@ hvsfw.form = {
 	poseTypeSelectorField() {
 		const formFieldStyleElem = document.getElementById( 'hvsfw-form-field-style' );
 		const attributeTypeElem = document.getElementById( 'attribute_type' );
-		if ( ! formFieldStyleElem || ! attributeTypeElem ) {
-			return;
+		if ( formFieldStyleElem && attributeTypeElem ) {
+			attributeTypeElem.setAttribute( 'data-prefix', 'hvsfw' );
+			const formFieldTypeElem = attributeTypeElem.closest( '.form-field' );
+			if ( formFieldTypeElem ) {
+				formFieldStyleElem.before( formFieldTypeElem );
+			}
 		}
-
-		attributeTypeElem.setAttribute( 'data-prefix', 'hvsfw' );
-		const formFieldTypeElem = attributeTypeElem.closest( '.form-field' );
-		if ( ! formFieldTypeElem ) {
-			return;
-		}
-
-		formFieldStyleElem.before( formFieldTypeElem );
 	},
 
 	/**
@@ -93,13 +95,14 @@ hvsfw.domReady = {
 	/**
 	 * Execute the code when dom is ready.
 	 *
-	 * @param {Function} func callback
+	 * @param {Function} func Contains the callback function.
 	 * @return {Function} The callback function.
 	 */
 	execute( func ) {
 		if ( typeof func !== 'function' ) {
 			return;
 		}
+
 		if ( document.readyState === 'interactive' || document.readyState === 'complete' ) {
 			return func();
 		}
@@ -108,6 +111,15 @@ hvsfw.domReady = {
 	},
 };
 
+/**
+ * Initialize App.
+ *
+ * @since 1.0.0
+ */
 hvsfw.domReady.execute( function() {
-	hvsfw.form.init(); // Handle the swatch setting form events.
+	Object.entries( hvsfw ).forEach( function( fragment ) {
+		if ( 'init' in fragment[ 1 ] ) {
+			fragment[ 1 ].init();
+		}
+	} );
 } );

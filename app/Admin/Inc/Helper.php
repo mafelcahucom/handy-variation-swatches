@@ -11,12 +11,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 	1.0.0
  * @version 1.0.0
- * @author Mafel John Cahucom
+ * @author  Mafel John Cahucom
  */
 final class Helper {
 
 	/**
 	 * Inherit Singleton.
+     * 
+     * @since 1.0.0
 	 */
 	use Singleton;
 
@@ -33,7 +35,7 @@ final class Helper {
      *
      * @since 1.0.0
      * 
-     * @return 1.0.0
+     * @return boolean
      */
     public static function plugin_has_error() {
         return ( empty( get_option( '_hvsfw_plugin_version' ) ) || empty( get_option( '_hvsfw_main_settings' ) ) );
@@ -55,7 +57,7 @@ final class Helper {
      *
      * @since 1.0.0
      * 
-     * @param string  $file  Target filename.
+     * @param  string  $file  Contains the target filename.
      * @return string
      */
     public static function get_asset_src( $file ) {
@@ -67,8 +69,8 @@ final class Helper {
      *
      * @since 1.0.0
      * 
-     * @param  string  $file  Target filename.
-     * @param  array   $args  Additional arguments.
+     * @param  string  $file  Contains the target filename.
+     * @param  array   $args  Contains the additional arguments.
      * @return HTMLElement
      */
     public static function render_view( $filename, $args = [] ) {
@@ -88,8 +90,8 @@ final class Helper {
      *
      * @since 1.0.0
      * 
-     * @param  string  $type       The type of icon.
-     * @param  string  $classname  Additional classname.
+     * @param  string  $type       Contains the type of icon.
+     * @param  string  $classname  Contains the additional classname.
      * @return string
      */
     public static function get_icon( $type, $classname = '' ) {
@@ -108,12 +110,12 @@ final class Helper {
     }
 
     /**
-     * Checks if a certain admin menu is already exists.
-     * Note only call this method inside "admin_menu" action.
+     * Checks if a certain admin menu is already exists. Note only call this 
+     * method inside "admin_menu" action.
      *
      * @since 1.0.0
      * 
-     * @param  string  $menu_name  The slug of the menu.
+     * @param  string  $menu_name  Contains the slug of the menu.
      * @return boolean
      */
     public static function is_menu_exists( $menu_slug = '' ) {
@@ -127,6 +129,7 @@ final class Helper {
                 }
             }
         }
+
         return $output;
     }
 
@@ -147,6 +150,7 @@ final class Helper {
         foreach( $attributes as $key => $value ) {
             $output .= esc_attr( $key ) .'="'. esc_attr( $value ) .'" ';
         }
+
         return $output;
     }
 
@@ -155,15 +159,16 @@ final class Helper {
      *
      * @since 1.0.0
      * 
-     * @param  string  $rgba_color  The rgba color string.
+     * @param  string  $rgba_color  Contains the rgba color string.
      * @return string
      */
     public static function convert_rgba_to_hexa( $rgba_color ) {
         $first_replacement  = str_replace( 'rgba', '', $rgba_color );
         $second_replacement = str_replace( '(', '', $first_replacement );
         $third_replacement  = str_replace( ')', '', $second_replacement );
-        $rgba = explode( ',', $third_replacement );
-        $hex_color = sprintf("#%02x%02x%02x%02x", $rgba[0], $rgba[1], $rgba[2], $rgba[3] );
+        $rgba               = explode( ',', $third_replacement );
+        $hex_color          = sprintf( "#%02x%02x%02x%02x", $rgba[0], $rgba[1], $rgba[2], $rgba[3] );
+
         return $hex_color;
     }
 
@@ -173,7 +178,7 @@ final class Helper {
      *
      * @since 1.0.0
      *
-     * @param  string $data  String to be encrypted.
+     * @param  string  $data  Contains the string to be encrypted.
      * @return string
      */
     public static function get_encrypted( $data = '' ) {
@@ -190,7 +195,7 @@ final class Helper {
      *
      * @since 1.0.0
      * 
-     * @param  string  $encrypted_data  Encrypted string to be encrypted.
+     * @param  string  $encrypted_data  Contains the encrypted string to be encrypted.
      * @return string
      */
     public static function get_decrypted( $encrypted_data = '' ) {
@@ -207,7 +212,7 @@ final class Helper {
      *
      * @since 1.0.0
      *
-     * @param  string  $type  The type of field to be return |value|label|.
+     * @param  string  $type  Contains the type of field to be return |value|label|.
      * @return array
      */
     public static function get_font_weight_choices( $type = '' ) {
@@ -265,7 +270,7 @@ final class Helper {
      *
      * @since 1.0.0
      *
-     * @param  string  $type  The type of field to be return |value|label|.
+     * @param  string  $type  Contains the type of field to be return |value|label|.
      * @return array
      */
     public static function get_border_style_choices( $type = '' ) {
@@ -327,8 +332,8 @@ final class Helper {
      *
      * @since 1.0.0
      *
-     * @param  array  $array  Containing the array to be unset.
-     * @param  array  $value  Containing the items value to be unset.
+     * @param  array  $array  Contains the array to be unset.
+     * @param  array  $value  Contains the items value to be unset.
      * @return array
      */
     public static function array_unset_by_value( $array, $values ) {

@@ -1,11 +1,11 @@
 /**
- * External dependencies
+ * External Dependencies
  */
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 
 /**
- * Internal dependencies
+ * Internal Dependencies
  */
 import { attributeData } from '../../data/attributeData';
 import './searchlist.scss';
@@ -19,7 +19,7 @@ import './searchlist.scss';
  * 
  * @component
  * @param {Object}   attributes    Contains the block attributes. 
- * @param {Function} setAttributes The block attributes setter.
+ * @param {Function} setAttributes Contains the block attributes setter.
  */
 const SearchList = ( { attributes, setAttributes, label } ) => {
     const { blockId, settings, searchList } = attributes;
@@ -32,7 +32,7 @@ const SearchList = ( { attributes, setAttributes, label } ) => {
      * 
      * @since 1.0.0
      * 
-     * @param {Object} e The target element event.
+     * @param {Object} e Contais the target element event.
      */
     const handleKeyword = ( e ) => {
         setKeyword( e.target.value );
@@ -50,7 +50,7 @@ const SearchList = ( { attributes, setAttributes, label } ) => {
      * 
      * @since 1.0.0
      * 
-     * @param {Object} e The target element event.
+     * @param {Object} e Contains the target element event.
      */
     const handleAttributeRadio = ( e ) => {
         setAttributes( { settings: { ...settings, attribute: e.target.value } } );
@@ -61,7 +61,7 @@ const SearchList = ( { attributes, setAttributes, label } ) => {
      * 
      * @since 1.0.0
      * 
-     * @return {Array} The label and value of product attributes.
+     * @return {Array} Contains the label and value of product attributes.
      */
     const getAttributeOptions = () => {
         return keyword ? matchedOptions : attributeData.getSelectOptions();
@@ -72,8 +72,8 @@ const SearchList = ( { attributes, setAttributes, label } ) => {
      * 
      * @since 1.0.0
      * 
-     * @param {string} value The value of the radio button. 
-     * @return {boolean} If radio is checked.
+     * @param  {string} value Contains the value of the radio button. 
+     * @return {boolean} The flag whether the radio butto is checked.
      */
     const isRadioChecked = ( value ) => {
         return settings.attribute === value;
@@ -84,7 +84,7 @@ const SearchList = ( { attributes, setAttributes, label } ) => {
      * 
      * @since 1.0.0
      * 
-     * @param {string} value The value of the current item. 
+     * @param  {string} value Contains the value of the current item. 
      * @return {string} The new item state.
      */
     const getItemState = ( value ) => {

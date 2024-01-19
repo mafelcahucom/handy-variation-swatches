@@ -11,11 +11,11 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * $args = [
- *     'title'   => (string) The title of the message.
- *     'content' => (string) The content of the message.
+ *     'title'   => (string) Contains the title of the message.
+ *     'content' => (string) Contains the content of the message.
  *     'button'  => (array)  Contains the buttn [ 'label', 'url' ].
- *     'image'   => (string) The image source url.
- *     'class'   => (string) Additional class.
+ *     'image'   => (string) Contains the image source url.
+ *     'class'   => (string) Contains the additional class.
  * ]
  **/
 

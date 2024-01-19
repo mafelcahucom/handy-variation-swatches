@@ -10,12 +10,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 	1.0.0
  * @version 1.0.0
- * @author Mafel John Cahucom
+ * @author  Mafel John Cahucom
  */
 final class Actions {
 
 	/**
 	 * Inherit Singleton.
+     * 
+     * @since 1.0.0
 	 */
 	use Singleton;
 
@@ -34,7 +36,7 @@ final class Actions {
      * 
      * @since 1.0.0
      *
-     * @param object  $query  The current query parameters of woocommerce_product_query.
+     * @param object  $query  Contains the current query parameters of woocommerce_product_query.
      */
     public function variation_filter_product_query( $query ) {
         if ( ! empty( $_GET ) ) {

@@ -11,12 +11,12 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * $args = [
- *     'name'        => (string) The name of the number field.
- *     'group'       => (string) The name of the group this number field.
- *     'value'       => (int)    The default value of the number field.
- *     'label'       => (string) The label of the number field.
- *     'description' => (string) The description of the number field.
- *     'placeholder' => (string) The placeholder of the number field.
+ *     'name'        => (string)  Contains the name of the number field.
+ *     'group'       => (string)  Contains the name of the group this number field.
+ *     'value'       => (integer) Contains the default value of the number field.
+ *     'label'       => (string)  Contains the label of the number field.
+ *     'description' => (string)  Contains the description of the number field.
+ *     'placeholder' => (string)  Contains the placeholder of the number field.
  * ]
  **/
 
@@ -26,25 +26,27 @@ $value       = absint( ( isset( $args['value'] ) ? $args['value'] : 0 ) );
 $label       = ( isset( $args['label'] ) ? $args['label'] : '' );
 $description = ( isset( $args['description'] ) ? $args['description'] : '' );
 $placeholder = ( isset( $args['placeholder'] ) ? $args['placeholder'] : '' );
+
+if ( empty( $name ) || empty( $group ) ) {
+    return;
+}
 ?>
 
 <div id="hd-form-field-<?php echo esc_attr( $name ); ?>" class="hd-form-field" data-has-error="0">
     <div class="hd-form-field--number-field">
         <?php if ( ! empty( $label ) ): ?>
-            <label class="hd-title hd-mb-5" for="<?php echo esc_attr( $name ); ?>">
+            <label class="hd-form-field__label hd-mb-5" for="<?php echo esc_attr( $name ); ?>">
                 <?php echo esc_html( $label ); ?>
             </label>
         <?php endif; ?>
-
+        <input type="number" class="hd-number-field" id="<?php echo esc_attr( $name ); ?>" name="<?php echo esc_attr( $name ); ?>" data-input-group="<?php echo esc_attr( $group ); ?>" placeholder="<?php echo esc_attr( $placeholder ); ?>" value="<?php echo esc_attr( $value ); ?>">
         <?php if ( ! empty( $description ) ): ?>
-            <p class="hd-text hd-mb-15">
+            <p class="hd-form-field__description">
                 <?php echo esc_html( $description ); ?>
             </p>
         <?php endif; ?>
-
-        <?php if ( ! empty( $name ) ): ?>
-            <input type="number" class="hd-number-field" id="<?php echo esc_attr( $name ); ?>" name="<?php echo esc_attr( $name ); ?>" data-input-group="<?php echo esc_attr( $group ); ?>" placeholder="<?php echo esc_attr( $placeholder ); ?>" value="<?php echo esc_attr( $value ); ?>">
-        <?php endif; ?>
-        <p class="hd-form-field__error hd-clr-red hd-fs-13 hd-mt-15">Error Message</p>
+        <p class="hd-form-field__error">
+            <?php __( 'Error Message', HVSFW_PLUGIN_DOMAIN ); ?>
+        </p>
     </div>
 </div>

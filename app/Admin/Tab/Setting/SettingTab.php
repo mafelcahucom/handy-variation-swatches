@@ -8,16 +8,18 @@ use HVSFW\Admin\Tab\Setting\SettingEvent;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Admin > Tab Setting.
+ * Admin > Tab > Setting.
  *
  * @since 	1.0.0
  * @version 1.0.0
- * @author Mafel John Cahucom
+ * @author  Mafel John Cahucom
  */
 final class SettingTab {
 
 	/**
 	 * Inherit Singleton.
+     * 
+     * @since 1.0.0
 	 */
 	use Singleton;
 
@@ -37,8 +39,6 @@ final class SettingTab {
      * @since 1.0.0
      */
     public static function render_tab() {
-        echo Helper::render_view( 'tab/setting', [
-            'page_title' => 'Setting'
-        ]);
+        echo Helper::render_view( 'tab/setting' );
     }
 }

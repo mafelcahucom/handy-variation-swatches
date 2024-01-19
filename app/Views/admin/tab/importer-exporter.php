@@ -15,88 +15,154 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Header
  */
-echo Component::get_header( $args['page_title'] ); ?>
+echo Component::get_header(); 
+?>
 
-<div class="hd-container">
-
-    <div class="hd-accordion hd-card hd-mb-50">
-        <div class="hd-accordion__header">
-            <div class="hd-flex hd-flex-jc-sb hd-flex-ai-c">
-                <div>
-                    <span class="hd-title">Import Settings</span>
-                </div>
-                <div class="hd-ml-10">
-                    <button class="hvsfw-js-toggle-accordion-btn hd-btn-circle" data-state="open" aria-label="toggle">
-                        <?php echo Helper::get_icon( 'caret-down-filled', 'hd-svg' ); ?>
-                    </button>
+<!-- Importer Component -->
+<div class="hd-card hd-mb-30" data-state="opened">
+    <div class="hd-card__header">
+        <span class="hd-card__title">
+            <?php echo __( 'Import / Restore Settings', HVSFW_PLUGIN_DOMAIN ); ?>
+        </span>
+        <div class="hd-card__chevron">
+            <?php echo Helper::get_icon( 'chevron-up', 'hd-svg' ); ?>
+        </div>
+    </div>
+    <div class="hd-card__body">
+        <div class="hd-card__content">
+            <div class="hd-row hd-row--block">
+                <div class="hd-row__content hd-row__content--single">
+                    <div class="hd-row__field">
+                        <p class="hd-mb-10">
+                            <?php echo __( 'Imported settings will overwrite existing settings. Note <b>.txt</b> file type are only allowed.', HVSFW_PLUGIN_DOMAIN ); ?>
+                        </p>
+                        <label class="hd-file-field">
+                            <div class="hd-file-field__icon">
+                                <?php echo Helper::get_icon( 'plus', 'hd-svg' ); ?>
+                            </div>
+                            <span class="hd-file-field__label">
+                                <?php echo __( 'Choose a file', HVSFW_PLUGIN_DOMAIN ); ?>
+                            </span>
+                            <input type="file" class="hd-file-field__input" accept=".txt">
+                        </label>
+                        <?php
+                            echo Component::get_button([
+                                'id'    => 'hd-import-setting-file-btn',
+                                'icon'  => 'download',
+                                'state' => 'disabled',
+                                'label' => __( 'Import Settings', HVSFW_PLUGIN_DOMAIN )
+                            ]);
+                        ?>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="hd-accordion__body" data-state="open">
-            <div class="hd-accordion__content">
-                <div class="hd-form-field">
-                    <p class="hd-text hd-mb-15">Upload the setting file, only <b>.txt</b> file type is allowed.</p>
-                    <label class="hd-file-field hd-mb-15" title="Upload file" aria-label="Upload file">
-                        <div class="hd-flex hd-flex-ai-c">
-                            <div class="hd-file-field__circle">
-                                <?php echo Helper::get_icon( 'plus-circle-fill', 'hd-svg' ); ?>
+    </div>
+</div>
+<!-- end: Importer Component -->
+
+<!-- Exporter Component -->
+<div class="hd-card hd-mb-30" data-state="opened">
+    <div class="hd-card__header">
+        <span class="hd-card__title">
+            <?php echo __( 'Export / Duplicate Settings', HVSFW_PLUGIN_DOMAIN ); ?>
+        </span>
+        <div class="hd-card__chevron">
+            <?php echo Helper::get_icon( 'chevron-up', 'hd-svg' ); ?>
+        </div>
+    </div>
+    <div class="hd-card__body">
+        <div class="hd-card__content">
+            <div class="hd-row hd-row--block">
+                <div class="hd-row__content hd-row__content--single">
+                    <div class="hd-row__field">
+                        <p class="hd-mb-10">
+                            <?php echo __( 'Download a copy of the settings configuration. Note in order to avoid the corruption of the settings configuration <b>.txt</b> file, do not edit it.', HVSFW_PLUGIN_DOMAIN ); ?>
+                        </p>
+                        <div class="hd-export-field">
+                            <div class="hd-export-field__row--1">
+                                <label class="hd-checkbox-field" data-state="default">
+                                    <input type="checkbox" class="hd-export-setting-checkbox hd-checkbox-field__input" value="ALL">
+                                    <span class="hd-checkbox-field__label">
+                                        <?php echo __( 'Export All', HVSFW_PLUGIN_DOMAIN ); ?>
+                                    </span>
+                                </label>
                             </div>
-                            <div class="hd-file-field__label">
-                                <span class="hd-js-file-field-label hd-fs-13 hd-fw-500">Choose a file</span>
+                            <div class="hd-export-field__row--2">
+                                <label class="hd-checkbox-field" data-state="default">
+                                    <input type="checkbox" class="hd-export-setting-checkbox hd-checkbox-field__input" value="GEN">
+                                    <span class="hd-checkbox-field__label">
+                                        <?php echo __( 'General', HVSFW_PLUGIN_DOMAIN ); ?>
+                                    </span>
+                                </label>
+                                <label class="hd-checkbox-field" data-state="default">
+                                    <input type="checkbox" class="hd-export-setting-checkbox hd-checkbox-field__input" value="GST">
+                                    <span class="hd-checkbox-field__label">
+                                        <?php echo __( 'Global Style', HVSFW_PLUGIN_DOMAIN ); ?>
+                                    </span>
+                                </label>
+                                <label class="hd-checkbox-field" data-state="default">
+                                    <input type="checkbox" class="hd-export-setting-checkbox hd-checkbox-field__input" value="BTS">
+                                    <span class="hd-checkbox-field__label">
+                                        <?php echo __( 'Button Swatch', HVSFW_PLUGIN_DOMAIN ); ?>
+                                    </span>
+                                </label>
+                                <label class="hd-checkbox-field" data-state="default">
+                                    <input type="checkbox" class="hd-export-setting-checkbox hd-checkbox-field__input" value="CRS">
+                                    <span class="hd-checkbox-field__label">
+                                        <?php echo __( 'Color Swatch', HVSFW_PLUGIN_DOMAIN ); ?>
+                                    </span>
+                                </label>
+                                <label class="hd-checkbox-field" data-state="default">
+                                    <input type="checkbox" class="hd-export-setting-checkbox hd-checkbox-field__input" value="IMS">
+                                    <span class="hd-checkbox-field__label">
+                                        <?php echo __( 'Image Swatch', HVSFW_PLUGIN_DOMAIN ); ?>
+                                    </span>
+                                </label>
+                                <label class="hd-checkbox-field" data-state="default">
+                                    <input type="checkbox" class="hd-export-setting-checkbox hd-checkbox-field__input" value="TOT">
+                                    <span class="hd-checkbox-field__label">
+                                        <?php echo __( 'Tooltip', HVSFW_PLUGIN_DOMAIN ); ?>
+                                    </span>
+                                </label>
+                                <label class="hd-checkbox-field" data-state="default">
+                                    <input type="checkbox" class="hd-export-setting-checkbox hd-checkbox-field__input" value="ADV">
+                                    <span class="hd-checkbox-field__label">
+                                        <?php echo __( 'Advanced', HVSFW_PLUGIN_DOMAIN ); ?>
+                                    </span>
+                                </label>
                             </div>
                         </div>
-                        <input type="file" id="hvsfw-js-file-field-input" class="hd-js-file-field-input hd-file-field__input" accept=".txt">
-                    </label>
-                    <button id="hvsfw-js-import-file-btn" class="hd-btn" data-state="default">
-                        <span>Run Importer</span>
-                        <div class="hd-loader"></div>
-                    </button>
+                    </div>
+                    <div class="hd-row__field">
+                        <?php
+                            echo Component::get_button([
+                                'id'    => 'hd-export-setting-file-btn',
+                                'icon'  => 'upload',
+                                'state' => 'disabled',
+                                'label' => __( 'Export Settings', HVSFW_PLUGIN_DOMAIN )
+                            ]);
+                        ?>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="hd-accordion hd-card hd-mb-50">
-        <div class="hd-accordion__header">
-            <div class="hd-flex hd-flex-jc-sb hd-flex-ai-c">
-                <div>
-                    <span class="hd-title">Export Settings</span>
-                </div>
-                <div class="hd-ml-10">
-                    <button class="hvsfw-js-toggle-accordion-btn hd-btn-circle" data-state="open" aria-label="toggle">
-                        <?php echo Helper::get_icon( 'caret-down-filled', 'hd-svg' ); ?>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div class="hd-accordion__body" data-state="open">
-            <div class="hd-accordion__content">
-                <div class="hd-form-field">
-                    <p class="hd-text hd-mb-15">Download the settings file configuration.</p>
-                    <button id="hvsfw-js-export-file-btn" class="hd-btn" data-state="default">
-                        <span>Export Settings</span>
-                        <div class="hd-loader"></div>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
 </div>
+<!-- end: Exporter Component -->
 
 <?php
-    /**
-     * Prompt Loader.
-     */
-    echo Component::get_prompt_loader();
+/**
+ * Prompt Loader.
+ */
+echo Component::get_prompt_loader();
 
-    /**
-     * Prompt Dialog.
-     */
-    echo Component::get_prompt_dialog();
+/**
+ * Prompt Dialog.
+ */
+echo Component::get_prompt_dialog();
 
-    /**
-     * Footer
-     */
-    echo Component::get_footer(); 
-?>
+/**
+ * Footer
+ */
+echo Component::get_footer(); 

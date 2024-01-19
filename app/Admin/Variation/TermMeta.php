@@ -13,12 +13,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 	1.0.0
  * @version 1.0.0
- * @author Mafel John Cahucom
+ * @author  Mafel John Cahucom
  */
 final class TermMeta {
 
 	/**
 	 * Inherit Singleton.
+     * 
+     * @since 1.0.0
 	 */
 	use Singleton;
 
@@ -95,28 +97,28 @@ final class TermMeta {
 
     /**
      * Register all styles.
-     *
-     * @param string  $hook_suffix  Hook suffix for the current admin page.
-     *
+     * 
      * @since 1.0.0
+     *
+     * @param string  $hook_suffix  Contains the hook suffix for the current admin page.
      */
     public function register_styles( $hook_suffix ) {
         if ( ! in_array( $hook_suffix, [ 'edit-tags.php', 'term.php' ] ) || ! $this->is_correct_page() ) {
             return;
         }
 
-        wp_register_style( 'hvsfw-term-css', Helper::get_asset_src( 'css/hvsfw-term.min.css' ), [], '1.0.0', 'all' );
-
         wp_enqueue_style( 'wp-color-picker' );
-        wp_enqueue_style( 'hvsfw-term-css' );
+
+        wp_register_style( 'hvsfw-term', Helper::get_asset_src( 'css/hvsfw-term.min.css' ), [], '1.0.0', 'all' );
+        wp_enqueue_style( 'hvsfw-term' );
     }
 
     /**
      * Register all scripts.
-     *
-     * @param string  $hook_suffix  Hook suffix for the current admin page.
-     *
+     * 
      * @since 1.0.0
+     *
+     * @param string  $hook_suffix  Contains the hook suffix for the current admin page.
      */
     public function register_scripts( $hook_suffix ) {
         if ( ! in_array( $hook_suffix, [ 'edit-tags.php', 'term.php' ] ) || ! $this->is_correct_page() ) {
@@ -129,9 +131,8 @@ final class TermMeta {
             wp_enqueue_media();
         }
 
-        wp_register_script( 'hvsfw-term-js', Helper::get_asset_src( 'js/hvsfw-term.min.js' ), $dependency, '1.0.0', true );
-
-        wp_enqueue_script( 'hvsfw-term-js' );
+        wp_register_script( 'hvsfw-term', Helper::get_asset_src( 'js/hvsfw-term.min.js' ), $dependency, '1.0.0', true );
+        wp_enqueue_script( 'hvsfw-term' );
     }
 
     /**
@@ -139,7 +140,7 @@ final class TermMeta {
      *
      * @since 1.0.0
      *
-     * @param string  $taxonomy_slug  The taxonomy slug.
+     * @param string  $taxonomy_slug  Contains the taxonomy slug.
      */
     public function add_term_swatch_setting_form( $taxonomy_slug ) {
         $settings = $this->get_settings();
@@ -160,7 +161,7 @@ final class TermMeta {
      *
      * @since 1.0.0
      * 
-     * @param object  $term  The current term editing.
+     * @param object  $term  Contains the current term editing.
      */
     public function edit_term_swatch_setting_form( $term ) {
         $settings = $this->get_settings();
@@ -183,7 +184,7 @@ final class TermMeta {
      *
      * @since 1.0.0
      *
-     * @param string  $taxonomy_slug  The taxonomy slug.
+     * @param string  $taxonomy_slug  Contains the taxonomy slug.
      */
     public function add_tooltip_swatch_setting_form( $taxonomy_slug ) {
         $settings = $this->get_settings();
@@ -205,7 +206,7 @@ final class TermMeta {
      *
      * @since 1.0.0
      * 
-     * @param object  $term  The current term editing.
+     * @param object  $term  Contains the current term editing.
      */
     public function edit_tooltip_swatch_setting_form( $term ) {
         $settings = $this->get_settings();
@@ -228,7 +229,7 @@ final class TermMeta {
      *
      * @since 1.0.0
      * 
-     * @param  integer  $term_id  The target term id.
+     * @param integer  $term_id  Contains the target term id.
      */
     public function save_term_swatch_setting( $term_id ) {
         if ( ! isset( $_POST['hvsfw_color_swatch'] ) && ! isset( $_POST['hvsfw_image_swatch'] ) ) {
@@ -282,7 +283,7 @@ final class TermMeta {
      *
      * @since 1.0.0
      * 
-     * @param  integer  $term_id  The target term id.
+     * @param integer  $term_id  Contains the target term id.
      */
     public function save_tooltip_swatch_setting( $term_id ) {
         if ( ! isset( $_POST['hvsfw_tooltip_type'] ) ) {
@@ -320,8 +321,7 @@ final class TermMeta {
     /**
      * Adding the swatch type column in term list.
      *
-     * @param array  $columns  Containg the current list of columns.
-     *
+     * @param  array  $columns  Contains the current list of columns.
      * @return array
      */
     public function add_swatch_type_column( $columns ) {
@@ -346,9 +346,9 @@ final class TermMeta {
      *
      * @since 1.0.0
      * 
-     * @param  string   $string       The custom column output.
-     * @param  string   $column_name  The name of the column.
-     * @param  integer  $term_id      The term ID.
+     * @param  string   $string       Contains the custom column output.
+     * @param  string   $column_name  Contains the name of the column.
+     * @param  integer  $term_id      Contains the term ID.
      * @return HTMLElement
      */
     public function render_swatch_type_component( $string, $column_name, $term_id ) {

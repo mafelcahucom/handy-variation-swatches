@@ -1,9 +1,16 @@
 /**
+ * Internal Dependencies.
+ */
+import {
+	eventListener,
+} from '../../../../helpers';
+
+/**
  * Color Picker Module.
  *
  * @since 1.0.0
  *
- * @type {Object}
+ * @type   {Object}
  * @author Mafel John Cahucom
  */
 const colorPicker = {
@@ -20,32 +27,12 @@ const colorPicker = {
 	},
 
 	/**
-	 * Global event listener delegation.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param {string}   type     Event type can be multiple seperate with space.
-	 * @param {string}   selector Target element.
-	 * @param {Function} callback Callback function.
-	 */
-	async eventListener( type, selector, callback ) {
-		const events = type.split( ' ' );
-		events.forEach( function( event ) {
-			document.addEventListener( event, function( e ) {
-				if ( e.target.matches( selector ) ) {
-					callback( e );
-				}
-			} );
-		} );
-	},
-
-	/**
 	 * Set the color picker.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param {string} action The type of action.
-	 * @param {Object} parent The parent element.
+	 * @param {string} action Contains the type of action.
+	 * @param {Object} parent Contains the parent element.
 	 */
 	setColorPicker( action = 'set', parent ) {
 		const selector = '.hvsfw-color-picker__input';
@@ -54,17 +41,15 @@ const colorPicker = {
 			inputElems = parent.querySelectorAll( selector );
 		}
 
-		if ( inputElems.length === 0 ) {
-			return;
+		if ( inputElems.length > 0 ) {
+			inputElems.forEach( function( inputElem ) {
+				jQuery( inputElem ).wpColorPicker();
+	
+				if ( action === 'reset' ) {
+					jQuery( inputElem ).iris( 'color', '#ffffff' );
+				}
+			} );
 		}
-
-		inputElems.forEach( function( inputElem ) {
-			jQuery( inputElem ).wpColorPicker();
-
-			if ( action === 'reset' ) {
-				jQuery( inputElem ).iris( 'color', '#ffffff' );
-			}
-		} );
 	},
 
 	/**
@@ -72,16 +57,14 @@ const colorPicker = {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param {Object} parent The parent element.
+	 * @param {Object} parent Contains the parent element.
 	 */
 	setCount( parent ) {
-		if ( ! parent ) {
-			return;
-		}
-
-		const listElem = parent.querySelector( '.hvsfw-color-picker__list' );
-		if ( listElem ) {
-			parent.setAttribute( 'data-count', listElem.childElementCount );
+		if ( parent ) {
+			const listElem = parent.querySelector( '.hvsfw-color-picker__list' );
+			if ( listElem ) {
+				parent.setAttribute( 'data-count', listElem.childElementCount );
+			}
 		}
 	},
 
@@ -90,28 +73,26 @@ const colorPicker = {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param {Object} parent The color picker parent element.
+	 * @param {Object} parent Contains the color picker parent element.
 	 */
 	setToDefault( parent ) {
 		let colorPickerElems = Array.from( document.querySelectorAll( '.hvsfw-color-picker' ) );
 		colorPickerElems = ( parent ? [ parent ] : colorPickerElems );
-		if ( colorPickerElems.length === 0 ) {
-			return;
+		if ( colorPickerElems.length > 0 ) {
+			colorPickerElems.forEach( function( colorPickerElem ) {
+				const itemElems = colorPickerElem.querySelectorAll( '.hvsfw-color-picker__item' );
+				if ( itemElems.length > 1 ) {
+					itemElems.forEach( function( itemElem, index ) {
+						if ( index !== 0 ) {
+							itemElem.remove();
+						}
+					} );
+				}
+	
+				colorPicker.setCount( colorPickerElem );
+				colorPicker.setColorPicker( 'reset', colorPickerElem );
+			} );
 		}
-
-		colorPickerElems.forEach( function( colorPickerElem ) {
-			const itemElems = colorPickerElem.querySelectorAll( '.hvsfw-color-picker__item' );
-			if ( itemElems.length > 1 ) {
-				itemElems.forEach( function( itemElem, index ) {
-					if ( index !== 0 ) {
-						itemElem.remove();
-					}
-				} );
-			}
-
-			colorPicker.setCount( colorPickerElem );
-			colorPicker.setColorPicker( 'reset', colorPickerElem );
-		} );
 	},
 
 	/**
@@ -119,8 +100,8 @@ const colorPicker = {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param {string} name The input name.
-	 * @return {HTMLElement} The new color picker field.
+	 * @param  {string} name Contains the input name.
+	 * @return {HTMLElement} Contains the new color picker field.
 	 */
 	field( name ) {
 		if ( ! name ) {
@@ -147,7 +128,7 @@ const colorPicker = {
 	 * @since 1.0.0
 	 */
 	addNewField() {
-		this.eventListener( 'click', '.hvsfw-js-color-picker-add-btn', function( e ) {
+		eventListener( 'click', '.hvsfw-js-color-picker-add-btn', function( e ) {
 			e.preventDefault();
 			const target = e.target;
 			const parentElem = target.closest( '.hvsfw-color-picker' );
@@ -186,7 +167,7 @@ const colorPicker = {
 	 * @since 1.0.0
 	 */
 	deleteField() {
-		this.eventListener( 'click', '.hvsfw-js-color-picker-delete-btn', function( e ) {
+		eventListener( 'click', '.hvsfw-js-color-picker-delete-btn', function( e ) {
 			e.preventDefault();
 			const target = e.target;
 			const parentElem = target.closest( '.hvsfw-color-picker' );

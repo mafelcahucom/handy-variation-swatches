@@ -3,7 +3,7 @@
  * 
  * @since 1.0.0
  * 
- * @type {Object}
+ * @type   {Object}
  * @author Mafel John Cahucom
  */
 const data = {
@@ -13,8 +13,8 @@ const data = {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param {Object} object The object to be checked.
-	 * @return {boolean} Whether has empty key.
+	 * @param  {Object} object Contains the object to be checked.
+	 * @return {boolean} The flag whether has an empty key.
 	 */
 	isObjectEmpty( object ) {
 		return object === null || object === undefined || Object.keys( object ).length === 0;
@@ -24,8 +24,8 @@ const data = {
 	 * Returns the validate size unit.
 	 * 
 	 * @since 1.0.0
-	 * @param {string} string The string to be validate. 
-	 * @return {string} Validated size.
+	 * @param  {string} string Contains the string to be validate. 
+	 * @return {string} The validated size.
 	 */
 	getValidateUnitSize: ( string ) => {
 		let size = '0px';
@@ -54,8 +54,8 @@ const data = {
 	 * 
 	 * @since 1.0.0
 	 * 
-	 * @param {string} string Contains the string to be modified.
-	 * @return {string} Capitalize first character. 
+	 * @param  {string} string Contains the string to be modified.
+	 * @return {string} The capitalize first character. 
 	 */
 	getUcFirst: ( string ) => {
 		return string.charAt( 0 ).toUpperCase() + string.slice( 1 );
@@ -66,8 +66,8 @@ const data = {
 	 * 
 	 * @since 1.0.0
 	 * 
-	 * @param {Object} padding Contains the top, right, bottom and left value.
-	 * @return {string} Single line padding value.
+	 * @param  {Object} padding Contains the top, right, bottom and left value.
+	 * @return {string} The single line padding value.
 	 */
 	getPadding: ( padding ) => {
 		if ( data.isObjectEmpty( padding ) ) {
@@ -89,8 +89,8 @@ const data = {
 	 * 
 	 * @since 1.0.0
 	 * 
-	 * @param {Object} border Contains the width, style and color value.
-	 * @return {string} Single line border value.
+	 * @param  {Object} border Contains the width, style and color value.
+	 * @return {string} The single line border value.
 	 */
 	getBorder: ( border ) => {
 		if ( data.isObjectEmpty( border ) ) {
@@ -111,8 +111,8 @@ const data = {
 	 * 
 	 * @since 1.0.0
 	 * 
-	 * @param {Object} borders Contains the border top, right, bottom and left.
-	 * @return {Object} Contains all borders and its value.
+	 * @param  {Object} borders Contains the border top, right, bottom and left.
+	 * @return {Object} The all borders and its value.
 	 */
 	getBorders: ( borders ) => {
 		if ( data.isObjectEmpty( borders ) ) {
@@ -159,7 +159,7 @@ const data = {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param {Array} colors Containing the list of colors.
+	 * @param  {Array} colors Contains the list of colors.
 	 * @return {string} The gradient background color.
 	 */
 	getLinearColor( colors ) {

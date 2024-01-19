@@ -1,5 +1,5 @@
 /**
- * External dependencies
+ * External Dependencies.
  */
 import { __ } from '@wordpress/i18n';
 import { useEffect } from '@wordpress/element';
@@ -24,10 +24,10 @@ import {
 } from '@wordpress/components';
 
 /**
- * Internal dependencies
+ * Internal Dependencies.
  */
 import Icon from './icon';
-import { helper } from './utils/Helper';
+import { helper } from './utils/helper';
 import { getFetch } from './lib/getFetch';
 import { generalData } from './data/generalData';
 import { attributeData } from './data/attributeData';
@@ -71,9 +71,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	 * 
 	 * @since 1.0.0
 	 * 
-	 * @param {string} objectName 	The target object name in setAttributes.
-	 * @param {string} propertyName The target property key of object.
-	 * @param {string} newValue		The new value from input. 
+	 * @param {string} objectName 	Contains the target object name in setAttributes.
+	 * @param {string} propertyName Contains the target property key of object.
+	 * @param {string} newValue		Contains the new value from input. 
 	 */
 	const handleValue = ( objectName, propertyName, newValue ) => {
 		const { [ objectName ]: object } = attributes;
@@ -156,8 +156,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		setBlockId();
 
 		/**
-		 * Set the block attribute productAttributes and
-		 * localize it also in window.
+		 * Set the block attribute productAttributes and localize it also in window.
 		 * 
 		 * @since 1.0.0
 		 */

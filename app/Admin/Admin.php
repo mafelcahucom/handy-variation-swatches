@@ -3,7 +3,6 @@ namespace HVSFW\Admin;
 
 use HVSFW\Inc\Traits\Singleton;
 use HVSFW\Admin\Inc\Helper;
-use HVSFW\Admin\Inc\Component;
 use HVSFW\Admin\Tab\Setting\SettingTab;
 use HVSFW\Admin\Tab\ImporterExporter\ImporterExporterTab;
 use HVSFW\Admin\Variation\AttributeMeta;
@@ -17,12 +16,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 	1.0.0
  * @version 1.0.0
- * @author Mafel John Cahucom
+ * @author  Mafel John Cahucom
  */
 final class Admin {
 
 	/**
 	 * Inherit Singleton.
+     * 
+     * @since 1.0.0
 	 */
 	use Singleton;
 
@@ -111,14 +112,16 @@ final class Admin {
     public function render_submenu_dashboard() {
         // Check if the plugin has error.
         if ( Helper::plugin_has_error() ) {
-            echo Component::get_plugin_error_message();
+            echo Helper::render_view( 'component/error-notice' );
             return;
         }
 
+        // Check if the current page is invalid.
         if ( ! Helper::is_correct_page() ) {
             return;
         }
 
+        // Render the tab content based on current tab slug.
         if ( isset( $_GET['tab'] ) ) {
             switch ( $_GET['tab'] ) {
                 case 'setting':
@@ -181,27 +184,30 @@ final class Admin {
      * @since 1.0.0
      */
     public function register_styles() {
-        wp_register_style( 'pickr', Helper::get_asset_src( 'pickr/pickr.min.css' ), [], '1.0.0', 'all' );
-        wp_register_style( 'hvsfw-admin-css', Helper::get_asset_src( 'css/hvsfw-admin.min.css' ), [], '1.0.0', 'all' );
+        wp_register_style( 'lexend-deca', Helper::get_asset_src( 'fonts/lexend-deca/lexend-deca.css' ), [], '1.0.0', 'all' );
+        wp_enqueue_style( 'lexend-deca' );
 
+        wp_register_style( 'pickr', Helper::get_asset_src( 'pickr/pickr.min.css' ), [], '1.0.0', 'all' );
         wp_enqueue_style( 'pickr' );
-        wp_enqueue_style( 'hvsfw-admin-css' );
+
+        wp_register_style( 'hvsfw-admin', Helper::get_asset_src( 'css/hvsfw-admin.min.css' ), [], '1.0.0', 'all' );
+        wp_enqueue_style( 'hvsfw-admin' );
     }
 
     /**
      * Register all scripts.
      *
-     * @since 1..0.0
+     * @since 1.0.0
      */
     public function register_scripts() {
         wp_register_script( 'pickr', Helper::get_asset_src( 'pickr/pickr.min.js' ), [], '1.0.0', true );
-        wp_register_script( 'hvsfw-admin-js', Helper::get_asset_src( 'js/hvsfw-admin.min.js' ), [], '1.0.0', true );
-
         wp_enqueue_script( 'pickr' );
-        wp_enqueue_script( 'hvsfw-admin-js' );
+
+        wp_register_script( 'hvsfw-admin', Helper::get_asset_src( 'js/hvsfw-admin.min.js' ), [], '1.0.0', true );
+        wp_enqueue_script( 'hvsfw-admin' );
 
         // Localize variables.
-        wp_localize_script( 'hvsfw-admin-js', 'hvsfwLocal', [
+        wp_localize_script( 'hvsfw-admin', 'hvsfwLocal', [
             'crafter' => 'Y35qwbAlyt+y60cldwAatUDyxikpRb30wBPT9Y1Xymk=',
             'url'     => admin_url( 'admin-ajax.php' ),
             'tab'     => [

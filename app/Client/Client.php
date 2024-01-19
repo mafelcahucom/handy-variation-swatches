@@ -18,12 +18,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 	1.0.0
  * @version 1.0.0
- * @author Mafel John Cahucom
+ * @author  Mafel John Cahucom
  */
 final class Client {
 
 	/**
 	 * Inherit Singleton.
+     * 
+     * @since 1.0.0
 	 */
 	use Singleton;
 
@@ -106,25 +108,22 @@ final class Client {
     /**
      * Register all scripts.
      *
-     * @since 1..0.0
+     * @since 1.0.0
      */
     public function register_scripts() {
-        // Include dependency.
-        $client_dependency = [ 'jquery' ];
-
         // Include wc-add-to-cart-variation in shop page.
+        $dependency = [ 'jquery' ];
         if ( $this->settings['gn_sp_enable'] == true ) {
-            $client_dependency[] = 'wc-add-to-cart-variation';
+            $dependency[] = 'wc-add-to-cart-variation';
         }
 
-        // Client js.
-        $client_src     = Helper::get_asset_src( 'js/hvsfw-client.min.js' );
-        $client_version = Helper::get_asset_version( 'js/hvsfw-client.min.js' );
-        wp_register_script( 'hvsfw-client-js', $client_src, $client_dependency, $client_version, true );
-        wp_enqueue_script( 'hvsfw-client-js' );
+        $source  = Helper::get_asset_src( 'js/hvsfw-client.min.js' );
+        $version = Helper::get_asset_version( 'js/hvsfw-client.min.js' );
+        wp_register_script( 'hvsfw-client', $source, $dependency, $version, true );
+        wp_enqueue_script( 'hvsfw-client' );
 
         // Localize variables.
-        wp_localize_script( 'hvsfw-client-js', 'hvsfwLocal', [
+        wp_localize_script( 'hvsfw-client', 'hvsfwLocal', [
             'crafter' => 'Y35qwbAlyt+y60cldwAatUDyxikpRb30wBPT9Y1Xymk=',
             'url'     => admin_url( 'admin-ajax.php' ),
             'plugin'  => [

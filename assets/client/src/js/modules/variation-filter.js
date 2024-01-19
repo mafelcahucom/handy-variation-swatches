@@ -1,9 +1,16 @@
 /**
+ * Internal Dependencies.
+ */
+import { 
+    eventListener 
+} from "../../../../helpers";
+
+/**
  * Variation Filter Module.
  *
  * @since 1.0.0
  *
- * @type {Object}
+ * @type   {Object}
  * @author Mafel John Cahucom
  */
 const variationFilter = {
@@ -21,36 +28,15 @@ const variationFilter = {
     },
 
     /**
-	 * Global event listener delegation.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param {string}   type     Event type can be multiple seperate with space.
-	 * @param {string}   selector Target element.
-	 * @param {Function} callback Callback function.
-	 */
-	async eventListener( type, selector, callback ) {
-		const events = type.split( ' ' );
-		events.forEach( function( event ) {
-			document.addEventListener( event, function( e ) {
-				if ( e.target.matches( selector ) ) {
-					callback( e );
-				}
-			} );
-		} );
-	},
-
-    /**
      * Go to the provided data url. Note this is done because wordpress automatically
      * add <p> and <br> tags after an <a> tag.
      * 
      * @since 1.0.0
      */
     onClickLink() {
-        this.eventListener( 'click', '.hvsfw-vf-link', function( e ) {
+        eventListener( 'click', '.hvsfw-vf-link', function( e ) {
             const target = e.target;
             const url = target.getAttribute( 'data-url' );
-            
             if ( url ) {
                 window.location.href = url;
             }
@@ -63,10 +49,9 @@ const variationFilter = {
      * @since 1.0.0
      */
     onChangeSwatchSelect() {
-        this.eventListener( 'change', '.hvsfw-vf-swatch-select__select', function( e ) {
+        eventListener( 'change', '.hvsfw-vf-swatch-select__select', function( e ) {
             const target = e.target;
             const url = target.value;
-
             if ( url ) {
                 window.location.href = url;
             }
@@ -79,11 +64,10 @@ const variationFilter = {
      * @since 1.0.0
      */
     onClearSwatchSelect() {
-        this.eventListener( 'click', '.hvsfw-vf-swatch-select__clear-btn', function( e ) {
+        eventListener( 'click', '.hvsfw-vf-swatch-select__clear-btn', function( e ) {
             const target = e.target;
             const parent = target.closest( '.hvsfw-vf-swatch-select' );
             const url = target.getAttribute( 'data-url' );
-
             if ( url ) {
                 parent.setAttribute( 'data-state', 'default' );
                 window.location.href = url;
@@ -98,25 +82,23 @@ const variationFilter = {
      */
     removeUnwantedTags() {
         const parentElems = document.querySelectorAll( '.hvsfw-vf' );
-        if ( parentElems.length === 0 ) {
-            return;
+        if ( parentElems.length > 0 ) {
+            parentElems.forEach( function( parentElem ) {
+                const pElems = parentElem.querySelectorAll( 'p' );
+                if ( pElems.length > 0 ) {
+                    pElems.forEach( function( pElem ) {
+                        pElem.remove();
+                    });
+                }
+    
+                const brElems = parentElem.querySelectorAll( 'br' );
+                if ( brElems.length > 0 ) {
+                    brElems.forEach( function( brElem ) {
+                        brElem.remove();
+                    });
+                }
+            });
         }
-
-        parentElems.forEach( function( parentElem ) {
-            const pElems = parentElem.querySelectorAll( 'p' );
-            if ( pElems.length > 0 ) {
-                pElems.forEach( function( pElem ) {
-                    pElem.remove();
-                });
-            }
-
-            const brElems = parentElem.querySelectorAll( 'br' );
-            if ( brElems.length > 0 ) {
-                brElems.forEach( function( brElem ) {
-                    brElem.remove();
-                });
-            }
-        });
     }
 };
 

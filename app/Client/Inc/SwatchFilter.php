@@ -12,12 +12,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since   1.0.0
  * @version 1.0.0
- * @author Mafel John Cahucom
+ * @author  Mafel John Cahucom
  */
 final class SwatchFilter {
 
     /**
 	 * Inherit Singleton.
+     * 
+     * @since 1.0.0
 	 */
 	use Singleton;
 
@@ -33,9 +35,9 @@ final class SwatchFilter {
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Contains all data for creating title component.
+     * @param  array  $args  Contains the all data for creating title component.
      * $args = [
-     *     'text'  => (string) The title text or content.
+     *     'text'  => (string) Contains the title text or content.
      *     'style' => (string) Contains the inline style.
      * ]
      * @return HTMLElement
@@ -56,6 +58,7 @@ final class SwatchFilter {
             </label>
         <?php endif; ?>
         <?php
+
         return ob_get_clean();
     }
 
@@ -64,11 +67,11 @@ final class SwatchFilter {
      * 
      * @since 1.0.0
      *
-     * @param  array  $args  Contains all data for creating swatch list component.
+     * @param  array  $args  Contains the all data for creating swatch list component.
      * $args = [
-     *      'attribute'  => (object)  The target variation attribute.
-     *      'query_type' => (string)  The filter query type 'and, or'.
-     *      'show_count' => (boolean) Contains the  flag to display product count.
+     *      'attribute'  => (object)  Contains the target variation attribute.
+     *      'query_type' => (string)  Contains the filter query type 'and, or'.
+     *      'show_count' => (boolean) Contains the flag to display product count.
      *      'styles'     => (array)   Contains the inline styles.
      * ]
      * @return HTMLElement
@@ -112,6 +115,7 @@ final class SwatchFilter {
             </ul>
         </div>
         <?php
+
         return ob_get_clean();
     }
 
@@ -120,10 +124,10 @@ final class SwatchFilter {
      * 
      * @since 1.0.0
      *
-     * @param  array  $args  Contains all data for creating swatch select component.
+     * @param  array  $args  Contains the all data for creating swatch select component.
      * $args = [
-     *      'attribute'  => (object)  The target variation attribute.
-     *      'query_type' => (string)  The filter query type 'and, or'.
+     *      'attribute'  => (object)  Contains the target variation attribute.
+     *      'query_type' => (string)  Contains the filter query type 'and, or'.
      *      'show_count' => (boolean) Contains the  flag to display product count.
      *      'styles'     => (array)   Contains the inline styles.
      * ]
@@ -183,6 +187,7 @@ final class SwatchFilter {
             </button>
         </div>
         <?php
+
         return ob_get_clean();
     }
 
@@ -191,11 +196,11 @@ final class SwatchFilter {
      * 
      * @since 1.0.0
      *
-     * @param  array  $args  Contains all data for creating swatch button component.
+     * @param  array  $args  Contains the all data for creating swatch button component.
      * $args = [
-     *      'attribute'  => (object)  The target variation attribute.
-     *      'query_type' => (string)  The filter query type 'and, or'.
-     *      'show_count' => (boolean) Contains the  flag to display product count.
+     *      'attribute'  => (object)  Contains the target variation attribute.
+     *      'query_type' => (string)  Contains the filter query type 'and, or'.
+     *      'show_count' => (boolean) Contains the flag to display product count.
      *      'styles'     => (array)   Contains the inline styles.
      * ]
      * @return HTMLElement
@@ -235,6 +240,7 @@ final class SwatchFilter {
             <?php endforeach; ?>
         </div>
         <?php
+
         return ob_get_clean();
     }
 
@@ -243,10 +249,10 @@ final class SwatchFilter {
      * 
      * @since 1.0.0
      *
-     * @param  array  $args  Contains all data for creating swatch color component.
+     * @param  array  $args  Contains the all data for creating swatch color component.
      * $args = [
-     *      'attribute'  => (object) The target variation attribute.
-     *      'query_type' => (string) The filter query type 'and, or'.
+     *      'attribute'  => (object) Contains the target variation attribute.
+     *      'query_type' => (string) Contains the filter query type 'and, or'.
      *      'styles'     => (array)  Contains the inline styles.
      * ]
      * @return HTMLElement
@@ -285,6 +291,7 @@ final class SwatchFilter {
             <?php endforeach; ?>
         </div>
         <?php
+
         return ob_get_clean();
     }
 
@@ -293,10 +300,10 @@ final class SwatchFilter {
      * 
      * @since 1.0.0
      *
-     * @param  array  $args  Contains all data for creating image color component.
+     * @param  array  $args  Contains the all data for creating image color component.
      * $args = [
-     *      'attribute'  => (object) The target variation attribute.
-     *      'query_type' => (string) The filter query type 'and, or'.
+     *      'attribute'  => (object) Contains the target variation attribute.
+     *      'query_type' => (string) Contains the filter query type 'and, or'.
      *      'styles'     => (array)  Contains the inline styles.
      * ]
      * @return HTMLElement
@@ -335,6 +342,7 @@ final class SwatchFilter {
             <?php endforeach; ?>
         </div>
         <?php
+
         return ob_get_clean();
     }
 
@@ -343,11 +351,11 @@ final class SwatchFilter {
      * 
      * @since 1.0.0
      *
-     * @param  array  $args  Contains all data for generating filter url.
+     * @param  array  $args  Contains the all data for generating filter url.
      * $args = [
      *      'term'        => (object)  Contains the attribute term.
-     *      'query_type'  => (string)  The filter query type 'and, or'.
-     *      'is_multiple' => (boolean) The flag if parameter accepts multiple value.
+     *      'query_type'  => (string)  Contains the filter query type 'and, or'.
+     *      'is_multiple' => (boolean) Contains the flag if parameter accepts multiple value.
      * ]
      * @return string
      */

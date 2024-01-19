@@ -1,6 +1,4 @@
-/**
- * Toast.
- */
+// Toast
 @keyframes hd-toast-fade-in-bottom {
 
 	0% {
@@ -41,9 +39,10 @@
 	margin-bottom: 10px;
 	box-sizing: border-box;
 	width: 300px;
-	background: #fff;
+	font-family: lexend-deca;
+	background: $clr-white-1;
 	border: 1px solid rgba(0, 0, 0, 0.1);
-	border-radius: 5px;
+	border-radius: $br-radius-2;
 	box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
 	backdrop-filter: blur(10px);
 	opacity: 0;
@@ -63,24 +62,24 @@
 
 	&__title {
 		display: inline-block;
-		color: #6c757d;
 		font-size: 14px;
 		line-height: 16.8px;
 		letter-spacing: 0.5px;
+		color: $clr-black-1;
 	}
 
 	&__status {
+		margin-right: 10px;
 		width: 20px;
 		height: 20px;
-		border-radius: 100px;
-		margin-right: 10px;
+		border-radius: $br-radius-2;
 
 		&--success {
 			background-color: #28a745;
 		}
 
 		&--danger {
-			background-color: #f83939;
+			background-color: #d83939;
 		}
 	}
 
@@ -93,13 +92,14 @@
 		cursor: pointer;
 
 		&__svg {
-			fill: #6c757d;
+			fill: $clr-black-2;
 			width: 20px;
 
 			&:hover,
 			&:focus {
-				fill: #000;
-				transition: all 320ms ease-in-out 0s;
+				fill: $clr-black-1;
+
+				@include transition;
 			}
 		}
 	}
@@ -108,9 +108,9 @@
 		padding: 0 12px;
 	}
 
-	&__p {
+	&__message {
 		margin: 0;
-		color: #212529;
+		color: $clr-black-1;
 		font-size: 14px;
 		line-height: 20px;
 		letter-spacing: 0.5px;
@@ -119,7 +119,7 @@
 	&__alert {
 
 		.hd-toast__head {
-			border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+			border-bottom: 1px solid $clr-gray-4;
 		}
 
 		.hd-toast__body {
@@ -133,7 +133,7 @@
 
 		&--left {
 			width: 85px;
-			background: #f5f5f5;
+			background: $clr-gray-1;
 		}
 
 		&--right {

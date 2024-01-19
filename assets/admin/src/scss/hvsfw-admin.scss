@@ -2,7 +2,6 @@
 @import "abstracts/variables";
 @import "abstracts/mixins";
 @import "abstracts/keyframes";
-@import "abstracts/animations";
 @import "abstracts/breakpoints";
 
 // Core
@@ -11,19 +10,24 @@
 @import "core/helpers";
 
 // Components
-@import "components/fragments";
-@import "components/toast";
-@import "components/tab";
-@import "components/carousel";
 @import "components/buttons";
-@import "components/switch";
 @import "components/card";
-@import "components/modal";
+@import "components/error_notice";
 @import "components/fields";
+@import "components/fragments";
 @import "components/loaders";
-@import "components/accordion";
+@import "components/modal";
+@import "components/placeholder";
+@import "components/row";
+@import "components/tab";
+@import "components/toast";
 
 // Layout
 @import "layout/header";
 @import "layout/navigation";
+@import "layout/content";
 @import "layout/footer";
+
+// Pages
+@import "pages/import_export";
+@import "pages/setting";

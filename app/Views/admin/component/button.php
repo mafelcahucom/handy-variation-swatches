@@ -13,40 +13,31 @@ defined( 'ABSPATH' ) || exit;
 
 /** 
  * $args = [
- *     'type'         => (string) The type of button normal | circle | circle-link.
- *     'id'           => (string) The id of the button.
- *     'class'        => (string) Additional class.
- *     'attr'         => (array) Contains the additional attributes.
- *     'label'        => (string) The label of the button. In cirle label will be used in aria-label
- *     'icon'         => (string) The name of svg icon. This is only applicable in circle type.
- *     'url'          => (string) The url to be used in link tag.
+ *     'id'    => (string) Contains the id of the button.
+ *     'class' => (string) Contains the additional class.
+ *     'attr'  => (array)  Contains the additional attributes.
+ *     'state' => (string) Contains the current state of the button.
+ *     'label' => (string) Contains the label of the button.
+ *     'icon'  => (string) Contains the icon of the button.
  * ]
  **/
 
 $id    = ( isset( $args['id'] ) ? $args['id'] : '' );
-$type  = ( isset( $args['type'] ) ? $args['type'] : 'normal' );
 $label = ( isset( $args['label'] ) ? $args['label'] : '' );
 $class = ( isset( $args['class'] ) ? $args['class'] : '' );
 $attr  = ( isset( $args['attr'] ) ? $args['attr'] : [] );
+$state = ( isset( $args['state'] ) ? $args['state'] : 'default' );
 $icon  = ( isset( $args['icon'] ) ? $args['icon'] : '' );
-$url   = ( isset( $args['url'] ) ? $args['url'] : '#' );
 ?>
 
-<?php if ( $type === 'normal' ): ?>
-    <button id="<?php echo esc_attr( $id ); ?>" class="hd-btn <?php echo esc_attr( $class ); ?>" data-state="default" <?php echo Helper::get_attributes( $attr ); ?>>
-        <span><?php echo esc_html( $label ); ?></span>
-        <div class="hd-loader"></div>
-    </button>
-<?php endif; ?>
-
-<?php if ( $type === 'circle' ): ?>
-    <button id="<?php echo esc_attr( $id ); ?>" class="hd-btn-circle <?php echo esc_attr( $class ); ?>" aria-label="<?php echo esc_attr( $label ); ?>" <?php echo Helper::get_attributes( $attr ); ?>>
-        <?php echo Helper::get_icon( $icon, 'hd-svg' ); ?>
-    </button>
-<?php endif; ?>
-
-<?php if ( $type === 'circle-link' ): ?>
-    <a href="<?php echo esc_url( $url ); ?>" id="<?php echo esc_attr( $id ); ?>" class="hd-btn-circle <?php echo esc_attr( $class ); ?>" title="<?php echo esc_attr( $label ); ?>" <?php echo Helper::get_attributes( $attr ); ?>>
-        <?php echo Helper::get_icon( $icon, 'hd-svg' ); ?>
-    </a>
-<?php endif; ?>
+<button id="<?php echo esc_attr( $id ); ?>" class="hd-btn <?php echo esc_attr( $class ); ?>" data-state="<?php echo esc_attr( $state ); ?>" <?php echo Helper::get_attributes( $attr ); ?>>
+    <div class="hd-btn__detail">
+        <?php if ( ! empty( $icon ) ): ?>
+            <?php echo Helper::get_icon( $icon, 'hd-btn__icon' ); ?>
+        <?php endif; ?>
+        <span class="hd-btn__label">
+            <?php echo esc_html( $label ); ?>
+        </span>
+    </div>
+    <div class="hd-btn__loader hd-loader"></div>
+</button>

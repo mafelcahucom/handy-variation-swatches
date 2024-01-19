@@ -1,7 +1,7 @@
 /**
  * Internal dependencies
  */
-import { helper } from '../../utils/Helper';
+import { helper } from '../../utils/helper';
 import { attributeData } from '../../data/attributeData';
 import './swatchselect.scss';
 

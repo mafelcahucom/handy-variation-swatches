@@ -15,17 +15,21 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since   1.0.0
  * @version 1.0.0
- * @author Mafel John Cahucom
+ * @author  Mafel John Cahucom
  */
 final class ProductMeta {
 
     /**
      * Inherit Singleton.
+     * 
+     * @since 1.0.0
      */
     use Singleton;
 
     /**
      * Inherit Security.
+     * 
+     * @since 1.0.0
      */
     use Security;
 
@@ -69,28 +73,28 @@ final class ProductMeta {
 
     /**
      * Register all styles.
-     *
-     * @param string  $hook_suffix  Hook suffix for the current admin page.
-     *
+     * 
      * @since 1.0.0
+     *
+     * @param string  $hook_suffix  Contains the hook suffix for the current admin page.
      */
     public function register_styles( $hook_suffix ) {
         if ( $hook_suffix !== 'post.php' && ! $this->is_correct_page() ) {
             return;
         }
 
-        wp_register_style( 'hvsfw-product-css', Helper::get_asset_src( 'css/hvsfw-product.min.css' ), [], '1.0.0', 'all' );
-
         wp_enqueue_style( 'wp-color-picker' );
-        wp_enqueue_style( 'hvsfw-product-css' );
+
+        wp_register_style( 'hvsfw-product', Helper::get_asset_src( 'css/hvsfw-product.min.css' ), [], '1.0.0', 'all' );
+        wp_enqueue_style( 'hvsfw-product' );
     }
 
     /**
      * Register all scripts.
-     *
-     * @param string  $hook_suffix  Hook suffix for the current admin page.
-     *
+     * 
      * @since 1.0.0
+     *
+     * @param string  $hook_suffix  Contains the hook suffix for the current admin page. 
      */
     public function register_scripts( $hook_suffix ) {
         if ( $hook_suffix !== 'post.php' && ! $this->is_correct_page() ) {
@@ -103,12 +107,11 @@ final class ProductMeta {
             wp_enqueue_media();
         }
 
-        wp_register_script( 'hvsfw-product-js', Helper::get_asset_src( 'js/hvsfw-product.min.js' ), $dependency, '1.0.0', true );
-
-        wp_enqueue_script( 'hvsfw-product-js' );
+        wp_register_script( 'hvsfw-product', Helper::get_asset_src( 'js/hvsfw-product.min.js' ), $dependency, '1.0.0', true );
+        wp_enqueue_script( 'hvsfw-product' );
 
         // Localize variables.
-        wp_localize_script( 'hvsfw-product-js', 'hvsfwLocal', [
+        wp_localize_script( 'hvsfw-product', 'hvsfwLocal', [
             'url'       => admin_url( 'admin-ajax.php' ),
             'variation' => [
                 'product' => [
@@ -127,7 +130,7 @@ final class ProductMeta {
      *
      * @since 1.0.0
      * 
-     * @param  array  $tabs  Containing all the current registered tabs.
+     * @param  array  $tabs  Contains the all the current registered tabs.
      * @return array
      */
     public function custom_product_tab( $tabs ) {
@@ -271,9 +274,9 @@ final class ProductMeta {
      *
      * @since 1.0.0
      * 
-     * @param  string  $query_string   The query string to be parse.
-     * @param  string  $arg_separator  The query arguments separator.
-     * @param  string  $dec_type       The decoding type.
+     * @param  string  $query_string   Contains the query string to be parse.
+     * @param  string  $arg_separator  Contains the query arguments separator.
+     * @param  string  $dec_type       Contains the decoding type.
      * @return array
      */
     private function parse_query_string( $query_string, $arg_separator = '&', $dec_type = PHP_QUERY_RFC1738 ) {
@@ -340,7 +343,7 @@ final class ProductMeta {
      *
      * @since 1.0.0
      * 
-     * @param  array  $swatches  Containing the swatches value.
+     * @param  array  $swatches  Contains the swatches value.
      * @return array
      */
     private function validate_swatches( $swatches ) {

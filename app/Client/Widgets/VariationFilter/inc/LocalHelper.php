@@ -11,12 +11,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 	1.0.0
  * @version 1.0.0
- * @author Mafel John Cahucom
+ * @author  Mafel John Cahucom
  */
 final class LocalHelper {
 
 	/**
 	 * Inherit Singleton.
+     * 
+     * @since 1.0.0
 	 */
 	use Singleton;
 
@@ -460,7 +462,7 @@ final class LocalHelper {
      *
      * @since 1.0.0
      * 
-     * @param string  $file  Target filename.
+     * @param  string  $file  Contains the target filename.
      * @return string
      */
     public static function get_asset_src( $file ) {

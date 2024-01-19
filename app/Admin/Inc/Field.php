@@ -10,16 +10,18 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Admin Field.
  *
- * @since   1.0.0
+ * @since 	1.0.0
  * @version 1.0.0
- * @author Mafel John Cahucom
+ * @author  Mafel John Cahucom
  */
 final class Field {
 
-    /**
-     * Inherit Singleton.
-     */
-    use Singleton;
+	/**
+	 * Inherit Singleton.
+     * 
+     * @since 1.0.0
+	 */
+	use Singleton;
 
     /**
      * Protected class constructor to prevent direct object creation.
@@ -35,12 +37,12 @@ final class Field {
      *
      * @param  array  $args  Contains all data for creating text field.
      * $args = [
-     *     'name'        => (string) The name of the text field.
-     *     'group'       => (string) The name of the group this text field.
-     *     'value'       => (string) The default value of the text field.
-     *     'label'       => (string) The label of the text field.
-     *     'description' => (string) The description of the text field.
-     *     'placeholder' => (string) The placeholder of the text field.
+     *     'name'        => (string) Contains the name of the text field.
+     *     'group'       => (string) Contains the name of the group this text field.
+     *     'value'       => (string) Contains the default value of the text field.
+     *     'label'       => (string) Contains the label of the text field.
+     *     'description' => (string) Contains the description of the text field.
+     *     'placeholder' => (string) Contains the placeholder of the text field.
      * ]
      * @return HTMLElement
      */
@@ -55,12 +57,12 @@ final class Field {
      *
      * @param  array  $args  Contains all data for creating textarea field.
      * $args = [
-     *     'name'        => (string) The name of the textarea field.
-     *     'group'       => (string) The name of the group this textarea field.
-     *     'value'       => (string) The default value of the textarea field.
-     *     'label'       => (string) The label of the textarea field.
-     *     'description' => (string) The description of the textarea field.
-     *     'placeholder' => (string) The placeholder of the textarea field.
+     *     'name'        => (string) Contains the name of the textarea field.
+     *     'group'       => (string) Contains the name of the group this textarea field.
+     *     'value'       => (string) Contains the default value of the textarea field.
+     *     'label'       => (string) Contains the label of the textarea field.
+     *     'description' => (string) Contains the description of the textarea field.
+     *     'placeholder' => (string) Contains the placeholder of the textarea field.
      * ]
      * @return HTMLElement
      */
@@ -75,12 +77,12 @@ final class Field {
      *
      * @param  array  $args  Contains all data for creating number field.
      * $args = [
-     *     'name'        => (string) The name of the number field.
-     *     'group'       => (string) The name of the group this number field.
-     *     'value'       => (int)    The default value of the number field.
-     *     'label'       => (string) The label of the number field.
-     *     'description' => (string) The description of the number field.
-     *     'placeholder' => (string) The placeholder of the number field.
+     *     'name'        => (string)  Contains the name of the number field.
+     *     'group'       => (string)  Contains the name of the group this number field.
+     *     'value'       => (integer) Contains the default value of the number field.
+     *     'label'       => (string)  Contains the label of the number field.
+     *     'description' => (string)  Contains the description of the number field.
+     *     'placeholder' => (string)  Contains the placeholder of the number field.
      * ]
      * @return HTMLElement
      */
@@ -95,13 +97,13 @@ final class Field {
      *
      * @param  array  $args  Contains all data for creating select field.
      * $args = [
-     *     'name'        => (string) The name of the select field.
-     *     'group'       => (string) The name of the group this select field.
-     *     'value'       => (string) The default value of the select field.
-     *     'label'       => (string) The label of the select field.
-     *     'options'     => (array)  Set of options to be selected.
-     *     'description' => (string) The description of the select field.
-     *     'placeholder' => (string) The placeholder of the select field.
+     *     'name'        => (string) Contains the name of the select field.
+     *     'group'       => (string) Contains the name of the group this select field.
+     *     'value'       => (string) Contains the default value of the select field.
+     *     'label'       => (string) Contains the label of the select field.
+     *     'options'     => (array)  Contains the set of options to be selected.
+     *     'description' => (string) Contains the description of the select field.
+     *     'placeholder' => (string) Contains the placeholder of the select field.
      * ]
      * @return HTMLElement
      **/
@@ -116,12 +118,13 @@ final class Field {
      *
      * @param  array  $args  Contains all data for creating switch field.
      * $args = [
-     *     'name'        => (string) The name of the switch field.
-     *     'group'       => (string) The name of the group this switch field.
-     *     'value'       => (boolean) The default value of the switch field.
-     *     'label'       => (string) The label of the switch field.
-     *     'description' => (string) The description of the switch field.
-     *     'placeholder' => (string) The placeholder of the switch field.
+     *     'name'        => (string)  Contains the name of the switch field.
+     *     'group'       => (string)  Contains the name of the group this switch field.
+     *     'value'       => (boolean) Contains the default value of the switch field.
+     *     'label'       => (string)  Contains the label of the switch field.
+     *     'description' => (string)  Contains the description of the switch field.
+     *     'placeholder' => (string)  Contains the placeholder of the switch field.
+     *     'choices'     => (array)   Contains the choices label aliases on : On | off : Off.
      * ]
      * @return HTMLElement
     **/
@@ -136,11 +139,11 @@ final class Field {
      *
      * @param  array  $args  Contains all data for creating color picker field.
      * $args = [
-     *     'name'        => (string) The name of the color-picker field.
-     *     'group'       => (string) The name of the group this color-picker field.
-     *     'value'       => (string) The default value of the color-picker field.
-     *     'label'       => (string) The label of the color-picker field.
-     *     'description' => (string) The description of the color-picker field.
+     *     'name'        => (string) Contains the name of the color-picker field.
+     *     'group'       => (string) Contains the name of the group this color-picker field.
+     *     'value'       => (string) Contains the default value of the color-picker field.
+     *     'label'       => (string) Contains the label of the color-picker field.
+     *     'description' => (string) Contains the description of the color-picker field.
      * ]
      * @return HTMLElement
     **/
@@ -157,11 +160,11 @@ final class Field {
      *
      * @param  array  $args  Contains all data for creating icon picker field.
      * $args = [
-     *     'name'        => (string) The name of the icon field.
-     *     'group'       => (string) The name of the group this icon field.
-     *     'value'       => (string) The default value of the icon field.
-     *     'label'       => (string) The label of the icon field.
-     *     'description' => (string) The description of the icon field.
+     *     'name'        => (string) Contains the name of the icon field.
+     *     'group'       => (string) Contains the name of the group this icon field.
+     *     'value'       => (string) Contains the default value of the icon field.
+     *     'label'       => (string) Contains the label of the icon field.
+     *     'description' => (string) Contains the description of the icon field.
      *     'icons'       => (array)  Contains the icon list [ name, svg ].
      * ]
      * @return HTMLElement
@@ -171,8 +174,15 @@ final class Field {
             return;
         }
 
+        if ( isset( $args['value'] ) && ! empty( $args['value'] ) ) {
+            if ( ( $key = array_search( $args['value'], $args['icons'] ) ) !== false ) {
+                unset( $args['icons'][ $key ] );
+                array_unshift( $args['icons'], $args['value'] );
+            }
+        }
+
         $icons = [];
-        foreach ( $args['icons'] as $key => $icon ) {
+        foreach ( $args['icons'] as $icon ) {
             $svg = Icon::get( $icon,'hd-svg' );
             if ( ! empty( $svg ) ) {
                 array_push( $icons, [
@@ -187,60 +197,30 @@ final class Field {
     }
 
     /**
-     * Return the image picker field component.
-     *
-     * @since 1.0.0
-     *
-     * @param  array  $args  Contains all data for creating image picker field.
-     * $args = [
-     *     'name'        => (string) The name of the image picker field.
-     *     'group'       => (string) The name of the group this image picker field.
-     *     'value'       => (string) The default value of the image picker field.
-     *     'label'       => (string) The label of the image picker field.
-     *     'description' => (string) The description of the image picker field.
-     *     'max_width'   => (int)    The max width of the image picker thumbnail.
-     *     'choices'     => (array)  Contains the image picker choices |value|label|image|.
-     * ]
-     * @return HTMLElement
-     **/
-    public static function get_image_picker_field( $args = [] ) {
-        return Helper::render_view( 'field/image-picker-field', $args );
-    }
-
-    /**
      * Return the loader picker field component.
      *
      * @since 1.0.0
      *
      * @param  array  $args  Contains all data for creating iamge picker field.
      * $args = [
-     *     'name'        => (string) The name of the loader picker field.
-     *     'group'       => (string) The name of the group this loader picker field.
-     *     'value'       => (string) The default value of the loader picker field.
-     *     'label'       => (string) The label of the loader picker field.
-     *     'description' => (string) The description of the loader picker field.
+     *     'name'        => (string) Contains the name of the loader picker field.
+     *     'group'       => (string) Contains the name of the group this loader picker field.
+     *     'value'       => (string) Contains the default value of the loader picker field.
+     *     'label'       => (string) Contains the label of the loader picker field.
+     *     'description' => (string) Contains the description of the loader picker field.
      *     'choices'     => (array)  Contains the name of the loaders.
      *]
      * @return HTMLElement
      **/
-    public static function get_loader_picker_field( $args = [] ) {  
-        return Helper::render_view( 'field/loader-picker-field', $args );
-    }
+    public static function get_loader_picker_field( $args = [] ) {
+        if ( isset( $args['value'] ) && ! empty( $args['value'] ) ) {
+            if ( ( $key = array_search( $args['value'], $args['choices'] ) ) !== false ) {
+                unset( $args['choices'][ $key ] );
+                array_unshift( $args['choices'], $args['value'] );
+            }
+        }
 
-    /**
-     * Return the multiple field component.
-     *
-     * @since 1.0.0
-     * 
-     * $args = [
-     *     'label'       => (string) The label of the text field.
-     *     'description' => (string) The description of the text field.
-     *     'fields'      => (array)  Containing the set of fields.
-     * ]
-     * @return HTMLElement
-    **/
-    public static function get_multiple_field( $args = [] ) {
-        return Helper::render_view( 'field/multiple-field', $args );
+        return Helper::render_view( 'field/loader-picker-field', $args );
     }
 
     /**
@@ -250,8 +230,10 @@ final class Field {
      *
      * @param  array  $args  Contains all data for creating note field.
      * $args = [
-     *     'title'        => (string) The title of the note field.
-     *     'content'      => (string) The content that will be displayed in note field.
+     *     'type'    => (string)  Contains the type of note field |message|alert.
+     *     'title'   => (string)  Contains the title of the note field.
+     *     'content' => (string)  Contains the content that will be displayed in note field.
+     *     'icon'    => (boolean) Contains the flag whether to show icon in note field, default false.
      * ]
      * @return HTMLElement
     **/

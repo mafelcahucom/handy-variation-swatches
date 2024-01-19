@@ -10,12 +10,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 	1.0.0
  * @version 1.0.0
- * @author Mafel John Cahucom
+ * @author  Mafel John Cahucom
  */
 final class Filters {
 
 	/**
 	 * Inherit Singleton.
+     * 
+     * @since 1.0.0
 	 */
 	use Singleton;
 
@@ -48,12 +50,12 @@ final class Filters {
      *
      * @since 1.0.0
      * 
-     * @param  string $tag    The <script> tag for the enqueued script.
-     * @param  string $handle The script's registered handle.
+     * @param  string  $tag     Contains the <script> tag for the enqueued script.
+     * @param  string  $handle  Contains the script's registered handle.
      * @return array
      */
     public function deffer_main_js( $tag, $handle ) {
-        if ( $handle === 'hvsfw-client-js' ) {
+        if ( $handle === 'hvsfw-client' ) {
             return str_replace( ' src', ' defer="defer" src', $tag );
         }
 

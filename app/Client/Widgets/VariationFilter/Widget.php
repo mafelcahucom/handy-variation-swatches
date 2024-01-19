@@ -14,12 +14,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 	1.0.0
  * @version 1.0.0
- * @author Mafel John Cahucom
+ * @author  Mafel John Cahucom
  */
 final class Widget {
 
 	/**
 	 * Inherit Singleton.
+     * 
+     * @since 1.0.0
 	 */
 	use Singleton;
 
@@ -82,7 +84,7 @@ final class Widget {
      *
      * @param  array  $args  Contains the arguments for rendering widget.
      * $args = [
-     *     'instance'   => (array)  The available instance of the widget.
+     *     'instance' => (array) Contains the available instance of the widget.
      * ]
      * @return HTMLElement
      */
@@ -373,7 +375,7 @@ final class Widget {
      * 
      * @since 1.0.0
      *
-     * @param  array  $setting  Contains the setting style.
+     * @param  array  $setting  Contains the style settings.
      * @return string
      */
     private static function get_padding( $setting ) {
@@ -394,7 +396,7 @@ final class Widget {
      * 
      * @since 1.0.0
      *
-     * @param  array   $setting  Contains the setting style.
+     * @param  array   $setting  Contains the style setting.
      * @param  string  $state    Contains the state for border color selection [defaut, active].
      * @return string
      */

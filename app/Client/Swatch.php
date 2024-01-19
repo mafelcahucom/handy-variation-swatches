@@ -14,17 +14,21 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 	1.0.0
  * @version 1.0.0
- * @author Mafel John Cahucom
+ * @author  Mafel John Cahucom
  */
 final class Swatch {
 
 	/**
 	 * Inherit Singleton.
+     * 
+     * @since 1.0.0
 	 */
 	use Singleton;
 
     /**
      * Inherit Security.
+     * 
+     * @since 1.0.0
      */
     use Security;
 
@@ -72,19 +76,15 @@ final class Swatch {
      *
      * @since 1.0.0
      * 
-     * @param  string  $html  The current variation html representation.
-     * @param  array   $args  Containing the default arguments from a filter hook.
+     * @param  string  $html  Contains the current variation html representation.
+     * @param  array   $args  Contains the the default arguments from a filter hook.
      * @return string
      */
     public function custom_swatch_variation_attribute( $html, $args ) {
-        $product     = $args['product'];
         $select_html = $html;
-
-        $template = 'single-product';
-        if ( property_exists( $product, 'hvsfw_template' ) ) {
-            $template = $product->hvsfw_template;
-        }
-
+        $product     = $args['product'];
+        $template    = ( isset( $args['hvsfw_template'] ) ? $args['hvsfw_template'] : 'single-product' );
+        
         if ( $template === 'single-product' && $this->settings['gn_pp_enable'] == false ) {
             return $select_html;
         } 
@@ -124,14 +124,17 @@ final class Swatch {
             'template'   => $template
         ]);
 
-        $html  = '<div class="hvsfw hvsfw-swatch">';
-        $html .= '<div class="hvsfw-select" data-attribute="'. esc_attr( $attribute['slug'] ) .'">';
-        $html .= $select_html;
-        $html .= '</div>';
-        $html .= $variation_html;
-        $html .= '</div>';
-
-        return $html; 
+        ob_start();
+        ?>
+        <div class="hvsfw hvsfw-swatch">
+            <div class="hvsfw-select" data-attribute="<?php echo esc_attr( $attribute['slug'] ); ?>">
+                <?php echo $select_html; ?>
+            </div>
+            <?php echo $variation_html; ?>
+        </div>
+        <?php
+        
+        return ob_get_clean();
     }
 
     /**
@@ -155,11 +158,8 @@ final class Swatch {
         $attributes              = $product->get_variation_attributes();
         $attribute_keys          = array_keys( $attributes );
         $encoded_variations      = wp_json_encode( $variations );
-        $product->hvsfw_template = 'archive-product';
         ?>
-        <div class="hvsfw-variations-form variations_form"
-             data-product_id="<?php echo absint( $product_id ); ?>"
-             data-product_variations="<?php echo esc_attr( $encoded_variations ); ?>">
+        <div class="hvsfw-variations-form variations_form" data-product_id="<?php echo absint( $product_id ); ?>" data-product_variations="<?php echo esc_attr( $encoded_variations ); ?>">
             <table class="hvsfw-variations-table variations" cellspacing="0" role="presentation">
                 <tbody>
                     <?php foreach ( $attributes as $attribute_name => $options ): ?>
@@ -175,9 +175,10 @@ final class Swatch {
                                 <?php
                                     wc_dropdown_variation_attribute_options(
                                         array(
-                                            'options'   => $options,
-                                            'attribute' => $attribute_name,
-                                            'product'   => $product,
+                                            'options'        => $options,
+                                            'attribute'      => $attribute_name,
+                                            'product'        => $product,
+                                            'hvsfw_template' => 'archive-product'
                                         )
                                     );
                                 ?>
@@ -202,12 +203,12 @@ final class Swatch {
      *
      * @since 1.0.0
      * 
-     * @param  array  $args  Containing the necessary arguments for variation attributes.
+     * @param  array  $args  Contains the necessary arguments for variation attributes.
      * $args = [
-     *     'product_id' => (integer) The target product's id.
-     *     'attribute'  => (array)   The attribute value from $this->get_attribute().
-     *     'swatch'     => (array)   The current setting of the swatch.
-     *     'template'   => (string)  The type of product page template.
+     *     'product_id' => (integer) Contains the target product's id.
+     *     'attribute'  => (array)   Contains the attribute value from $this->get_attribute().
+     *     'swatch'     => (array)   Contains the current setting of the swatch.
+     *     'template'   => (string)  Contains the type of product page template.
      * ]
      * @return string
      */
@@ -328,11 +329,11 @@ final class Swatch {
      *
      * @since 1.0.0
      * 
-     * @param  array  $args  Containing the necessary arguments for swatch button type requirements.
+     * @param  array  $args  Contains the necessary arguments for swatch button type requirements.
      * $args = [
-     *     'term'      => (array)  The term id, value, style, tooltip from saved swatch in post meta.
-     *     'option'    => (array)  The term name, slug, value, is_default and style.
-     *     'attribute' => (array)  The attribute value from $this->get_attribute().
+     *     'term'      => (array) Contains the term id, value, style, tooltip from saved swatch in post meta.
+     *     'option'    => (array) Contains the term name, slug, value, is_default and style.
+     *     'attribute' => (array) Contains the attribute value from $this->get_attribute().
      * ]
      * @return string
      */
@@ -420,11 +421,11 @@ final class Swatch {
      *
      * @since 1.0.0
      * 
-     * @param  array  $args  Containing the necessary arguments for swatch color type requirements.
+     * @param  array  $args  Contains the necessary arguments for swatch color type requirements.
      * $args = [
-     *     'term'      => (array)  The term id, value, style, tooltip from saved swatch in post meta.
-     *     'option'    => (array)  The term name, slug, value, is_default and style.
-     *     'attribute' => (array)  The attribute value from $this->get_attribute().
+     *     'term'      => (array) Contains the term id, value, style, tooltip from saved swatch in post meta.
+     *     'option'    => (array) Contains the term name, slug, value, is_default and style.
+     *     'attribute' => (array) Contains the attribute value from $this->get_attribute().
      * ]
      * @return string
      */
@@ -494,7 +495,6 @@ final class Swatch {
             ?>
             <div class="hvsfw-color" style="background: <?php echo esc_attr( $background_color ) ?>;"></div>
         </div>
-
         <?php
 
         return ob_get_clean();
@@ -505,11 +505,11 @@ final class Swatch {
      *
      * @since 1.0.0
      * 
-     * @param  array  $args  Containing the necessary arguments for swatch image type requirements.
+     * @param  array  $args  Contains the necessary arguments for swatch image type requirements.
      * $args = [
-     *     'term'      => (array)  The term id, value, style, tooltip from saved swatch in post meta.
-     *     'option'    => (array)  The term name, slug, value, is_default and style.
-     *     'attribute' => (array)  The attribute value from $this->get_attribute().
+     *     'term'      => (array) Contains the term id, value, style, tooltip from saved swatch in post meta.
+     *     'option'    => (array) Contains the term name, slug, value, is_default and style.
+     *     'attribute' => (array) Contains the attribute value from $this->get_attribute().
      * ]
      * @return string
      */
@@ -590,10 +590,10 @@ final class Swatch {
      *
      * @since 1.0.0
      * 
-     * @param  array  $args  Containing the necessary arguments for tooltip component.
+     * @param  array  $args  Contains the necessary arguments for tooltip component.
      * $args = [
-     *     'term'  => (array)  The term id, value, style, tooltip from saved swatch in post meta.
-     *     'label' => (String) The tooltip default label.
+     *     'term'  => (array)  Contains the term id, value, style, tooltip from saved swatch in post meta.
+     *     'label' => (string) Contains the tooltip default label.
      * ]
      * @return array
      */
@@ -672,6 +672,7 @@ final class Swatch {
 
         $output['html']       = ob_get_clean();
         $output['is_enabled'] = 'yes';
+
         return $output;
     }
 
@@ -680,8 +681,8 @@ final class Swatch {
      *
      * @since 1.0.0
      * 
-     * @param  object  $product    The wc_get_product object.
-     * @param  string  $attribute  The attribute name or index.
+     * @param  object  $product    Contains the wc_get_product object.
+     * @param  string  $attribute  Contains the attribute name or index.
      * @return array
      */
     private function get_attribute( $product, $attribute ) {
@@ -741,8 +742,8 @@ final class Swatch {
      *
      * @since 1.0.0
      * 
-     * @param  integer  $product_id     The target product's id.
-     * @param  integer  $total_options  The total attribute options.
+     * @param  integer  $product_id     Contains the target product's id.
+     * @param  integer  $total_options  Contains the total attribute options.
      * @return string
      */
     private function get_more_link( $product_id, $total_options ) {
@@ -782,7 +783,7 @@ final class Swatch {
      *
      * @since 1.0.0
      * 
-     * @param  string  $type  The swatch type |button|color|image.
+     * @param  string  $type  Contains the swatch type |button|color|image.
      * @return array
      */
     private function get_default_style( $type ) {
@@ -827,8 +828,8 @@ final class Swatch {
      *
      * @since 1.0.0
      * 
-     * @param  array   $args     The current wp parse arguments.
-     * @param  object  $product  The wc_product object.
+     * @param  array   $args     Contains the current wp parse arguments.
+     * @param  object  $product  Contains the wc_product object.
      * @return array
      */
     public function modify_add_to_cart_args( $args, $product ) {
@@ -847,9 +848,9 @@ final class Swatch {
      *
      * @since 1.0.0
      * 
-     * @param  array   $fields     Contain the fields used in add to cart form variation.
-     * @param  object  $product    The current target product.
-     * @param  object  $variation  The current target product's available variations.
+     * @param  array   $fields     Contains the fields used in add to cart form variation.
+     * @param  object  $product    Contains the current target product.
+     * @param  object  $variation  Contains the current target product's available variations.
      * @return array
      */
     public function modify_available_variations( $fields, $product, $variation ) {
@@ -889,7 +890,11 @@ final class Swatch {
         // Validate product.
         $product = wc_get_product( $product_id );
         if ( ! $product ) {
-            wc_add_notice( 'The product you are trying to add to the cart is not found.', 'error' );
+            wc_add_notice( 
+                __( 'The product you are trying to add to the cart is not found.', HVSFW_PLUGIN_DOMAIN ), 
+                'error' 
+            );
+
             wp_send_json_success([
                 'response' => 'FAILED_ADDING_TO_CART',
                 'notice'   => wc_print_notices( true )
@@ -898,7 +903,11 @@ final class Swatch {
 
         // Validate product status.
         if ( get_post_status( $product_id ) !== 'publish' ) {
-            wc_add_notice( 'The product you are trying to add is not yet publish.', 'error' );
+            wc_add_notice( 
+                __( 'The product you are trying to add is not yet publish.', HVSFW_PLUGIN_DOMAIN ), 
+                'error' 
+            );
+
             wp_send_json_success([
                 'response' => 'FAILED_ADDING_TO_CART',
                 'notice'   => wc_print_notices( true )
@@ -907,7 +916,11 @@ final class Swatch {
 
         // Validate product type.
         if ( ! $product->is_type( 'variable' ) ) {
-            wc_add_notice( 'The product you are trying to add is not a variable product type.', 'error' );
+            wc_add_notice( 
+                __( 'The product you are trying to add is not a variable product type.', HVSFW_PLUGIN_DOMAIN ), 
+                'error' 
+            );
+
             wp_send_json_success([
                 'response' => 'FAILED_ADDING_TO_CART',
                 'notice'   => wc_print_notices( true )
@@ -916,7 +929,11 @@ final class Swatch {
 
         // Validate product variation.
         if ( ! Helper::is_valid_variation_id( $variation_id, $product ) ) {
-            wc_add_notice( 'The product variation you are trying to add to the cart is not found.', 'error' );
+            wc_add_notice( 
+                __( 'The product variation you are trying to add to the cart is not found.', HVSFW_PLUGIN_DOMAIN ), 
+                'error' 
+            );
+
             wp_send_json_success([
                 'response' => 'FAILED_ADDING_TO_CART',
                 'notice'   => wc_print_notices( true )
@@ -926,7 +943,11 @@ final class Swatch {
         // Get product variation.
         $variation = wc_get_product( $variation_id );
         if ( ! $variation ) {
-            wc_add_notice( 'The product variation you are trying to add to the cart is not found.', 'error' );
+            wc_add_notice( 
+                __( 'The product variation you are trying to add to the cart is not found.', HVSFW_PLUGIN_DOMAIN ), 
+                'error' 
+            );
+            
             wp_send_json_success([
                 'response' => 'FAILED_ADDING_TO_CART',
                 'notice'   => wc_print_notices( true )

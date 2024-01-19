@@ -13,12 +13,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 	1.0.0
  * @version 1.0.0
- * @author Mafel John Cahucom
+ * @author  Mafel John Cahucom
  */
 final class AttributeMeta {
 
 	/**
 	 * Inherit Singleton.
+     * 
+     * @since 1.0.0
 	 */
 	use Singleton;
 
@@ -49,28 +51,28 @@ final class AttributeMeta {
 
     /**
      * Register all styles.
-     *
-     * @param string  $hook_suffix  Hook suffix for the current admin page.
-     *
+     * 
      * @since 1.0.0
+     *
+     * @param string  $hook_suffix  Contains the hook suffix for the current admin page.
      */
     public function register_styles( $hook_suffix ) {
         if ( $hook_suffix !== 'product_page_product_attributes' ) {
             return;
         }
 
-        wp_register_style( 'hvsfw-attribute-css', Helper::get_asset_src( 'css/hvsfw-attribute.min.css' ), [], '1.0.0', 'all' );
-
         wp_enqueue_style( 'wp-color-picker' );
-        wp_enqueue_style( 'hvsfw-attribute-css' );
+
+        wp_register_style( 'hvsfw-attribute', Helper::get_asset_src( 'css/hvsfw-attribute.min.css' ), [], '1.0.0', 'all' );
+        wp_enqueue_style( 'hvsfw-attribute' );
     }
 
     /**
      * Register all scripts.
-     *
-     * @param string  $hook_suffix  Hook suffix for the current admin page.
-     *
+     * 
      * @since 1.0.0
+     *
+     * @param string  $hook_suffix  Contains the hook suffix for the current admin page.
      */
     public function register_scripts( $hook_suffix ) {
         if ( $hook_suffix !== 'product_page_product_attributes' ) {
@@ -78,9 +80,8 @@ final class AttributeMeta {
         }
 
         $dependency = [ 'jquery', 'wp-color-picker' ];
-        wp_register_script( 'hvsfw-attribute-js', Helper::get_asset_src( 'js/hvsfw-attribute.min.js' ), $dependency, '1.0.0', true );
-
-        wp_enqueue_script( 'hvsfw-attribute-js' );
+        wp_register_script( 'hvsfw-attribute', Helper::get_asset_src( 'js/hvsfw-attribute.min.js' ), $dependency, '1.0.0', true );
+        wp_enqueue_script( 'hvsfw-attribute' );
     }
 
     /**
@@ -88,8 +89,7 @@ final class AttributeMeta {
      *
      * @since 1.0.0
      *
-     * @param  array  $types  Containing the current attribute types.
-     * 
+     * @param  array  $types  Contains the current attribute types.
      * @return array
      */
     public function attribute_type_selector_field( $types ) {
@@ -132,7 +132,7 @@ final class AttributeMeta {
      *
      * @since 1.0.0
      * 
-     * @param  integer  $id  Added attribute ID.
+     * @param integer  $id  Contains the added attribute ID.
      */
     public function save_attribute_swatch_setting( $id ) {
         // Validate the swatch setting value.
@@ -160,7 +160,7 @@ final class AttributeMeta {
      *
      * @since 1.0.0
      * 
-     * @param  integer  $id  Added attribute ID.
+     * @param integer  $id  Contains the added attribute ID.
      */
     public function delete_attribute_swatch_setting( $id ) {
         delete_option( "_hvsfw_swatch_attribute_setting_$id" );
@@ -171,7 +171,7 @@ final class AttributeMeta {
      *
      * @since 1.0.0
      *
-     * @param  integer  $attribute_id  The target attribute id.
+     * @param integer  $attribute_id  Contains the target attribute id.
      */
     private function delete_term_meta_associate_by_attribute( $attribute_id ) {
         if ( empty( $attribute_id ) ) {

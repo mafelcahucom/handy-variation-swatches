@@ -1,7 +1,17 @@
 /**
- * Internal dependencies
+ * Internal Dependencies.
  */
-import variationFilter from "./modules/variation-filter";
+import {
+	getFetch,
+	isObject,
+	setInlineStyle,
+	eventListener,
+} from "../../../helpers";
+
+/**
+ * Module Dependencies.
+ */
+import variationFilterModule from "./modules/variation-filter";
 
 /**
  * Strict mode.
@@ -22,136 +32,13 @@ import variationFilter from "./modules/variation-filter";
 const hvsfw = hvsfw || {};
 
 /**
- * Helper.
- *
+ * Holds the variation filter events.
+ * 
  * @since 1.0.0
- *
+ * 
  * @type {Object}
  */
-hvsfw.fn = {
-
-	/**
-	 * Global event listener delegation.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param {string}   type     Event type can be multiple seperate with space.
-	 * @param {string}   selector Target element.
-	 * @param {Function} callback Callback function.
-	 */
-	async eventListener( type, selector, callback ) {
-		const events = type.split( ' ' );
-		events.forEach( function( event ) {
-			document.addEventListener( event, function( e ) {
-				if ( e.target.matches( selector ) ) {
-					callback( e );
-				}
-			} );
-		} );
-	},
-
-	/**
-	 * Fetch handler.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param {Object} params Containing the parameters.
-	 * @return {Object} Fetch response
-	 */
-	async fetch( params ) {
-		let result = {
-			success: false,
-			data: {
-				error: 'NETWORK_ERROR',
-			},
-		};
-
-		if ( this.isObjectEmpty( params ) ) {
-			result.data.error = 'MISSING_DATA_ERROR';
-			return result;
-		}
-
-		try {
-			const response = await fetch( hvsfwLocal.url, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/x-www-form-urlencoded',
-				},
-				body: new URLSearchParams( params ),
-			} );
-
-			if ( response.ok ) {
-				result = await response.json();
-			}
-		} catch ( e ) {
-			console.log( 'error', e );
-		}
-
-		return result;
-	},
-
-	/**
-	 * Checks if the object is empty.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param {Object} object The object to be checked.
-	 * @return {boolean} Whether has empty key.
-	 */
-	isObjectEmpty( object ) {
-		return Object.keys( object ).length === 0;
-	},
-
-	/**
-	 * Set or implement the inline style on a certain element based on
-	 * the given styles.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param {Object} element The target element.
-	 * @param {Array}  styles  Containing the style attribute and value.
-	 */
-	setInlineStyle( element, styles ) {
-		if ( ! element || ! styles ) {
-			return;
-		}
-
-		Object.entries( styles ).forEach( function( style ) {
-			element.style[ style[ 0 ] ] = style[ 1 ];
-		} );
-	},
-
-	/**
-	 * Sort the object based on the keys.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param {Object} object The object to be sort.
-	 * @return {Object} The sorted object.
-	 */
-	sortObject( object ) {
-		return Object.keys( object ).sort().reduce( function( result, key ) {
-			result[ key ] = object[ key ];
-			return result;
-		}, {} );
-	},
-
-	/**
-	 * Checks if the two objects has the same keys and values.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param {Object} object1 The first object.
-	 * @param {Object} object2 The second object.
-	 * @return {boolean} If two objects are equal.
-	 */
-	isObjectsEqual( object1, object2 ) {
-		const obj1 = this.sortObject( object1 );
-		const obj2 = this.sortObject( object2 );
-
-		return JSON.stringify( obj1 ) === JSON.stringify( obj2 );
-	},
-};
+hvsfw.variationFilter = variationFilterModule;
 
 /**
  * Holds all the prompt compnents.
@@ -167,7 +54,7 @@ hvsfw.prompt = {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param {HTMLElement} notice The notice to be printed.
+	 * @param {HTMLElement} notice Contains the notice to be printed.
 	 */
 	notice( notice ) {
 		if ( ! hvsfwLocal.setting.notice.isEnabled ) {
@@ -205,7 +92,7 @@ hvsfw.prompt = {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param {string} error The error name.
+	 * @param {string} error Contains the error name.
 	 */
 	errorMessage( error ) {
 		const errors = [
@@ -298,19 +185,17 @@ hvsfw.swatch = {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param {Object} element The target term element.
-	 * @param {string} event   The style event |enter|leave.
+	 * @param {Object} element Contains the target term element.
+	 * @param {string} event   Contains the style event |enter|leave.
 	 */
 	setTermInlineStyle( element, event ) {
-		if ( ! element || ! event ) {
-			return;
-		}
-
-		const styleEncoded = element.getAttribute( 'data-style' );
-		if ( styleEncoded ) {
-			const styleParsed = JSON.parse( styleEncoded );
-			if ( styleParsed[ event ] ) {
-				hvsfw.fn.setInlineStyle( element, styleParsed[ event ] );
+		if ( element && event ) {
+			const styleEncoded = element.getAttribute( 'data-style' );
+			if ( styleEncoded ) {
+				const styleParsed = JSON.parse( styleEncoded );
+				if ( styleParsed[ event ] ) {
+					setInlineStyle( element, styleParsed[ event ] );
+				}
 			}
 		}
 	},
@@ -320,7 +205,7 @@ hvsfw.swatch = {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param {Object} form The target variation form.
+	 * @param {Object} form Contains the target variation form.
 	 */
 	setTermEnable( form ) {
 		if ( ! form ) {
@@ -371,17 +256,15 @@ hvsfw.swatch = {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param {Object} term  The target term element.
-	 * @param {string} state The updated state value.
+	 * @param {Object} term  Contains the target term element.
+	 * @param {string} state Contains the updated state value.
 	 */
 	setTermState( term, state ) {
-		if ( ! term || ! [ 'default', 'active' ].includes( state ) ) {
-			return;
+		if ( term && [ 'default', 'active' ].includes( state ) ) {
+			const styleState = ( state === 'active' ? 'enter' : 'leave' );
+			hvsfw.swatch.setTermInlineStyle( term, styleState );
+			term.setAttribute( 'data-state', state );
 		}
-
-		const styleState = ( state === 'active' ? 'enter' : 'leave' );
-		hvsfw.swatch.setTermInlineStyle( term, styleState );
-		term.setAttribute( 'data-state', state );
 	},
 
 	/**
@@ -389,20 +272,18 @@ hvsfw.swatch = {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param {Object} form     The target variation form.
-	 * @param {string} selector The term selector.
-	 * @param {string} state    The update state value
+	 * @param {Object} form     Contains the target variation form.
+	 * @param {string} selector Contains the term selector.
+	 * @param {string} state    Contains the update state value
 	 */
 	setAllTermState( form, selector, state ) {
-		if ( ! form || ! selector || ! [ 'default', 'active' ].includes( state ) ) {
-			return;
-		}
-
-		const termElems = form.querySelectorAll( selector );
-		if ( termElems.length > 0 ) {
-			termElems.forEach( function( termElem ) {
-				hvsfw.swatch.setTermState( termElem, state );
-			} );
+		if ( form && selector && [ 'default', 'active' ].includes( state ) ) {
+			const termElems = form.querySelectorAll( selector );
+			if ( termElems.length > 0 ) {
+				termElems.forEach( function( termElem ) {
+					hvsfw.swatch.setTermState( termElem, state );
+				} );
+			}
 		}
 	},
 
@@ -471,7 +352,7 @@ hvsfw.swatch = {
 			} );
 
 			const currentVariation = variations.find( function( data ) {
-				return hvsfw.fn.isObjectsEqual( attributes, data.attributes );
+				return isObject.equal( attributes, data.attributes );
 			} );
 
 			let isVariationBuyable = false;
@@ -552,7 +433,7 @@ hvsfw.swatch = {
 	 * @since 1.0.0
 	 */
 	onUpdateVariation() {
-		hvsfw.fn.eventListener( 'click', '.hvsfw-term', function( e ) {
+		eventListener( 'click', '.hvsfw-term', function( e ) {
 			const target = e.target;
 			const value = target.getAttribute( 'data-value' );
 			const state = target.getAttribute( 'data-state' );
@@ -563,29 +444,27 @@ hvsfw.swatch = {
 			}
 
 			const formElem = target.closest( '.variations_form' );
-			if ( ! formElem ) {
-				return;
-			}
+			if ( formElem ) {
+				const selectElem = formElem.querySelector( `select[name="attribute_${ attribute }"]` );
+				if ( selectElem ) {
+					selectElem.value = value;
+					selectElem.dispatchEvent( new Event( 'change', {
+						bubbles: true,
+					} ) );
 
-			const selectElem = formElem.querySelector( `select[name="attribute_${ attribute }"]` );
-			if ( selectElem ) {
-				selectElem.value = value;
-				selectElem.dispatchEvent( new Event( 'change', {
-					bubbles: true,
-				} ) );
+					// Set term current & siblings state.
+					const attributeElem = target.closest( '.hvsfw-attribute' );
+					if ( attributeElem ) {
+						const termElems = attributeElem.querySelectorAll( '.hvsfw-term:not([data-enable="no"])' );
+						if ( termElems.length > 0 ) {
+							termElems.forEach( function( termElem ) {
+								termElem.setAttribute( 'data-state', 'default' );
+								hvsfw.swatch.setTermInlineStyle( termElem, 'leave' );
+							} );
 
-				// Set term current & siblings state.
-				const attributeElem = target.closest( '.hvsfw-attribute' );
-				if ( attributeElem ) {
-					const termElems = attributeElem.querySelectorAll( '.hvsfw-term:not([data-enable="no"])' );
-					if ( termElems.length > 0 ) {
-						termElems.forEach( function( termElem ) {
-							termElem.setAttribute( 'data-state', 'default' );
-							hvsfw.swatch.setTermInlineStyle( termElem, 'leave' );
-						} );
-
-						target.setAttribute( 'data-state', 'active' );
-						hvsfw.swatch.setTermInlineStyle( target, 'enter' );
+							target.setAttribute( 'data-state', 'active' );
+							hvsfw.swatch.setTermInlineStyle( target, 'enter' );
+						}
 					}
 				}
 			}
@@ -598,7 +477,7 @@ hvsfw.swatch = {
 	 * @since 1.0.0
 	 */
 	onResetVariation() {
-		hvsfw.fn.eventListener( 'click', '.reset_variations', function( e ) {
+		eventListener( 'click', '.reset_variations', function( e ) {
 			const target = e.target;
 			
 			// Product Single Page.
@@ -730,8 +609,8 @@ hvsfw.addToCart = {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param {Object} thumbnail The current product thumbnail.
-	 * @param {Object} variation The current variation found.
+	 * @param {Object} thumbnail Contains the current product thumbnail.
+	 * @param {Object} variation Contains the current variation found.
 	 */
 	setButton( thumbnail, variation ) {
 		if ( ! thumbnail || ! variation ) {
@@ -771,7 +650,7 @@ hvsfw.addToCart = {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param {Object} thumbnail The current product thumbnail.
+	 * @param {Object} thumbnail Contains the current product thumbnail.
 	 */
 	resetButton( thumbnail ) {
 		if ( ! thumbnail ) {
@@ -803,7 +682,7 @@ hvsfw.addToCart = {
 	 * @since 1.0.0
 	 */
 	variationAddToCart() {
-		hvsfw.fn.eventListener( 'click', '.hvsfw-js-loop-add-to-cart-btn', async function( e ) {
+		eventListener( 'click', '.hvsfw-js-loop-add-to-cart-btn', async function( e ) {
 			e.preventDefault();
 			const target = e.target;
 			const productId = parseInt( target.getAttribute( 'data-product_id' ) );
@@ -816,6 +695,7 @@ hvsfw.addToCart = {
 				if ( href ) {
 					window.location.href = href;
 				}
+				
 				return;
 			}
 
@@ -836,7 +716,7 @@ hvsfw.addToCart = {
 			}
 
 			classList.add( 'loading' );
-			const res = await hvsfw.fn.fetch( {
+			const res = await getFetch( {
 				nonce: hvsfwLocal.nonce.variationAddToCart,
 				action: 'hvsfw_variation_add_to_cart',
 				productId,
@@ -894,13 +774,14 @@ hvsfw.domReady = {
 	/**
 	 * Execute the code when dom is ready.
 	 *
-	 * @param {Function} func callback
+	 * @param {Function} func Contains the callback function.
 	 * @return {Function} The callback function.
 	 */
 	execute( func ) {
 		if ( typeof func !== 'function' ) {
 			return;
 		}
+
 		if ( document.readyState === 'interactive' || document.readyState === 'complete' ) {
 			return func();
 		}
@@ -909,8 +790,15 @@ hvsfw.domReady = {
 	},
 };
 
+/**
+ * Initialize App.
+ *
+ * @since 1.0.0
+ */
 hvsfw.domReady.execute( function() {
-	variationFilter.init(); // Handle variation filter block and widget events.
-	hvsfw.swatch.init(); // Handle variation swatch events.
-	hvsfw.addToCart.init(); // Handle ajax add to cart event.
+	Object.entries( hvsfw ).forEach( function( fragment ) {
+		if ( 'init' in fragment[ 1 ] ) {
+			fragment[ 1 ].init();
+		}
+	} );
 } );

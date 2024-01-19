@@ -13,12 +13,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 	1.0.0
  * @version 1.0.0
- * @author Mafel John Cahucom
+ * @author  Mafel John Cahucom
  */
 final class ProductMetaView {
 
 	/**
 	 * Inherit Singleton.
+     * 
+     * @since 1.0.0
 	 */
 	use Singleton;
 
@@ -52,7 +54,7 @@ final class ProductMetaView {
      *
      * @since 1.0.0
      * 
-     * @param  array   $excluded        The list of type to be excluded.
+     * @param  array  $excluded  Contains the list of type to be excluded.
      * @return array
      */
     private static function get_attribute_types( $excluded = [] ) {
@@ -81,7 +83,7 @@ final class ProductMetaView {
      *
      * @since 1.0.0
      * 
-     * @param  array  $indexes  The list of array index.
+     * @param  array  $indexes  Contains the list of array index.
      * @return string
      */
     private static function get_name( $indexes = [] ) {
@@ -100,10 +102,10 @@ final class ProductMetaView {
      *
      * @since 1.0.0
      *
-     * @param array  $args  Containing the arguments for rendering notice.
+     * @param array  $args  Contains the arguments for rendering notice.
      * $args = [
-     *     'state'   => (string) The notice state.
-     *     'message' => (string) The notice message.
+     *     'state'   => (string) Contains the notice state.
+     *     'message' => (string) Contains the notice message.
      * ]
      */
     public static function notice( $args = [] ) {
@@ -124,7 +126,7 @@ final class ProductMetaView {
      *
      * @since 1.0.0
      * 
-     * @param  integer  $post_id  The current post id.
+     * @param integer  $post_id  Contains the current post id.
      */
     public static function swatches_panel( $post_id ) {
         ?>
@@ -147,7 +149,7 @@ final class ProductMetaView {
      *
      * @since 1.0.0
      * 
-     * @param  integer  $post_id  The current post id.
+     * @param integer  $post_id  Contains the current post id.
      */
     public static function swatch_attributes( $post_id ) {
         $product          = wc_get_product( $post_id );
@@ -176,7 +178,7 @@ final class ProductMetaView {
                 } else {
                     self::notice([
                         'state'   => 'success',
-                        'message' => 'Before you can customize the variation swatches settings you need to add attributes and save this product first.'
+                        'message' => __( 'Before you can customize the variation swatches settings you need to add attributes and save this product first.', HVSFW_PLUGIN_DOMAIN )
                     ]);
                 }
             ?>
@@ -184,10 +186,14 @@ final class ProductMetaView {
         <div class="hvsfw-control" data-visible="<?php echo $show_controller; ?>">
             <div class="hvsfw-flex">
                 <div class="hvsfw-col__left hvsfw-mr-10">
-                    <button type="button" id="hvsfw-js-save-setting-btn" class="button button-primary">Save Settings</button>
+                    <button type="button" id="hvsfw-js-save-setting-btn" class="button button-primary">
+                        <?php echo __( 'Save Settings', HVSFW_PLUGIN_DOMAIN ); ?>
+                    </button>
                 </div>
                 <div class="hvsfw-col__right">
-                    <button type="button" id="hvsfw-js-reset-setting-btn" class="button">Reset Settings</button>
+                    <button type="button" id="hvsfw-js-reset-setting-btn" class="button">
+                        <?php echo __( 'Reset Settings', HVSFW_PLUGIN_DOMAIN ); ?>
+                    </button>
                 </div>
             </div>
         </div>
@@ -199,10 +205,10 @@ final class ProductMetaView {
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Containing the arguments for rendering attribute components.
+     * @param array  $args  Contains the arguments for rendering attribute components.
      * $args = [
-     *     'name'      => (string)  The name of the product attribute name or slug.
-     *     'attribute' => (object)  The single product attribute.
+     *     'name'      => (string) Contains the name of the product attribute name or slug.
+     *     'attribute' => (object) Contains the single product attribute.
      * ]
      */
     private static function attribute_component( $args = [] ) {
@@ -242,7 +248,9 @@ final class ProductMetaView {
                 </span>
                 <div class="hvsfw-flex hvsfw-flex-ai-c">
                     <div class="hvsfw-flex hvsfw-flex-ai-c hvsfw-mr-10">
-                        <span class="hvsfw-mr-10">Type</span>
+                        <span class="hvsfw-mr-10">
+                            <?php echo __( 'Type', HVSFW_PLUGIN_DOMAIN ); ?>
+                        </span>
                         <select name="<?php echo self::get_name( [ $args['name'], 'type' ] ); ?>" class="hvsfw-field-attribute-type hvsfw-setting-field-type" data-prefix="<?php echo $style_root_name; ?>">
                             <?php foreach ( $swatch_options as $key => $option ): ?>
                                 <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $attribute_type, $key ); ?>>
@@ -252,7 +260,7 @@ final class ProductMetaView {
                         </select>
                         <input type="hidden" name="<?php echo self::get_name( [ $args['name'], 'custom' ] ); ?>" value="<?php echo $is_custom_attribute; ?>">
                     </div>
-                    <button type="button" class="hvsfw-accordion__toggle-btn hvsfw-flex-cc" data-state="close" aria-label="open" title="open">
+                    <button type="button" class="hvsfw-accordion__toggle-btn hvsfw-flex-cc" data-state="close" aria-label="<?php echo __( 'Open', HVSFW_PLUGIN_DOMAIN ); ?>" title="<?php echo __( 'Open', HVSFW_PLUGIN_DOMAIN ); ?>">
                         <span class="hvsfw-accordion__chevron hvsfw-dashicon"></span>
                     </button>
                 </div>
@@ -265,7 +273,7 @@ final class ProductMetaView {
                                 // Render global style component.
                                 self::style_component([
                                     'accordion' => 'global-style',
-                                    'title'     => 'Style',
+                                    'title'     => __( 'Style', HVSFW_PLUGIN_DOMAIN ),
                                     'type'      => $attribute_type,
                                     'setting'   => $style_setting,
                                     'root_name' => $style_root_name
@@ -295,12 +303,12 @@ final class ProductMetaView {
      *
      * @since 1.0.0
      * 
-     * @param  array  $args  Containing the arguments for rendering term components.
+     * @param array  $args  Contains the arguments for rendering term components.
      * $args = [
-     *     'type'      => (string) The attribute type.
-     *     'attr_name' => (string) The attribute name or slug.
-     *     'is_custom' => (string) Is custom attribute.
-     *     'attribute' => (object) The object attribute.
+     *     'type'      => (string) Contains the attribute type.
+     *     'attr_name' => (string) Contains the attribute name or slug.
+     *     'is_custom' => (string) Contains the flag whether is custom attribute.
+     *     'attribute' => (object) Contains the object attribute.
      * ]
      */
     private static function term_component( $args = [] ) {
@@ -358,7 +366,9 @@ final class ProductMetaView {
                     </span>
                     <div class="hvsfw-term-control hvsfw-flex hvsfw-flex-ai-c" data-visible="<?php echo $show_term_control; ?>">
                         <div class="hvsfw-term-select-type hvsfw-flex hvsfw-flex-ai-c hvsfw-mr-10" data-visible="<?php echo $is_type_assorted; ?>">
-                            <span class="hvsfw-mr-10">Type</span>
+                            <span class="hvsfw-mr-10">
+                                <?php echo __( 'Type', HVSFW_PLUGIN_DOMAIN ); ?>
+                            </span>
                             <select name="<?php echo $root_name . '[type]' ?>" class="hvsfw-field-term-type hvsfw-setting-field-type" data-prefix="<?php echo $root_name . '[style]'; ?>">
                                 <?php foreach ( $swatch_options as $key => $option ): ?>
                                     <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $term_type, $key ); ?>>
@@ -368,7 +378,7 @@ final class ProductMetaView {
                             </select>
                             <input type="hidden" name="<?php echo $root_name . '[id]'; ?>" value="<?php echo esc_attr( $term['id'] ); ?>">
                         </div>
-                        <button type="button" class="hvsfw-accordion__toggle-btn hvsfw-flex-cc" data-state="close" aria-label="open" title="open">
+                        <button type="button" class="hvsfw-accordion__toggle-btn hvsfw-flex-cc" data-state="close" aria-label="<?php echo __( 'Open', HVSFW_PLUGIN_DOMAIN ); ?>" title="<?php echo __( 'Open', HVSFW_PLUGIN_DOMAIN ); ?>">
                             <span class="hvsfw-accordion__chevron hvsfw-dashicon"></span>
                         </button>
                     </div>
@@ -380,7 +390,7 @@ final class ProductMetaView {
                                 // Render term style component.
                                 self::style_component([
                                     'accordion' => 'style',
-                                    'title'     => 'Style',
+                                    'title'     => __( 'Style', HVSFW_PLUGIN_DOMAIN ),
                                     'type'      => $term_type,
                                     'setting'   => $style_setting,
                                     'root_name' => $root_name . '[style]'
@@ -409,7 +419,7 @@ final class ProductMetaView {
                 </div>
             </div>
         <?php 
-            endforeach;
+        endforeach;
     }
 
     /**
@@ -417,13 +427,13 @@ final class ProductMetaView {
      *
      * @since 1.0.0
      * 
-     * @param  array  $args  Containing the arguments for rendering value components.
+     * @param array  $args  Contains the arguments for rendering value components.
      * $args = [
-     *     'type'      => (string) The term type.
-     *     'attr_name' => (string) The attribute name or slug.
-     *     'term_name' => (string) The term name.
-     *     'term_slug' => (string) The term slug.
-     *     'root_name' => (string) The root name, will be used in field attribute name.
+     *     'type'      => (string) Contains the term type.
+     *     'attr_name' => (string) Contains the attribute name or slug.
+     *     'term_name' => (string) Contains the term name.
+     *     'term_slug' => (string) Contains the term slug.
+     *     'root_name' => (string) Contains the root name, will be used in field attribute name.
      * ]
      */
     private static function value_component( $args = [] ) {
@@ -481,7 +491,7 @@ final class ProductMetaView {
                 <span class="hvsfw-accordion__title" data-type="value">
                     <?php echo esc_html( ucfirst( $args['type'] ) ); ?>
                 </span>
-                <button type="button" class="hvsfw-accordion__toggle-btn hvsfw-flex-cc" data-state="close" aria-label="open" title="open">
+                <button type="button" class="hvsfw-accordion__toggle-btn hvsfw-flex-cc" data-state="close" aria-label="<?php echo __( 'Open', HVSFW_PLUGIN_DOMAIN ); ?>" title="<?php echo __( 'Open', HVSFW_PLUGIN_DOMAIN ); ?>">
                     <span class="hvsfw-accordion__chevron hvsfw-dashicon"></span>
                 </button>
             </div>
@@ -489,21 +499,25 @@ final class ProductMetaView {
                 <div class="hvsfw-accordion__content">
                     <div class="hvsfw-field" data-group-field="value_button" data-visible="<?php echo $show_value_button; ?>">
                         <div class="hvsfw-field__col--left">
-                            <label for="<?php echo $args['root_name'] . '_button_label'; ?>" class="hvsfw-field__label">Button Label</label>
+                            <label for="<?php echo $args['root_name'] . '_button_label'; ?>" class="hvsfw-field__label">
+                                <?php echo __( 'Button Label', HVSFW_PLUGIN_DOMAIN ); ?>
+                            </label>
                         </div>
                         <div class="hvsfw-field__col--right">
                             <div class="hvsfw-field__wrap">
                                 <div class="hvsfw-field__fluid">
-                                    <input type="text" name="<?php echo $args['root_name'] . '[button_label]'; ?>" id="<?php echo $args['root_name'] . '_button_label'; ?>" class="hvsfw-field-value-button-label" placeholder="Label" value="<?php echo esc_attr( $value_button_label ); ?>" data-default="<?php echo esc_attr( $args['term_name'] ); ?>">
+                                    <input type="text" name="<?php echo $args['root_name'] . '[button_label]'; ?>" id="<?php echo $args['root_name'] . '_button_label'; ?>" class="hvsfw-field-value-button-label" placeholder="<?php echo __( 'Label', HVSFW_PLUGIN_DOMAIN ); ?>" value="<?php echo esc_attr( $value_button_label ); ?>" data-default="<?php echo esc_attr( $args['term_name'] ); ?>">
                                     <input type="hidden" name="<?php echo $args['root_name'] . '[button_default]' ?>" value="<?php echo esc_attr( $args['term_name'] ); ?>">
                                 </div>
-                                <?php echo wc_help_tip( 'Write the button label. Term name is the default value.' ); ?>
+                                <?php echo wc_help_tip( __( 'Write the button label. Term name is the default value.', HVSFW_PLUGIN_DOMAIN ) ); ?>
                             </div>
                         </div>
                     </div>
                     <div class="hvsfw-field" data-group-field="value_color" data-visible="<?php echo $show_value_color; ?>">
                         <div class="hvsfw-field__col--left">
-                            <label class="hvsfw-field__label">Colors</label>
+                            <label class="hvsfw-field__label">
+                                <?php echo __( 'Colors', HVSFW_PLUGIN_DOMAIN ); ?>
+                            </label>
                         </div>
                         <div class="hvsfw-field__col--right">
                             <div class="hvsfw-field__wrap">
@@ -516,13 +530,15 @@ final class ProductMetaView {
                                         ]);
                                     ?>
                                 </div>
-                                <?php echo wc_help_tip( 'Add colors as much as you want for this color swatch.' ); ?>
+                                <?php echo wc_help_tip( __( 'Add colors as much as you want for this color swatch.', HVSFW_PLUGIN_DOMAIN ) ); ?>
                             </div>
                         </div>
                     </div>
                     <div class="hvsfw-field" data-group-field="value_image" data-visible="<?php echo $show_value_image; ?>">
                         <div class="hvsfw-field__col--left">
-                            <label class="hvsfw-field__label">Image</label>
+                            <label class="hvsfw-field__label">
+                                <?php echo __( 'Image', HVSFW_PLUGIN_DOMAIN ); ?>
+                            </label>
                         </div>
                         <div class="hvsfw-field__col--right">
                             <div class="hvsfw-field__wrap">
@@ -535,13 +551,15 @@ final class ProductMetaView {
                                         ]);
                                     ?>
                                 </div>
-                                <?php echo wc_help_tip( 'Select an image for this image swatch.' ); ?>
+                                <?php echo wc_help_tip( __( 'Select an image for this image swatch.', HVSFW_PLUGIN_DOMAIN ) ); ?>
                             </div>
                         </div>
                     </div>
                     <div class="hvsfw-field" data-group-field="value_image" data-visible="<?php echo $show_value_image; ?>">
                         <div class="hvsfw-field__col--left">
-                            <label class="hvsfw-field__label">Image Size</label>
+                            <label class="hvsfw-field__label">
+                                <?php echo __( 'Image Size', HVSFW_PLUGIN_DOMAIN ); ?>
+                            </label>
                         </div>
                         <div class="hvsfw-field__col--right">
                             <div class="hvsfw-field__wrap">
@@ -554,7 +572,7 @@ final class ProductMetaView {
                                         ]);
                                     ?>
                                 </div>
-                                <?php echo wc_help_tip( 'Select an image size for this image swatch to override the default image size.' ); ?>
+                                <?php echo wc_help_tip( __( 'Select an image size for this image swatch to override the default image size.', HVSFW_PLUGIN_DOMAIN ) ); ?>
                             </div>
                         </div>
                     </div>
@@ -569,12 +587,12 @@ final class ProductMetaView {
      *
      * @since 1.0.0
      * 
-     * @param  array  $args  Containing the arguments for rendering tooltip components.
+     * @param array  $args  Contains the arguments for rendering tooltip components.
      * $args = [
-     *     'attr_name' => (string) The attribute name or slug.
-     *     'term_slug' => (string) The term slug.
-     *     'root_name' => (string) The root name, will be used in field attribute name.
-     *     'is_custom' => (string) Is custom attribute.
+     *     'attr_name' => (string) Contains the attribute name or slug.
+     *     'term_slug' => (string) Contains the term slug.
+     *     'root_name' => (string) Contains the root name, will be used in field attribute name.
+     *     'is_custom' => (string) Contains the flag whether is custom attribute.
      * ]
      */
     private static function tooltip_component( $args = [] ) {
@@ -624,23 +642,23 @@ final class ProductMetaView {
         $tooltip_choices = [
             [
                 'value' => 'none',
-                'label' => 'None'
+                'label' => __( 'None', HVSFW_PLUGIN_DOMAIN )
             ],
             [
                 'value' => 'default',
-                'label' => 'Default'
+                'label' => __( 'Default', HVSFW_PLUGIN_DOMAIN )
             ],
             [
                 'value' => 'text',
-                'label' => 'Text'
+                'label' => __( 'Text', HVSFW_PLUGIN_DOMAIN )
             ],
             [
                 'value' => 'html',
-                'label' => 'HTML',
+                'label' => __( 'HTML', HVSFW_PLUGIN_DOMAIN )
             ],
             [
                 'value' => 'image',
-                'label' => 'Image'
+                'label' => __( 'Image', HVSFW_PLUGIN_DOMAIN )
             ]
         ];
 
@@ -656,8 +674,10 @@ final class ProductMetaView {
         ?>
         <div class="hvsfw-accordion" data-accordion="tooltip">
             <div class="hvsfw-accordion__head">
-                <span class="hvsfw-accordion__title">Tooltip</span>
-                <button type="button" class="hvsfw-accordion__toggle-btn hvsfw-flex-cc" data-state="close" aria-label="open" title="open">
+                <span class="hvsfw-accordion__title">
+                    <?php echo __( 'Tooltip', HVSFW_PLUGIN_DOMAIN ); ?>
+                </span>
+                <button type="button" class="hvsfw-accordion__toggle-btn hvsfw-flex-cc" data-state="close" aria-label="<?php echo __( 'Open', HVSFW_PLUGIN_DOMAIN ); ?>" title="<?php echo __( 'Open', HVSFW_PLUGIN_DOMAIN ); ?>">
                     <span class="hvsfw-accordion__chevron hvsfw-dashicon"></span>
                 </button>
             </div>
@@ -665,7 +685,9 @@ final class ProductMetaView {
                 <div class="hvsfw-accordion__content">
                     <div class="hvsfw-field" data-group-field="<?php echo $args['root_name'] . '_type'; ?>" data-visible="yes">
                         <div class="hvsfw-field__col--left">
-                            <label for="<?php echo $args['root_name'] . '_type'; ?>" class="hvsfw-field__label">Type</label>
+                            <label for="<?php echo $args['root_name'] . '_type'; ?>" class="hvsfw-field__label">
+                                <?php echo __( 'Type', HVSFW_PLUGIN_DOMAIN ); ?>
+                            </label>
                         </div>
                         <div class="hvsfw-field__col--right">
                             <div class="hvsfw-field__wrap">
@@ -678,26 +700,30 @@ final class ProductMetaView {
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
-                                <?php echo wc_help_tip( 'Select your preferred tooltip content type.' ); ?>
+                                <?php echo wc_help_tip( __( 'Select your preferred tooltip content type.', HVSFW_PLUGIN_DOMAIN ) ); ?>
                             </div>
                         </div>
                     </div>
                     <div class="hvsfw-field" data-group-field="<?php echo $args['root_name'] . '_content_text'; ?>" data-visible="<?php echo $show_tooltip_text; ?>">
                         <div class="hvsfw-field__col--left">
-                            <label for="<?php echo $args['root_name'] . '_content_text'; ?>" class="hvsfw-field__label">Content (Text)</label>
+                            <label for="<?php echo $args['root_name'] . '_content_text'; ?>" class="hvsfw-field__label">
+                                <?php echo __( 'Content (Text)', HVSFW_PLUGIN_DOMAIN ); ?>
+                            </label>
                         </div>
                         <div class="hvsfw-field__col--right">
                             <div class="hvsfw-field__wrap">
                                 <div class="hvsfw-field__fluid">
                                     <input type="text" name="<?php echo $args['root_name'] . '[content_text]'; ?>" id="<?php echo $args['root_name'] . '_content_text'; ?>" class="hvsfw-tooltip-field-content-text" value="<?php echo esc_attr( $tooltip_text ); ?>">
                                 </div>
-                                <?php echo wc_help_tip( 'Write the tooltip text content. Term name is the default value.' ); ?>
+                                <?php echo wc_help_tip( __( 'Write the tooltip text content. Term name is the default value.', HVSFW_PLUGIN_DOMAIN ) ); ?>
                             </div>
                         </div>
                     </div>
                     <div class="hvsfw-field" data-group-field="<?php echo $args['root_name'] . '_content_html'; ?>" data-visible="<?php echo $show_tooltip_html; ?>">
                         <div class="hvsfw-field__col--left">
-                            <label for="<?php echo $args['root_name'] . '_content_html'; ?>" class="hvsfw-field__label">Content (HTML)</label>
+                            <label for="<?php echo $args['root_name'] . '_content_html'; ?>" class="hvsfw-field__label">
+                                <?php echo __( 'Content (HTML)', HVSFW_PLUGIN_DOMAIN ); ?>
+                            </label>
                         </div>
                         <div class="hvsfw-field__col--right">
                             <div class="hvsfw-field__wrap">
@@ -706,13 +732,15 @@ final class ProductMetaView {
                                         <?php echo $tooltip_html; ?>
                                     </textarea>
                                 </div>
-                                <?php echo wc_help_tip( 'Write the tooltip html markup content. Term name is the default value.' ); ?>
+                                <?php echo wc_help_tip( __( 'Write the tooltip html markup content. Term name is the default value.', HVSFW_PLUGIN_DOMAIN ) ); ?>
                             </div>
                         </div>
                     </div>
                     <div class="hvsfw-field" data-group-field="<?php echo $args['root_name'] . '_content_image'; ?>" data-visible="<?php echo $show_tooltip_image; ?>">
                         <div class="hvsfw-field__col--left">
-                            <label for="<?php echo $args['root_name'] . '_content_image'; ?>" class="hvsfw-field__label">Content (Image)</label>
+                            <label for="<?php echo $args['root_name'] . '_content_image'; ?>" class="hvsfw-field__label">
+                                <?php echo __( 'Content (Image)', HVSFW_PLUGIN_DOMAIN ); ?>
+                            </label>
                         </div>
                         <div class="hvsfw-field__col--right">
                             <div class="hvsfw-field__wrap">
@@ -725,7 +753,7 @@ final class ProductMetaView {
                                         ]);
                                     ?>
                                 </div>
-                                <?php echo wc_help_tip( 'Select the image for the tooltip image content. Term name is the default value.' ); ?>
+                                <?php echo wc_help_tip( __( 'Select the image for the tooltip image content. Term name is the default value.', HVSFW_PLUGIN_DOMAIN ) ); ?>
                             </div>
                         </div>
                     </div>
@@ -740,13 +768,13 @@ final class ProductMetaView {
      *
      * @since 1.0.0
      * 
-     * @param  array  $args  Containing the arguments for rendering style components.
+     * @param array  $args  Contains the arguments for rendering style components.
      * $args = [
-     *     'accordion' => (string)  The name of the accordion or prefix.
-     *     'title'     => (string)  The title or label of accordion.
-     *     'type'      => (string)  The type of the swatch.
-     *     'setting'   => (array)   The product swatch style value from _hvsfw_value post meta.
-     *     'root_name' => (string)  The root name, will be used in field attribute name.
+     *     'accordion' => (string) Contains the name of the accordion or prefix.
+     *     'title'     => (string) Contains the title or label of accordion.
+     *     'type'      => (string) Contains the type of the swatch.
+     *     'setting'   => (array)  Contains the product swatch style value from _hvsfw_value post meta.
+     *     'root_name' => (string) Contains the root name, will be used in field attribute name.
      * ]
      */
     private static function style_component( $args = [] ) {
@@ -777,7 +805,7 @@ final class ProductMetaView {
                 <span class="hvsfw-accordion__title">
                     <?php echo esc_html( $args['title'] ); ?>
                 </span>
-                <button type="button" class="hvsfw-accordion__toggle-btn hvsfw-flex-cc" data-state="close" aria-label="open" title="open">
+                <button type="button" class="hvsfw-accordion__toggle-btn hvsfw-flex-cc" data-state="close" aria-label="<?php echo __( 'Open', HVSFW_PLUGIN_DOMAIN ); ?>" title="<?php echo __( 'Open', HVSFW_PLUGIN_DOMAIN ); ?>">
                     <span class="hvsfw-accordion__chevron hvsfw-dashicon"></span>
                 </button>
             </div>
@@ -785,86 +813,114 @@ final class ProductMetaView {
                 <div class="hvsfw-accordion__content">
                     <div class="hvsfw-field" data-group-field="<?php echo $args['root_name'] . '_style'; ?>" data-visible="<?php echo $field_visibility['style']; ?>">
                         <div class="hvsfw-field__col--left">
-                            <label for="<?php echo $args['root_name'] . '_style'; ?>" class="hvsfw-field__label">Style</label>
+                            <label for="<?php echo $args['root_name'] . '_style'; ?>" class="hvsfw-field__label">
+                                <?php echo __( 'Style', HVSFW_PLUGIN_DOMAIN ); ?>
+                            </label>
                         </div>
                         <div class="hvsfw-field__col--right">
                             <div class="hvsfw-field__wrap">
                                 <div class="hvsfw-field__fluid">
                                     <select name="<?php echo $args['root_name'] . '[style]'; ?>" id="<?php echo $args['root_name'] . '_style'; ?>" class="hvsfw-setting-field-style" data-prefix="<?php echo $args['root_name']; ?>">
-                                        <option value="default" <?php selected( $settings['style'], 'default' ); ?>>Default</option>
-                                        <option value="custom" <?php selected( $settings['style'], 'custom' ); ?>>Custom</option>
+                                        <option value="default" <?php selected( $settings['style'], 'default' ); ?>>
+                                            <?php echo __( 'Default', HVSFW_PLUGIN_DOMAIN ); ?>
+                                        </option>
+                                        <option value="custom" <?php selected( $settings['style'], 'custom' ); ?>>
+                                            <?php echo __( 'Custom', HVSFW_PLUGIN_DOMAIN ); ?>
+                                        </option>
                                     </select>
                                 </div>
-                                <?php echo wc_help_tip( 'Select whether to use the default style from main settings or assign a custom style in this variation swatch attribute.' ); ?>
+                                <?php echo wc_help_tip( __( 'Select whether to use the default style from main settings or assign a custom style in this variation swatch attribute.', HVSFW_PLUGIN_DOMAIN ) ); ?>
                             </div>
                         </div>
                     </div>
                     <div class="hvsfw-field" data-group-field="<?php echo $args['root_name'] . '_shape'; ?>" data-visible="<?php echo $field_visibility['shape']; ?>">
                         <div class="hvsfw-field__col--left">
-                            <label for="<?php echo $args['root_name'] . '_shape'; ?>" class="hvsfw-field__label">Shape</label>
+                            <label for="<?php echo $args['root_name'] . '_shape'; ?>" class="hvsfw-field__label">
+                                <?php echo __( 'Shape', HVSFW_PLUGIN_DOMAIN ); ?>
+                            </label>
                         </div>
                         <div class="hvsfw-field__col--right">
                             <div class="hvsfw-field__wrap">
                                 <div class="hvsfw-field__fluid">
                                     <select name="<?php echo $args['root_name'] . '[shape]'; ?>" id="<?php echo $args['root_name'] . '_shape'; ?>" class="hvsfw-setting-field-shape" data-prefix="<?php echo $args['root_name']; ?>">
-                                        <option value="square" <?php selected( $settings['shape'], 'square' ); ?>>Square</option>
-                                        <option value="circle" <?php selected( $settings['shape'], 'circle' ); ?>>Circle</option>
-                                        <option value="custom" <?php selected( $settings['shape'], 'custom' ); ?>>Custom</option>
+                                        <option value="square" <?php selected( $settings['shape'], 'square' ); ?>>
+                                            <?php echo __( 'Square', HVSFW_PLUGIN_DOMAIN ); ?>
+                                        </option>
+                                        <option value="circle" <?php selected( $settings['shape'], 'circle' ); ?>>
+                                            <?php echo __( 'Circle', HVSFW_PLUGIN_DOMAIN ); ?>
+                                        </option>
+                                        <option value="custom" <?php selected( $settings['shape'], 'custom' ); ?>>
+                                            <?php echo __( 'Custom', HVSFW_PLUGIN_DOMAIN ); ?>
+                                        </option>
                                     </select>
                                 </div>
-                                <?php echo wc_help_tip( 'Select your preferred shape of this variation swatch attribute.' ); ?>
+                                <?php echo wc_help_tip( __( 'Select your preferred shape of this variation swatch attribute.', HVSFW_PLUGIN_DOMAIN ) ); ?>
                             </div>
                         </div>
                     </div>
                     <div class="hvsfw-field" data-group-field="<?php echo $args['root_name'] . '_size'; ?>" data-visible="<?php echo $field_visibility['size']; ?>">
                         <div class="hvsfw-field__col--left">
-                            <label for="<?php echo $args['root_name'] . '_size'; ?>" class="hvsfw-field__label">Size</label>
+                            <label for="<?php echo $args['root_name'] . '_size'; ?>" class="hvsfw-field__label">
+                                <?php echo __( 'Size', HVSFW_PLUGIN_DOMAIN ); ?>
+                            </label>
                         </div>
                         <div class="hvsfw-field__col--right">
                             <div class="hvsfw-field__wrap">
                                 <div class="hvsfw-field__fluid">
                                     <input type="text" name="<?php echo $args['root_name'] . '[size]'; ?>" id="<?php echo $args['root_name'] . '_size'; ?>" placeholder="40px" value="<?php echo esc_attr( $settings['size'] ); ?>">
                                 </div>
-                                <?php echo wc_help_tip( 'The size or width & height of this variation swatch attribute.' ); ?>
+                                <?php echo wc_help_tip( __( 'The size or width & height of this variation swatch attribute.', HVSFW_PLUGIN_DOMAIN ) ); ?>
                             </div>
                         </div>
                     </div>
                     <div class="hvsfw-field" data-group-field="<?php echo $args['root_name'] . '_dimension'; ?>" data-visible="<?php echo $field_visibility['dimension']; ?>">
                         <div class="hvsfw-field__col--left">
-                            <label for="<?php echo $args['root_name'] . '_width'; ?>" class="hvsfw-field__label">Size</label>
+                            <label for="<?php echo $args['root_name'] . '_width'; ?>" class="hvsfw-field__label">
+                                <?php echo __( 'Size', HVSFW_PLUGIN_DOMAIN ); ?>
+                            </label>
                         </div>
                         <div class="hvsfw-field__col--right">
                             <div class="hvsfw-field__wrap">
                                 <div class="hvsfw-field__fluid">
                                     <div class="hvsfw-field__grid">
                                         <div class="hvsfw-field__grid__col">
-                                            <label for="<?php echo $args['root_name'] . '_width'; ?>" class="hvsfw-field__label--sub">Width</label>
+                                            <label for="<?php echo $args['root_name'] . '_width'; ?>" class="hvsfw-field__label--sub">
+                                                <?php echo __( 'Width', HVSFW_PLUGIN_DOMAIN ); ?>
+                                            </label>
                                             <input type="text" name="<?php echo $args['root_name'] . '[width]'; ?>" id="<?php echo $args['root_name'] . '_width'; ?>" placeholder="40px" value="<?php echo esc_attr( $settings['width'] ); ?>">
                                         </div>
                                         <div class="hvsfw-field__grid__col">
-                                            <label for="<?php echo $args['root_name'] . '_height'; ?>" class="hvsfw-field__label--sub">Height</label>
+                                            <label for="<?php echo $args['root_name'] . '_height'; ?>" class="hvsfw-field__label--sub">
+                                                <?php echo __( 'Height', HVSFW_PLUGIN_DOMAIN ); ?>
+                                            </label>
                                             <input type="text" name="<?php echo $args['root_name'] . '[height]'; ?>" id="<?php echo $args['root_name'] . '_height'; ?>" placeholder="40px" value="<?php echo esc_attr( $settings['height'] ); ?>">
                                         </div>
                                     </div>
                                 </div>
-                                <?php echo wc_help_tip( 'The width and height of this variation swatch attribute.' ); ?>
+                                <?php echo wc_help_tip( __( 'The width and height of this variation swatch attribute.', HVSFW_PLUGIN_DOMAIN ) ); ?>
                             </div>
                         </div>
                     </div>
                     <div class="hvsfw-field" data-group-field="<?php echo $args['root_name'] . '_font'; ?>" data-visible="<?php echo $field_visibility['font']; ?>">
                         <div class="hvsfw-field__col--left">
-                            <label for="<?php echo $args['root_name'] . '_font_size'; ?>" class="hvsfw-field__label">Font</label>
+                            <label for="<?php echo $args['root_name'] . '_font_size'; ?>" class="hvsfw-field__label">
+                                <?php echo __( 'Font', HVSFW_PLUGIN_DOMAIN ); ?>
+                            </label>
                         </div>
                         <div class="hvsfw-field__col--right">
                             <div class="hvsfw-field__wrap">
                                 <div class="hvsfw-field__fluid">
                                     <div class="hvsfw-field__grid">
                                         <div class="hvsfw-field__grid__col">
-                                            <label for="<?php echo $args['root_name'] . '_font_size'; ?>" class="hvsfw-field__label--sub">Size</label>
+                                            <label for="<?php echo $args['root_name'] . '_font_size'; ?>" class="hvsfw-field__label--sub">
+                                                <?php echo __( 'Size', HVSFW_PLUGIN_DOMAIN ); ?>
+                                            </label>
                                             <input type="text" name="<?php echo $args['root_name'] . '[font_size]'; ?>" id="<?php echo $args['root_name'] . '_font_size'; ?>" placeholder="14px" value="<?php echo esc_attr( $settings['font_size'] ); ?>">
                                         </div>
                                         <div class="hvsfw-field__grid__col">
-                                            <label for="<?php echo $args['root_name'] . '_font_weight'; ?>" class="hvsfw-field__label--sub">Weight</label>
+                                            <label for="<?php echo $args['root_name'] . '_font_weight'; ?>" class="hvsfw-field__label--sub">
+                                                <?php echo __( 'Weight', HVSFW_PLUGIN_DOMAIN ); ?>
+                                            </label>
                                             <select name="<?php echo $args['root_name'] . '[font_weight]'; ?>" id="<?php echo $args['root_name'] . '_font_weight'; ?>">
                                                 <?php foreach ( Helper::get_font_weight_choices() as $value ): ?>
                                                     <option value="<?php echo $value['value']; ?>" <?php selected( $settings['font_weight'], $value['value'] ); ?>>
@@ -875,96 +931,122 @@ final class ProductMetaView {
                                         </div>
                                     </div>
                                 </div>
-                                <?php echo wc_help_tip( 'The font size and weight of this variation swatch attribute.' ); ?>
+                                <?php echo wc_help_tip( __( 'The font size and weight of this variation swatch attribute.', HVSFW_PLUGIN_DOMAIN ) ); ?>
                             </div>
                         </div>
                     </div>
                     <div class="hvsfw-field" data-group-field="<?php echo $args['root_name'] . '_text_color'; ?>" data-visible="<?php echo $field_visibility['text_color']; ?>">
                         <div class="hvsfw-field__col--left">
-                            <label for="<?php echo $args['root_name'] . '_font_color'; ?>" class="hvsfw-field__label">Text Color</label>
+                            <label for="<?php echo $args['root_name'] . '_font_color'; ?>" class="hvsfw-field__label">
+                                <?php echo __( 'Text Color', HVSFW_PLUGIN_DOMAIN ); ?>
+                            </label>
                         </div>
                         <div class="hvsfw-field__col--right">
                             <div class="hvsfw-field__wrap">
                                 <div class="hvsfw-field__fluid">
                                     <div class="hvsfw-field__grid">
                                         <div class="hvsfw-field__grid__col">
-                                            <label for="<?php echo $args['root_name'] . '_font_color'; ?>" class="hvsfw-field__label--sub">Color</label>
+                                            <label for="<?php echo $args['root_name'] . '_font_color'; ?>" class="hvsfw-field__label--sub">
+                                                <?php echo __( 'Color', HVSFW_PLUGIN_DOMAIN ); ?>
+                                            </label>
                                             <input type="hidden" name="<?php echo $args['root_name'] . '[font_color]'; ?>" id="<?php echo $args['root_name'] . '_font_color'; ?>" class="hvsfw-color-picker-style" value="<?php echo esc_attr( $settings['font_color'] ); ?>">
                                         </div>
                                         <div class="hvsfw-field__grid__col">
-                                            <label for="<?php echo $args['root_name'] . '_font_hover_color'; ?>" class="hvsfw-field__label--sub">Active Color</label>
+                                            <label for="<?php echo $args['root_name'] . '_font_hover_color'; ?>" class="hvsfw-field__label--sub">
+                                                <?php echo __( 'Active Color', HVSFW_PLUGIN_DOMAIN ); ?>
+                                            </label>
                                             <input type="hidden" name="<?php echo $args['root_name'] . '[font_hover_color]'; ?>" id="<?php echo $args['root_name'] . '_font_hover_color'; ?>" class="hvsfw-color-picker-style" value="<?php echo esc_attr( $settings['font_hover_color'] ); ?>">
                                         </div>
                                     </div>
                                 </div>
-                                <?php echo wc_help_tip( 'The text color of this variation swatch attribute.' ); ?>
+                                <?php echo wc_help_tip( __( 'The text color of this variation swatch attribute.', HVSFW_PLUGIN_DOMAIN ) ); ?>
                             </div>
                         </div>
                     </div>
                     <div class="hvsfw-field" data-group-field="<?php echo $args['root_name'] . '_background_color'; ?>" data-visible="<?php echo $field_visibility['background_color']; ?>">
                         <div class="hvsfw-field__col--left">
-                            <label for="<?php echo $args['root_name'] . '_background_color'; ?>" class="hvsfw-field__label">Background Color</label>
+                            <label for="<?php echo $args['root_name'] . '_background_color'; ?>" class="hvsfw-field__label">
+                                <?php echo __( 'Background Color', HVSFW_PLUGIN_DOMAIN ); ?>
+                            </label>
                         </div>
                         <div class="hvsfw-field__col--right">
                             <div class="hvsfw-field__wrap">
                                 <div class="hvsfw-field__fluid">
                                     <div class="hvsfw-field__grid">
                                         <div class="hvsfw-field__grid__col">
-                                            <label for="<?php echo $args['root_name'] . '_background_color'; ?>" class="hvsfw-field__label--sub">Color</label>
+                                            <label for="<?php echo $args['root_name'] . '_background_color'; ?>" class="hvsfw-field__label--sub">
+                                                <?php echo __( 'Color', HVSFW_PLUGIN_DOMAIN ); ?>
+                                            </label>
                                             <input type="hidden" name="<?php echo $args['root_name'] . '[background_color]'; ?>" id="<?php echo $args['root_name'] . '_background_color'; ?>" class="hvsfw-color-picker-style" value="<?php echo esc_attr( $settings['background_color'] ); ?>">
                                         </div>
                                         <div class="hvsfw-field__grid__col">
-                                            <label for="<?php echo $args['root_name'] . '_background_hover_color'; ?>" class="hvsfw-field__label--sub">Active Color</label>
+                                            <label for="<?php echo $args['root_name'] . '_background_hover_color'; ?>" class="hvsfw-field__label--sub">
+                                                <?php echo __( 'Active Color', HVSFW_PLUGIN_DOMAIN ); ?>
+                                            </label>
                                             <input type="hidden" name="<?php echo $args['root_name'] . '[background_hover_color]'; ?>" id="<?php echo $args['root_name'] . '_background_hover_color'; ?>" class="hvsfw-color-picker-style" value="<?php echo esc_attr( $settings['background_hover_color'] ); ?>">
                                         </div>
                                     </div>
                                 </div>
-                                <?php echo wc_help_tip( 'The background color of this variation swatch attribute.' ); ?>
+                                <?php echo wc_help_tip( __( 'The background color of this variation swatch attribute.', HVSFW_PLUGIN_DOMAIN ) ); ?>
                             </div>
                         </div>
                     </div>
                     <div class="hvsfw-field" data-group-field="<?php echo $args['root_name'] . '_padding'; ?>" data-visible="<?php echo $field_visibility['padding']; ?>">
                         <div class="hvsfw-field__col--left">
-                            <label for="<?php echo $args['root_name'] . '_padding_top'; ?>" class="hvsfw-field__label">Padding</label>
+                            <label for="<?php echo $args['root_name'] . '_padding_top'; ?>" class="hvsfw-field__label">
+                                <?php echo __( 'Padding', HVSFW_PLUGIN_DOMAIN ); ?>
+                            </label>
                         </div>
                         <div class="hvsfw-field__col--right">
                             <div class="hvsfw-field__wrap">
                                 <div class="hvsfw-field__fluid">
                                     <div class="hvsfw-field__grid hvsfw-mb-10">
                                         <div class="hvsfw-field__grid__col">
-                                            <label for="<?php echo $args['root_name'] . '_padding_top'; ?>" class="hvsfw-field__label--sub">Top</label>
+                                            <label for="<?php echo $args['root_name'] . '_padding_top'; ?>" class="hvsfw-field__label--sub">
+                                                <?php echo __( 'Top', HVSFW_PLUGIN_DOMAIN ); ?>
+                                            </label>
                                             <input type="text" name="<?php echo $args['root_name'] . '[padding_top]'; ?>" id="<?php echo $args['root_name'] . '_padding_top'; ?>" placeholder="5px" value="<?php echo esc_attr( $settings['padding_top'] ); ?>">
                                         </div>
                                         <div class="hvsfw-field__grid__col">
-                                            <label for="<?php echo $args['root_name'] . '_padding_bottom'; ?>" class="hvsfw-field__label--sub">Bottom</label>
+                                            <label for="<?php echo $args['root_name'] . '_padding_bottom'; ?>" class="hvsfw-field__label--sub">
+                                                <?php echo __( 'Bottom', HVSFW_PLUGIN_DOMAIN ); ?>
+                                            </label>
                                             <input type="text" name="<?php echo $args['root_name'] . '[padding_bottom]'; ?>" id="<?php echo $args['root_name'] . '_padding_bottom'; ?>" placeholder="5px" value="<?php echo esc_attr( $settings['padding_bottom'] ); ?>">
                                         </div>
                                     </div>
                                     <div class="hvsfw-field__grid">
                                         <div class="hvsfw-field__grid__col">
-                                            <label for="<?php echo $args['root_name'] . '_padding_left'; ?>" class="hvsfw-field__label--sub">Left</label>
+                                            <label for="<?php echo $args['root_name'] . '_padding_left'; ?>" class="hvsfw-field__label--sub">
+                                                <?php echo __( 'Left', HVSFW_PLUGIN_DOMAIN ); ?>
+                                            </label>
                                             <input type="text" name="<?php echo $args['root_name'] . '[padding_left]'; ?>" id="<?php echo $args['root_name'] . '_padding_left'; ?>" placeholder="5px" value="<?php echo esc_attr( $settings['padding_left'] ); ?>">
                                         </div>
                                         <div class="hvsfw-field__grid__col">
-                                            <label for="<?php echo $args['root_name'] . '_padding_right'; ?>" class="hvsfw-field__label--sub">Right</label>
+                                            <label for="<?php echo $args['root_name'] . '_padding_right'; ?>" class="hvsfw-field__label--sub">
+                                                <?php echo __( 'Right', HVSFW_PLUGIN_DOMAIN ); ?>
+                                            </label>
                                             <input type="text" name="<?php echo $args['root_name'] . '[padding_right]'; ?>" id="<?php echo $args['root_name'] . '_padding_right'; ?>" placeholder="5px" value="<?php echo esc_attr( $settings['padding_right'] ); ?>">
                                         </div>
                                     </div>
                                 </div>
-                                <?php echo wc_help_tip( 'The padding of this variation swatch attribute.' ); ?>
+                                <?php echo wc_help_tip( __( 'The padding of this variation swatch attribute.', HVSFW_PLUGIN_DOMAIN ) ); ?>
                             </div>
                         </div>
                     </div>
                     <div class="hvsfw-field" data-group-field="<?php echo $args['root_name'] . '_border'; ?>" data-visible="<?php echo $field_visibility['border']; ?>">
                         <div class="hvsfw-field__col--left">
-                            <label for="<?php echo $args['root_name'] . '_border_style'; ?>" class="hvsfw-field__label">Border</label>
+                            <label for="<?php echo $args['root_name'] . '_border_style'; ?>" class="hvsfw-field__label">
+                                <?php echo __( 'Border', HVSFW_PLUGIN_DOMAIN ); ?>
+                            </label>
                         </div>
                         <div class="hvsfw-field__col--right">
                             <div class="hvsfw-field__wrap">
                                 <div class="hvsfw-field__fluid">
                                     <div class="hvsfw-field__grid hvsfw-mb-10">
                                         <div class="hvsfw-field__grid__col">
-                                            <label for="<?php echo $args['root_name'] . '_border_style'; ?>" class="hvsfw-field__label--sub">Style</label>
+                                            <label for="<?php echo $args['root_name'] . '_border_style'; ?>" class="hvsfw-field__label--sub">
+                                                <?php echo __( 'Style', HVSFW_PLUGIN_DOMAIN ); ?>
+                                            </label>
                                             <select name="<?php echo $args['root_name'] . '[border_style]'; ?>" id="<?php echo $args['root_name'] . '_border_style'; ?>">
                                                 <?php foreach ( Helper::get_border_style_choices() as $value ): ?>
                                                     <option value="<?php echo $value['value']; ?>" <?php selected( $settings['border_style'], $value['value'] ); ?>>
@@ -974,35 +1056,43 @@ final class ProductMetaView {
                                             </select>
                                         </div>
                                         <div class="hvsfw-field__grid__col">
-                                            <label for="<?php echo $args['root_name'] . '_border_width'; ?>" class="hvsfw-field__label--sub">Width</label>
+                                            <label for="<?php echo $args['root_name'] . '_border_width'; ?>" class="hvsfw-field__label--sub">
+                                                <?php echo __( 'Width', HVSFW_PLUGIN_DOMAIN ); ?>
+                                            </label>
                                             <input type="text" name="<?php echo $args['root_name'] . '[border_width]'; ?>" id="<?php echo $args['root_name'] . '_border_width'; ?>" placeholder="1px" value="<?php echo esc_attr( $settings['border_width'] ); ?>">
                                         </div>
                                     </div>
                                     <div class="hvsfw-field__grid">
                                         <div class="hvsfw-field__grid__col">
-                                            <label for="<?php echo $args['root_name'] . '_border_color'; ?>" class="hvsfw-field__label--sub">Color</label>
+                                            <label for="<?php echo $args['root_name'] . '_border_color'; ?>" class="hvsfw-field__label--sub">
+                                                <?php echo __( 'Color', HVSFW_PLUGIN_DOMAIN ); ?>
+                                            </label>
                                             <input type="hidden" name="<?php echo $args['root_name'] . '[border_color]'; ?>" id="<?php echo $args['root_name'] . '_border_color'; ?>" class="hvsfw-color-picker-style" value="<?php echo esc_attr( $settings['border_color'] ); ?>">
                                         </div>
                                         <div class="hvsfw-field__grid__col">
-                                            <label for="<?php echo $args['root_name'] . '_border_hover_color'; ?>" class="hvsfw-field__label--sub">Active Color</label>
+                                            <label for="<?php echo $args['root_name'] . '_border_hover_color'; ?>" class="hvsfw-field__label--sub">
+                                                <?php echo __( 'Active Color', HVSFW_PLUGIN_DOMAIN ); ?>
+                                            </label>
                                             <input type="hidden" name="<?php echo $args['root_name'] . '[border_hover_color]'; ?>" id="<?php echo $args['root_name'] . '_border_hover_color'; ?>" class="hvsfw-color-picker-style" value="<?php echo esc_attr( $settings['border_hover_color'] ); ?>">
                                         </div>
                                     </div>
                                 </div>
-                                <?php echo wc_help_tip( 'The border of this variation swatch attribute.' ); ?>
+                                <?php echo wc_help_tip( __( 'The border of this variation swatch attribute.', HVSFW_PLUGIN_DOMAIN ) ); ?>
                             </div>
                         </div>
                     </div>
                     <div class="hvsfw-field" data-group-field="<?php echo $args['root_name'] . '_border_radius'; ?>" data-visible="<?php echo $field_visibility['border_radius']; ?>">
                         <div class="hvsfw-field__col--left">
-                            <label for="<?php echo $args['root_name'] . '_border_radius'; ?>" class="hvsfw-field__label">Border Radius</label>
+                            <label for="<?php echo $args['root_name'] . '_border_radius'; ?>" class="hvsfw-field__label">
+                                <?php echo __( 'Border Radius', HVSFW_PLUGIN_DOMAIN ); ?>
+                            </label>
                         </div>
                         <div class="hvsfw-field__col--right">
                             <div class="hvsfw-field__wrap">
                                 <div class="hvsfw-field__fluid">
                                     <input type="text" name="<?php echo $args['root_name'] . '[border_radius]'; ?>" id="<?php echo $args['root_name'] . '_border_radius'; ?>" placeholder="0px" value="<?php echo esc_attr( $settings['border_radius'] ); ?>">
                                 </div>
-                                <?php echo wc_help_tip( 'The border radius of this variation swatch attribute.' ); ?>
+                                <?php echo wc_help_tip( __( 'The border radius of this variation swatch attribute.', HVSFW_PLUGIN_DOMAIN ) ); ?>
                             </div>
                         </div>
                     </div>

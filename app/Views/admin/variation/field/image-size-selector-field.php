@@ -14,10 +14,10 @@ defined( 'ABSPATH' ) || exit;
 
 /** 
  * $args = [
- *     'id'		 => (string)  The id of the image size selector.
- *     'name'	 => (string)  The name of the image size selector.
- *     'term_id' => (integer) The id of the term.
- *     'default' => (string)  The default image size value.
+ *     'id'		 => (string)  Contains the id of the image size selector.
+ *     'name'	 => (string)  Contains the name of the image size selector.
+ *     'term_id' => (integer) Contains the id of the term.
+ *     'default' => (string)  Contains the default image size value.
  * ]
  **/
 

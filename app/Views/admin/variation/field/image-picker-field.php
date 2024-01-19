@@ -13,10 +13,10 @@ defined( 'ABSPATH' ) || exit;
 
 /** 
  * $args = [
- *     'id'			   => (string) 	The id of the image input.
- *     'name'		   => (string)  The name of the image input.
- *     'term_id'	   => (integer) The id of the term.
- *     'attachment_id' => (integer) The id of the attachment.
+ *     'id'			   => (string) 	Contains the id of the image input.
+ *     'name'		   => (string)  Contains the name of the image input.
+ *     'term_id'	   => (integer) Contains the id of the term.
+ *     'attachment_id' => (integer) Contains the id of the attachment.
  * ]
  **/
 
@@ -26,7 +26,7 @@ if ( ! isset( $args['id'] ) || ! isset( $args['name'] ) ) {
 
 $image 		   = [];
 $attachment_id = 0;
-$placeholder   = Utility::get_product_thumbnail_placeholer_src();
+$placeholder   = Utility::get_product_thumbnail_placeholder_src();
 
 if ( isset( $args['term_id'] ) ) {
 	$image 		   = Utility::get_swatch_image_by_term_id( $args['term_id'] );
@@ -48,10 +48,14 @@ $remove_state = ( $attachment_id === 0 ? 'disabled' : 'default' );
 	<input type="hidden" id="<?php echo esc_attr( $args['name'] ); ?>" class="hvsfw-image-picker-input" name="<?php echo esc_attr( $args['name'] ); ?>" value="<?php echo esc_attr( $attachment_id ); ?>">
 	<div class="hvsfw-image-picker__control">
 		<div class="hvsfw-col__left">
-			<button type="button" class="hvsfw-js-image-picker-select-btn button button-primary" data-state="default">Upload</button>
+			<button type="button" class="hvsfw-js-image-picker-select-btn button button-primary" data-state="default">
+				<?php echo __( 'Upload', HVSFW_PLUGIN_DOMAIN ); ?>
+			</button>
 		</div>
 		<div class="hvsfw-col__right">
-			<button type="button" class="hvsfw-js-image-picker-remove-btn button" data-state="<?php echo $remove_state; ?>">Remove</button>
+			<button type="button" class="hvsfw-js-image-picker-remove-btn button" data-state="<?php echo $remove_state; ?>">
+				<?php echo __( 'Remove', HVSFW_PLUGIN_DOMAIN ); ?>
+			</button>
 		</div>
 	</div>
 </div>

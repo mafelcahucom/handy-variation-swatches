@@ -1,10 +1,8 @@
-/**
- * Loaders
- */
+// Loaders
 .hd-spinner-1 {
 	width: 100%;
 	height: 100%;
-	border: 2px solid $clr-black;
+	border: 2px solid $clr-black-1;
 	border-bottom-color: transparent;
 	border-radius: 50%;
 	display: inline-block;
@@ -37,7 +35,7 @@
 	position: absolute;
 	inset: 0;
 	border-radius: 50%;
-	border: 2px solid $clr-black;
+	border: 2px solid $clr-black-1;
 	animation: hd-spinner-2-prixClipFix 2s linear infinite;
 }
 
@@ -86,14 +84,14 @@
 	position: absolute;
 	inset: 0;
 	border-radius: 50%;
-	border: 2px solid $clr-black;
+	border: 2px solid $clr-black-1;
 	animation: hd-spinner-3-prixClipFix 2s linear infinite;
 }
 
 .hd-spinner-3::after {
 	inset: 5px;
 	transform: rotate3d(90, 90, 0, 180deg);
-	border-color: $clr-blue;
+	border-color: $clr-blue-1;
 }
 
 @keyframes hd-spinner-3-rotate {
@@ -126,7 +124,7 @@
 .hd-spinner-4 {
 	width: 100%;
 	height: 100%;
-	border: 2px solid $clr-black;
+	border: 2px solid $clr-black-1;
 	border-radius: 50%;
 	display: inline-block;
 	position: relative;
@@ -140,7 +138,7 @@
 	position: absolute;
 	left: 0;
 	top: 0;
-	background: $clr-blue;
+	background: $clr-blue-1;
 	width: 8px;
 	height: 8px;
 	transform: translate(-50%, 50%);
@@ -161,7 +159,7 @@
 .hd-spinner-5 {
 	width: 100%;
 	height: 100%;
-	border: 2px solid $clr-black;
+	border: 2px solid $clr-black-1;
 	border-radius: 50%;
 	display: inline-block;
 	position: relative;
@@ -175,7 +173,7 @@
 	position: absolute;
 	left: 50%;
 	top: 0;
-	background: $clr-blue;
+	background: $clr-blue-1;
 	width: 2px;
 	height: 50%;
 	transform: translateX(-50%);
@@ -197,7 +195,7 @@
 	height: 100%;
 	border-radius: 50%;
 	display: inline-block;
-	border-top: 2px solid $clr-black;
+	border-top: 2px solid $clr-black-1;
 	border-right: 3px solid transparent;
 	box-sizing: border-box;
 	animation: hd-spinner-6-rotation 1s linear infinite;
@@ -219,7 +217,7 @@
 	height: 100%;
 	border-radius: 50%;
 	display: inline-block;
-	border-top: 2px solid $clr-black;
+	border-top: 2px solid $clr-black-1;
 	border-right: 2px solid transparent;
 	box-sizing: border-box;
 	animation: hd-spinner-7-rotation 1s linear infinite;
@@ -234,7 +232,7 @@
 	width: 100%;
 	height: 100%;
 	border-radius: 50%;
-	border-bottom: 2px solid $clr-blue;
+	border-bottom: 2px solid $clr-blue-1;
 	border-left: 2px solid transparent;
 }
 
@@ -254,7 +252,7 @@
 	width: 100%;
 	height: 100%;
 	border: 2px solid;
-	border-color: $clr-black transparent;
+	border-color: $clr-black-1 transparent;
 	border-radius: 50%;
 	display: inline-block;
 	box-sizing: border-box;
@@ -275,7 +273,7 @@
 .hd-spinner-9 {
 	width: 100%;
 	height: 100%;
-	background: $clr-black;
+	background: $clr-black-1;
 	border-radius: 50%;
 	position: relative;
 	animation: hd-spinner-9-skLinRotate 1s ease-in-out infinite alternate;
@@ -287,7 +285,7 @@
 	inset: 3px;
 	border-radius: 50%;
 	border: 2px solid transparent;
-	border-top-color: $clr-blue;
+	border-top-color: $clr-blue-1;
 }
 
 @keyframes hd-spinner-9-skLinRotate {
@@ -302,7 +300,7 @@
 .hd-pulse-1 {
 	width: 100%;
 	height: 100%;
-	background: $clr-black;
+	background: $clr-black-1;
 	display: inline-block;
 	border-radius: 50%;
 	box-sizing: border-box;
@@ -336,7 +334,7 @@
 	width: 100%;
 	height: 100%;
 	border-radius: 50%;
-	background: $clr-black;
+	background: $clr-black-1;
 	position: absolute;
 	left: 0;
 	top: 0;
@@ -373,7 +371,7 @@
 	width: 100%;
 	height: 100%;
 	border-radius: 50%;
-	background: $clr-black;
+	background: $clr-black-1;
 	position: absolute;
 	left: 0;
 	top: 0;
@@ -413,7 +411,7 @@
 	width: 100%;
 	height: 100%;
 	border-radius: 50%;
-	border: 2px solid $clr-black;
+	border: 2px solid $clr-black-1;
 	position: absolute;
 	left: 0;
 	top: 0;

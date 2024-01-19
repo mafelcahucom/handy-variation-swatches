@@ -18,6 +18,8 @@ final class Helper {
 
     /**
      * Inherit Singleton.
+     * 
+     * @since 1.0.0
      */
     use Singleton;
 
@@ -34,7 +36,7 @@ final class Helper {
      *
      * @since 1.0.0
      * 
-     * @return 1.0.0
+     * @return boolean
      */
     public static function plugin_has_error() {
         return ( empty( get_option( '_hvsfw_plugin_version' ) ) || empty( get_option( '_hvsfw_main_settings' ) ) );
@@ -45,7 +47,7 @@ final class Helper {
      *
      * @since 1.0.0
      * 
-     * @param string  $file  Target filename.
+     * @param  string  $file  Contains the target filename.
      * @return string
      */
     public static function get_asset_src( $file ) {
@@ -57,7 +59,7 @@ final class Helper {
      *
      * @since 1.0.0
      * 
-     * @param string  $file  Target filename.
+     * @param  string  $file  Contains the target filename.
      * @return string
      */
     public static function get_asset_version( $file ) {
@@ -77,8 +79,8 @@ final class Helper {
      *
      * @since 1.0.0
      * 
-     * @param  string  $file  Target filename.
-     * @param  array   $args  Additional arguments.
+     * @param  string  $file  Contains the target filename.
+     * @param  array   $args  Contains the additional arguments.
      * @return HTMLElement
      */
     public static function render_view( $filename, $args = [] ) {
@@ -97,8 +99,8 @@ final class Helper {
      *
      * @since 1.0.0
      * 
-     * @param  string  $type       The type of icon.
-     * @param  string  $classname  Additional classname.
+     * @param  string  $type       Contains the type of icon.
+     * @param  string  $classname  Contains the additional classname.
      * @return string
      */
     public static function get_icon( $type, $classname = '' ) {
@@ -110,9 +112,9 @@ final class Helper {
      *
      * @since 1.0.0
      * 
-     * @param  number  $attachment_id          The target attachment id.
-     * @param  string  $size                   The specific image size from add_image_size().
-     * @param  array   $additional_attributes  Contains the additional attributes.
+     * @param  integer  $attachment_id          Contains the target attachment id.
+     * @param  string   $size                   Contains the specific image size from add_image_size().
+     * @param  array    $additional_attributes  Contains the additional attributes.
      * @return HTMLElement
      */
     public static function get_attachment_image( $attachment_id, $size = 'full', $additional_attributes = [] ) {
@@ -134,10 +136,10 @@ final class Helper {
      *
      * @since 1.0.0
      * 
-     * @param  string  $size  Registered image sizes.
+     * @param  string  $size  Contains the registered image sizes.
      * @return string
      */
-    public static function get_product_thumbnail_placeholer_src( $size = 'full' ) {
+    public static function get_product_thumbnail_placeholder_src( $size = 'full' ) {
         $source = wc_placeholder_img_src( $size );
         if ( empty( $source ) ) {
             $source = self::get_asset_src( 'images/thumbnail-placeholder.webp' );
@@ -151,15 +153,21 @@ final class Helper {
      *
      * @since 1.0.0
      * 
-     * @param  string  $alt    Will be used in alt attribute.
-     * @param  string  $title  Will be used in title attribute. 
-     * @param  string  $class  Additional class.
+     * @param  string  $alt    Contains the value of the alternative attribute.
+     * @param  string  $title  Contains the value of the title attribute.
+     * @param  string  $class  Contains the additional class.
      * @return HTMLElement
      */
-    public static function get_product_thumbnail_placeholer( $alt = '', $title = '', $class = '' ) {
-        $source = self::get_product_thumbnail_placeholer_src( 'woocommerce_thumbnail' );
+    public static function get_product_thumbnail_placeholder( $alt = '', $title = '', $class = '' ) {
+        $source = self::get_product_thumbnail_placeholder_src( 'woocommerce_thumbnail' );
 
-        return '<img src="'. $source .'" class="'. esc_attr( $class ) .'" alt="'. esc_attr( $alt ) .'" title="'. esc_attr( $title ) .'">';
+        return sprintf(
+            '<img src="%s" class="%s" alt="%s" title="%s">',
+            esc_url( $source ),
+            esc_attr( $class ),
+            esc_attr( $alt ),
+            esc_attr( $title )
+        );
     }
 
     /**
@@ -167,11 +175,11 @@ final class Helper {
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Contaings all the parameters need to render product thumbnail.
+     * @param  array  $args  Contains all the parameters need to render product thumbnail.
      * $args = [
-     *     'product_id'   => (integer) The target product id.
-     *     'variation_id' => (integer) The target variation id.
-     *     'class'        => (string)  Additional class.
+     *     'product_id'   => (integer) Contains the target product id.
+     *     'variation_id' => (integer) Contains the target variation id.
+     *     'class'        => (string)  Contains the Additional class.
      * ]
      * @return HTMLElement
      */
@@ -202,7 +210,7 @@ final class Helper {
         }
 
         if ( empty( $output ) ) {
-            $output = self::get_product_thumbnail_placeholer( $title, $title, $class );
+            $output = self::get_product_thumbnail_placeholder( $title, $title, $class );
         }
 
         return $output;
@@ -213,8 +221,8 @@ final class Helper {
      *
      * @since 1.0.0
      * 
-     * @param  integer  $product_id  The target product id.
-     * @param  string   $size        The size of the attachment image.
+     * @param  integer  $product_id  Contains the target product id.
+     * @param  string   $size        Contains the size of the attachment image.
      * @return string
      */
     public static function get_product_thumbnail_src( $product_id, $size = 'woocommerce_thumbnail' ) {
@@ -228,7 +236,7 @@ final class Helper {
         }
 
         if ( empty( $source ) ) {
-            $source = self::get_product_thumbnail_placeholer_src( $size );
+            $source = self::get_product_thumbnail_placeholder_src( $size );
         }
 
         return $source;
@@ -239,7 +247,7 @@ final class Helper {
      *
      * @since 1.0.0
      * 
-     * @param  integer  $attachment_id  The target attachment id.
+     * @param  integer  $attachment_id  Contains the target attachment id.
      * @return string
      */
     public static function get_attachment_image_src( $attachment_id ) {
@@ -249,7 +257,7 @@ final class Helper {
 
         $source = wp_get_attachment_image_src( $attachment_id, 'full' );
         if ( empty( $source ) ) {
-            $source = self::get_product_thumbnail_placeholer_src( 'full' );
+            $source = self::get_product_thumbnail_placeholder_src( 'full' );
         }
 
         return $source;
@@ -260,12 +268,12 @@ final class Helper {
      *
      * @since 1.0.0
      * 
-     * @param  string  $type       The product type |simple|variable|.
-     * @param  object  $product    The product data from WC_Product.
-     * @param  object  $variation  The product variation data from WC_Product.
+     * @param  string  $type       Contains the product type |simple|variable|.
+     * @param  object  $product    Contains the product data from WC_Product.
+     * @param  object  $variation  Contains the product variation data from WC_Product.
      * @return string
      */
-    public static function get_product_small_thumbnail( $type = 'simple', $product, $variation = 0 ) {
+    public static function get_product_small_thumbnail( $type = 'simple', $product = null, $variation = 0 ) {
         if ( empty( $type ) || empty( $product ) ) {
             return;
         }
@@ -305,10 +313,10 @@ final class Helper {
     /**
      * Validate the variation id.
      *
-     * @sice 1.0.0
+     * @since 1.0.0
      * 
-     * @param  integer  $variation_id  The $_POST['variationId'].
-     * @param  object   $product       The product data from WC_Product.
+     * @param  integer  $variation_id  Contains the $_POST['variationId'].
+     * @param  object   $product       Contains the product data from WC_Product.
      * @return boolean
      */
     public static function is_valid_variation_id( $variation_id, $product ) {
@@ -343,7 +351,7 @@ final class Helper {
      *
      * @since 1.0.0
      * 
-     * @param  string  $css  The internal css to be minify.
+     * @param  string  $css  Contains the internal css to be minify.
      * @return string
      */
 	public static function minify_css( $css ) {
@@ -362,13 +370,18 @@ final class Helper {
      *
      * @since 1.0.0
      * 
-     * @param  string  $product_name  Containing the name of the product.
+     * @param  string  $product_name  Contains the name of the product.
      */
     public static function custom_add_to_cart_message_success( $product_name ) {
-        if ( empty( $product_name ) ) {
-            return;
+        if ( ! empty( $product_name ) ) {
+            wc_add_notice( 
+                sprintf(
+                    '<a href="%s" tabindex="1" class="button wc-forward">View cart</a> %s have been added to your cart.',
+                    esc_url( wc_get_cart_url() ),
+                    esc_html( $product_name )
+                ), 
+                'success' 
+            );
         }
-        
-        wc_add_notice( '<a href="'. wc_get_cart_url() .'" tabindex="1" class="button wc-forward">View cart</a> '. esc_html( $product_name ) .' have been added to your cart.', 'success' );
     }
 }

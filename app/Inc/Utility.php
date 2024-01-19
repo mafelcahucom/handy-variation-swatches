@@ -10,12 +10,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 	1.0.0
  * @version 1.0.0
- * @author Mafel John Cahucom
+ * @author  Mafel John Cahucom
  */
 final class Utility {
 
 	/**
 	 * Inherit Singleton.
+     * 
+     * @since 1.0.0
 	 */
 	use Singleton;
 
@@ -48,7 +50,7 @@ final class Utility {
      *
      * @since 1.0.0
      * 
-     * @param string  $file  Target filename.
+     * @param  string  $file  Contains the target filename.
      * @return string
      */
     public static function get_client_asset_src( $file ) {
@@ -60,10 +62,10 @@ final class Utility {
      *
      * @since 1.0.0
      * 
-     * @param  string  $size  Registered image sizes.
+     * @param  string  $size  Contains the registered image sizes.
      * @return string
      */
-    public static function get_product_thumbnail_placeholer_src( $size = 'full' ) {
+    public static function get_product_thumbnail_placeholder_src( $size = 'full' ) {
         $source = wc_placeholder_img_src( $size );
         if ( empty( $source ) ) {
             $source = self::get_client_asset_src( 'images/thumbnail-placeholder.webp' );
@@ -77,8 +79,7 @@ final class Utility {
      *
      * @since 1.0.0
      *
-     * @param integer  $product_id  The target product id.
-     * 
+     * @param integer  $product_id  Contains the target product id.
      * @return array
      */
     public static function get_product_swatches( $product_id ) {
@@ -96,8 +97,8 @@ final class Utility {
      *
      * @since 1.0.0
      * 
-     * @param  integer  $attribute_id  The attribute id.
-     * @param  string   $field         The field to be return.
+     * @param  integer  $attribute_id  Contains the attribute id.
+     * @param  string   $field         Contains the field to be return.
      * @return mixed
      */
     public static function get_swatch_settings( $attribute_id, $field = '' ) {
@@ -118,7 +119,7 @@ final class Utility {
      *
      * @since 1.0.0
      * 
-     * @param  integer  $term_id  The target term id.
+     * @param  integer  $term_id  Contains the target term id.
      * @return 
      */
     public static function get_swatch_tooltip( $term_id ) {
@@ -140,7 +141,7 @@ final class Utility {
      *
      * @since 1.0.0
      * 
-     * @param  integer  $term_id  The target term id.
+     * @param  integer  $term_id  Contains the target term id.
      * @return array
      */
     public static function get_swatch_color( $term_id ) {
@@ -158,7 +159,7 @@ final class Utility {
      *
      * @since 1.0.0
      * 
-     * @param  integer  $term_id  The target term id.
+     * @param  integer  $term_id  Contains the target term id.
      * @return integer
      */
     public static function get_swatch_image( $term_id ) {
@@ -175,7 +176,7 @@ final class Utility {
      *
      * @since 1.0.0
      * 
-     * @param  integer  $term_id  The target term id.
+     * @param  integer  $term_id  Contains the target term id.
      * @return string
      */
     public static function get_swatch_image_size( $term_id ) {
@@ -193,15 +194,15 @@ final class Utility {
      *
      * @since 1.0.0
      * 
-     * @param  integer  $attachment_id  The attachment id.
-     * @param  string   $size           The attachment image size.
+     * @param  integer  $attachment_id  Contains the attachment id.
+     * @param  string   $size           Contains the attachment image size.
      * @return array
      */
     public static function get_swatch_image_by_attachment_id( $attachment_id, $size = 'full' ) {
         $image = [
-            'src'   => self::get_product_thumbnail_placeholer_src(),
-            'alt'   => 'WooCommerce Placeholder',
-            'title' => 'WooCommerce Placeholder'
+            'src'   => self::get_product_thumbnail_placeholder_src(),
+            'alt'   => __( 'WooCommerce Placeholder', HVSFW_PLUGIN_DOMAIN ),
+            'title' => __( 'WooCommerce Placeholder', HVSFW_PLUGIN_DOMAIN )
         ];
 
         if ( empty( $attachment_id ) ) {
@@ -228,15 +229,15 @@ final class Utility {
      *
      * @since 1.0.0
      * 
-     * @param  integer  $term_id  The target term id.
-     * @param  string   $size     The attachment image size.
+     * @param  integer  $term_id  Contains the target term id.
+     * @param  string   $size     Contains the attachment image size.
      * @return array
      */
     public static function get_swatch_image_by_term_id( $term_id, $size = 'full' ) {
         $image = [
-            'src'   => self::get_product_thumbnail_placeholer_src(),
-            'alt'   => 'WooCommerce Placeholder',
-            'title' => 'WooCommerce Placeholder'
+            'src'   => self::get_product_thumbnail_placeholder_src(),
+            'alt'   => __( 'WooCommerce Placeholder', HVSFW_PLUGIN_DOMAIN ),
+            'title' => __( 'WooCommerce Placeholder', HVSFW_PLUGIN_DOMAIN )
         ];
 
         $attachment_id = get_term_meta( $term_id, '_hvsfw_value', true );
@@ -252,8 +253,8 @@ final class Utility {
      *
      * @since 1.0.0
      * 
-     * @param  array   $colors  Containing the list of colors.
-     * @param  string  $angle   The total angle or rotation of the background.
+     * @param  array   $colors  Contains the the list of colors.
+     * @param  string  $angle   Contains the total angle or rotation of the background.
      * @return string
      */
     public static function get_linear_color( $colors, $angle = '-45deg' ) {
@@ -282,7 +283,7 @@ final class Utility {
      *
      * @since 1.0.0
      *
-     * @param  object  $product  The product object.
+     * @param  object  $product  Contains the product object.
      * @return array
      */
     public static function get_attributes( $product ) {
@@ -302,7 +303,7 @@ final class Utility {
      *
      * @since 1.0.0
      * 
-     * @param  integer  $attribute_id  The ID of the attribute.
+     * @param  integer  $attribute_id  Contains the ID of the attribute.
      * @return string
      */
     public static function get_attribute_type_by_id( $attribute_id ) {
@@ -377,7 +378,7 @@ final class Utility {
 	 * 
 	 * @since 1.0.0
 	 *
-	 * @param  string  $attribute_name  The name of target attribute.
+	 * @param  string  $attribute_name  Contains the name of target attribute.
 	 * @return array
 	 */
 	public static function get_attribute( $attribute_name ) {
@@ -401,7 +402,7 @@ final class Utility {
      *
      * @since 1.0.0
      * 
-     * @param  string  $string  The string to be converted to slug.
+     * @param  string  $string  Contains the string to be converted to slug.
      * @return string
      */
     public static function get_converted_slug( $string ) {
@@ -417,8 +418,8 @@ final class Utility {
      *
      * @since 1.0.0
      * 
-     * @param  array  $array  Containg the array to be check.
-     * @param  array  $keys   Containg the array keys use as reference.
+     * @param  array  $array  Contains the array to be check.
+     * @param  array  $keys   Contains the array keys use as reference.
      * @return boolean
      */
     public static function has_array_unset( $array, $keys ) {

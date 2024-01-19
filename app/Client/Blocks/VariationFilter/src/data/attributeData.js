@@ -3,7 +3,7 @@
  * 
  * @since 1.0.0
  * 
- * @type {Object}
+ * @type   {Object}
  * @author Mafel John Cahucom
  */
 const data = {
@@ -13,7 +13,7 @@ const data = {
 	 * 
 	 * @since 1.0.0
 	 * 
-	 * @return {boolean} Check if not empty attributes.
+	 * @return {boolean} The flag whether the variation attributes is empty.
 	 */
 	isEmpty: () => {
 		return data.getAll().length === 0;
@@ -24,8 +24,8 @@ const data = {
 	 * 
 	 * @since 1.0.0
 	 * 
-	 * @param {string} name The name of the product attribute.
-	 * @return {boolean} If the attribute name is found.
+	 * @param  {string} name Contains the name of the product attribute.
+	 * @return {boolean} The flag whether the key is exists.
 	 */
 	isFound: ( name ) => {
 		if ( ! name ) {
@@ -40,7 +40,7 @@ const data = {
 	 * 
 	 * @since 1.0.0
 	 * 
-	 * @return {Array} Converted array attributes.
+	 * @return {Array} The converted array attributes.
 	 */
 	getAll: () => {
         const attributes = window.hvsfwVfData.productAttributes;
@@ -58,7 +58,7 @@ const data = {
 	 * 
 	 * @since 1.0.0
 	 * 
-	 * @param {string} name The name of the product attribute.
+	 * @param {string} name Contains the name of the product attribute.
 	 */
 	get: ( name ) => {
 		if ( ! name || data.getAll().length === 0 ) {

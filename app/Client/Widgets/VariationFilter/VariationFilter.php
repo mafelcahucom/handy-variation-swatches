@@ -15,12 +15,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 	1.0.0
  * @version 1.0.0
- * @author Mafel John Cahucom
+ * @author  Mafel John Cahucom
  */
 class VariationFilter extends WP_Widget {
 
 	/**
 	 * Inherit Singleton.
+     * 
+     * @since 1.0.0
 	 */
 	use Singleton;
 
@@ -43,7 +45,7 @@ class VariationFilter extends WP_Widget {
 		$name 	  = 'Handy Variation Filter';
 		$options  = [
 			'classname'	  => 'hvsfw-variation-filter-widget',
-			'description' => 'Show a list of variation swatches on the shop page to filter the products.',
+			'description' => __( 'Show a list of variation swatches on the shop page to filter the products.', HVSFW_PLUGIN_DOMAIN ),
 			'customize_selective_refresh' => true
 		];
 		$controls = [
@@ -71,28 +73,29 @@ class VariationFilter extends WP_Widget {
 
     /**
      * Register all styles.
-     *
-     * @param string  $hook_suffix  Hook suffix for the current admin page.
-     *
+     * 
      * @since 1.0.0
+     * 
+     * @param string  $hook_suffix  Contains the hook suffix for the current admin page.
+     *
      */
     public function register_styles( $hook_suffix ) {
         if ( $hook_suffix !== 'widgets.php' ) {
             return;
         }
 
-        wp_register_style( 'hvsfw-variation-filter-css', LocalHelper::get_asset_src( 'css/main.min.css' ), [], '1.0.0', 'all' );
-
         wp_enqueue_style( 'wp-color-picker' );
-        wp_enqueue_style( 'hvsfw-variation-filter-css' );
+
+        wp_register_style( 'hvsfw-variation-filter', LocalHelper::get_asset_src( 'css/main.min.css' ), [], '1.0.0', 'all' );
+        wp_enqueue_style( 'hvsfw-variation-filter' );
     }
 
     /**
      * Register all scripts.
-     *
-     * @param string  $hook_suffix  Hook suffix for the current admin page.
-     *
+     * 
      * @since 1.0.0
+     *
+     * @param string  $hook_suffix  Contains the hook suffix for the current admin page.
      */
     public function register_scripts( $hook_suffix ) {
         if ( $hook_suffix !== 'widgets.php' ) {
@@ -100,9 +103,8 @@ class VariationFilter extends WP_Widget {
         }
 
         $dependency = [ 'jquery', 'wp-color-picker' ];
-        wp_register_script( 'hvsfw-variation-filter-js', LocalHelper::get_asset_src( 'js/main.min.js' ), $dependency, '1.0.0', true );
-
-        wp_enqueue_script( 'hvsfw-variation-filter-js' );
+        wp_register_script( 'hvsfw-variation-filter', LocalHelper::get_asset_src( 'js/main.min.js' ), $dependency, '1.0.0', true );
+        wp_enqueue_script( 'hvsfw-variation-filter' );
     }
 
     /**
@@ -110,7 +112,7 @@ class VariationFilter extends WP_Widget {
 	 *
 	 * @since 1.0.0
 	 * 
-	 * @param  array  $instance  The available instance of the form.
+	 * @param array  $instance  Contains the available instance of the form.
 	 */
 	public function form( $instance ) {
         echo Form::render([
@@ -125,8 +127,8 @@ class VariationFilter extends WP_Widget {
 	 *
 	 * @since 1.0.0
 	 * 
-	 * @param  array  $new_instance  Holds all new instances.
-	 * @param  array  $old_instance  Holds all old instances.
+	 * @param  array  $new_instance  Contains the all new instances.
+	 * @param  array  $old_instance  Contains the all old instances.
 	 * @return array
 	 */
 	public function update( $new_instance, $old_instance ) {
@@ -195,8 +197,8 @@ class VariationFilter extends WP_Widget {
 	 *
 	 * @since 1.0.0
 	 * 
-	 * @param  array  $args      Holds the define arguments.
-	 * @param  array  $instance  Holds all the instances.
+	 * @param  array  $args      Contains the define arguments.
+	 * @param  array  $instance  Contains the all the instances.
 	 */
 	public function widget( $args, $instance ) {
         echo $args['before_widget'];

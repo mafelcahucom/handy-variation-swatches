@@ -1,9 +1,16 @@
 /**
- * Color Picker Module.
+ * Internal Dependencies.
+ */
+import {
+	eventListener,
+} from '../../../../helpers';
+
+/**
+ * Image Picker Module.
  *
  * @since 1.0.0
  *
- * @type {Object}
+ * @type   {Object}
  * @author Mafel John Cahucom
  */
 const imagePicker = {
@@ -19,55 +26,33 @@ const imagePicker = {
 	},
 
 	/**
-	 * Global event listener delegation.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param {string}   type     Event type can be multiple seperate with space.
-	 * @param {string}   selector Target element.
-	 * @param {Function} callback Callback function.
-	 */
-	async eventListener( type, selector, callback ) {
-		const events = type.split( ' ' );
-		events.forEach( function( event ) {
-			document.addEventListener( event, function( e ) {
-				if ( e.target.matches( selector ) ) {
-					callback( e );
-				}
-			} );
-		} );
-	},
-
-	/**
 	 * Set to default or reset image picker.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param {Object} parent The image picker parent element.
+	 * @param {Object} parent Contains the image picker parent element.
 	 */
 	setToDefault( parent ) {
 		let imagePickerElems = Array.from( document.querySelectorAll( '.hvsfw-image-picker' ) );
 		imagePickerElems = ( parent ? [ parent ] : imagePickerElems );
-		if ( imagePickerElems.length === 0 ) {
-			return;
-		}
-
-		imagePickerElems.forEach( function( imagePickerElem ) {
-			const inputElem = imagePickerElem.querySelector( '.hvsfw-image-picker-input' );
-			const imageElem = imagePickerElem.querySelector( '.hvsfw-image-picker__img' );
-			const removeBtnElem = imagePickerElem.querySelector( '.hvsfw-js-image-picker-remove-btn' );
-			if ( inputElem && imageElem && removeBtnElem ) {
-				const imagePlaceholder = imageElem.getAttribute( 'data-default' );
-
-				inputElem.value = 0;
-
-				imageElem.setAttribute( 'src', imagePlaceholder );
-				imageElem.setAttribute( 'alt', 'WooCommerce Placeholder' );
-				imageElem.setAttribute( 'title', 'WooCommerce Placeholder' );
-
-				removeBtnElem.setAttribute( 'data-state', 'disabled' );
-			}
-		} );
+		if ( imagePickerElems.length > 0 ) {
+			imagePickerElems.forEach( function( imagePickerElem ) {
+				const inputElem = imagePickerElem.querySelector( '.hvsfw-image-picker-input' );
+				const imageElem = imagePickerElem.querySelector( '.hvsfw-image-picker__img' );
+				const removeBtnElem = imagePickerElem.querySelector( '.hvsfw-js-image-picker-remove-btn' );
+				if ( inputElem && imageElem && removeBtnElem ) {
+					const imagePlaceholder = imageElem.getAttribute( 'data-default' );
+	
+					inputElem.value = 0;
+	
+					imageElem.setAttribute( 'src', imagePlaceholder );
+					imageElem.setAttribute( 'alt', 'WooCommerce Placeholder' );
+					imageElem.setAttribute( 'title', 'WooCommerce Placeholder' );
+	
+					removeBtnElem.setAttribute( 'data-state', 'disabled' );
+				}
+			} );
+		}		
 	},
 
 	/**
@@ -76,7 +61,7 @@ const imagePicker = {
 	 * @since 1.0.0
 	 */
 	uploadImage() {
-		this.eventListener( 'click', '.hvsfw-js-image-picker-select-btn', function( e ) {
+		eventListener( 'click', '.hvsfw-js-image-picker-select-btn', function( e ) {
 			e.preventDefault();
 			const target = e.target;
 			const state = target.getAttribute( 'data-state' );
@@ -128,17 +113,15 @@ const imagePicker = {
 	 * @since 1.0.0
 	 */
 	removeImage() {
-		this.eventListener( 'click', '.hvsfw-js-image-picker-remove-btn', function( e ) {
+		eventListener( 'click', '.hvsfw-js-image-picker-remove-btn', function( e ) {
 			e.preventDefault();
 			const target = e.target;
 			const state = target.getAttribute( 'data-state' );
-			if ( state !== 'default' ) {
-				return;
-			}
-
-			const parentElem = target.closest( '.hvsfw-image-picker' );
-			if ( parentElem ) {
-				imagePicker.setToDefault( parentElem );
+			if ( state === 'default' ) {
+				const parentElem = target.closest( '.hvsfw-image-picker' );
+				if ( parentElem ) {
+					imagePicker.setToDefault( parentElem );
+				}
 			}
 		} );
 	},

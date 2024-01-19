@@ -1,76 +1,75 @@
 <?php
 /**
- * Admin Header Template
+ * Admin Header Template.
  *
- * @since 1.0.0
+ * @since   1.0.0
+ * @version 1.0.0
+ * @author  Mafel John Cahucom 
  */
 
 use HVSFW\Admin\Inc\Helper;
 use HVSFW\Admin\Inc\Component;
 
-defined( 'ABSPATH' ) || exit; ?>
+defined( 'ABSPATH' ) || exit; 
+?>
 
-<div class="hd-dashboard">
-    <div class="hd-app">
-
-        <!-- Header -->
-        <div class="hd-header">
-            <div class="hd-header__component">
-                <div class="hd-container">
-                    <div class="hd-flex hd-flex-jc-sb">
-                        <div class="hd-flex hd-flex-ai-c">
-                            <div>
-                                <?php echo Component::get_logo(); ?>
-                            </div>
-                            <div>
-                                <?php echo Helper::get_icon( 'chevron-forward-filled', 'hd-separator' ) ?>
-                            </div>
-                            <div>
-                                <span class="hd-fw-600">
-                                    <?php echo esc_html( $args['page_title'] ); ?>
-                                </span>
-                            </div>
+<main class="hd-app">
+    
+    <!-- header -->
+    <div class="hd-header">
+        <div class="hd-container">
+            <div class="hd-header__col">
+                <div class="hd-header__col--left">
+                    <div class="hd-flex hd-flex-ai-c hd-flex-jc-sb hd-gap-15">
+                        <div class="hd-header__logo">
+                            <?php echo Component::get_logo(); ?>
                         </div>
-                        <div class="hd-flex">
-                            <div>
+                        <div class="hd-header__separator"></div>
+                        <div class="hd-header__title">
+                            <span class="hd-fw-600">
+                                <?php echo __( 'Variation Swatches', HVSFW_PLUGIN_DOMAIN ); ?>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hd-header__col--right">
+                    <div class="hd-flex hd-gap-10">
+                        <div>
+                            <a class="hd-btn-square" href="#" title="<?php echo __( 'Help', HVSFW_PLUGIN_DOMAIN ); ?>">
+                                <?php echo Helper::get_icon( 'help', 'hd-svg' ); ?>
+                            </a>
+                        </div>
+                        <div class="hd-ps-relative">
+                            <button type="button" id="hd-navigation-btn" class="hd-btn-square" data-state="default" title="<?php echo __( 'Open Navigation', HVSFW_PLUGIN_DOMAIN ); ?>">
                                 <?php
-                                    echo Component::get_button([
-                                        'type'  => 'circle-link',
-                                        'label' => 'Help',
-                                        'icon'  => 'help-filled',
-                                        'url'   => 'www.facebook.com'
-                                    ]);
+                                    echo Helper::get_icon( 'app', 'hd-svg hd-btn-nav__icon--default' );
+                                    echo Helper::get_icon( 'close', 'hd-svg hd-btn-nav__icon--active' );
                                 ?>
-                            </div>
-                            <div class="hd-ps-relative hd-ml-10">
-                                <button id="hd-js-toggle-header-navigation-btn" class="hd-header__navigation-btn hd-btn-circle" data-state="default" aria-label="Open Navigation" title="Open Navigation">
-                                    <?php echo Helper::get_icon( 'app-filled', 'hd-svg' ); ?>
-                                    <?php echo Helper::get_icon( 'close-filled', 'hd-svg' ); ?>
-                                </button>
-                                <div id="hd-js-header-navigation" class="hd-header__navigation" data-state="default">
-                                    <?php
-                                        echo Component::get_navigation([
-                                            [
-                                                'label' => 'Setting',
-                                                'slug'  => 'setting',
-                                                'icon'  => 'setting-filled'
-                                            ],
-                                            [
-                                                'label' => 'Import & Export',
-                                                'slug'  => 'import-export',
-                                                'icon'  => 'archive-filled'
-                                            ]
-                                        ]);
-                                    ?>
-                                </div>
+                            </button>
+                            <div id="hd-header-navigation" class="hd-header__navigation">
+                                <?php
+                                    echo Component::get_navigation([
+                                        [
+                                            'slug'  => 'setting',
+                                            'icon'  => 'setting',
+                                            'label' => __( 'Setting', HVSFW_PLUGIN_DOMAIN )
+                                        ],
+                                        [
+                                            'slug'  => 'import-export',
+                                            'icon'  => 'download',
+                                            'label' => __( 'Import & Export', HVSFW_PLUGIN_DOMAIN )
+                                        ]
+                                    ])
+                                ?>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="hd-header__shadow" style="background-image: url('<?php echo esc_url( Helper::get_asset_src( 'images/shadow.png' ) ) ?>');"></div>
         </div>
-        <!-- End: Header -->
+    </div>
+    <!-- end: header -->
 
-        <!-- Content -->
-        <div class="hd-content">
+    <!-- content -->
+    <div class="hd-content">
+        <div class="hd-container">

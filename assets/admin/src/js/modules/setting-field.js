@@ -1,9 +1,18 @@
 /**
+ * Internal Dependencies.
+ */
+import {
+	setAttribute,
+	removeArrayItem,
+	eventListener,
+} from '../../../../helpers';
+
+/**
  * Setting Field Module.
  *
  * @since 1.0.0
  *
- * @type {Object}
+ * @type   {Object}
  * @author Mafel John Cahucom
  */
 const settingField = {
@@ -50,10 +59,10 @@ const settingField = {
 	 * @since 1.0.0
 	 *
 	 * @param {Object} params       Contains the necessary parameters.
-	 * @param {string} params.page  The page of this module will be used [ attribute, product ].
-	 * @param {string} params.type  The class or selector of select type field.
-	 * @param {string} params.style The class or selector of select style field.
-	 * @param {string} params.shape The class or selector of select shape field.
+	 * @param {string} params.page  Contains the page of this module will be used [ attribute, product ].
+	 * @param {string} params.type  Contains the class or selector of select type field.
+	 * @param {string} params.style Contains the class or selector of select style field.
+	 * @param {string} params.shape Contains the class or selector of select shape field.
 	 */
 	init( params ) {
 		if ( ! params.page || ! params.type || ! params.style || ! params.shape ) {
@@ -70,65 +79,6 @@ const settingField = {
 		this.onChangeTypeField();
 		this.onChangeStyleField();
 		this.onChangeShapeField();
-	},
-
-	/**
-	 * Global event listener delegation.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param {string}   type     Event type can be multiple seperate with space.
-	 * @param {string}   selector Target element.
-	 * @param {Function} callback Callback function.
-	 */
-	async eventListener( type, selector, callback ) {
-		const events = type.split( ' ' );
-		events.forEach( function( event ) {
-			document.addEventListener( event, function( e ) {
-				if ( e.target.matches( selector ) ) {
-					callback( e );
-				}
-			} );
-		} );
-	},
-
-	/**
-	 * Sets the attribute of target elements.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param {string} selector  The element selector.
-	 * @param {string} attribute The Attribute to be set.
-	 * @param {string} value     The value of the attribute.
-	 */
-	setAttribute( selector, attribute, value ) {
-		if ( ! selector || ! attribute ) {
-			return;
-		}
-
-		const elems = document.querySelectorAll( selector );
-		if ( elems.length === 0 ) {
-			return;
-		}
-
-		elems.forEach( function( elem ) {
-			elem.setAttribute( attribute, value );
-		} );
-	},
-
-	/**
-	 * Remove a specific item in an array.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param {Array} array Containing the array to be filtered.
-	 * @param {Array} item  The item to be removed in array.
-	 * @return {Array} The filtered array.
-	 */
-	removeArrayItem( array, item ) {
-		return array.filter( function( value ) {
-			return value !== item;
-		} );
 	},
 
 	/**
@@ -268,7 +218,7 @@ const settingField = {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return {Array} List of group field.
+	 * @return {Array} The list of group field.
 	 */
 	getGroupFields() {
 		return [
@@ -282,8 +232,8 @@ const settingField = {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param {string} type The type value.
-	 * @return {Array} List of fields on specific type.
+	 * @param  {string} type Contains the type value.
+	 * @return {Array} The list of fields on specific type.
 	 */
 	getFieldsByType( type ) {
 		if ( ! type ) {
@@ -311,7 +261,7 @@ const settingField = {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return {string} The type selector.
+	 * @return {string} The type of selector.
 	 */
 	getTypeSelector() {
 		let typeSelector = settingField.type;
@@ -330,26 +280,22 @@ const settingField = {
 	 * @param {Array} field Contains the field schema id, type and default value.
 	 */
 	setFieldDefaultValue( field ) {
-		if ( ! field ) {
-			return;
-		}
-
-		const selector = settingField.prefix + '_' + field.id;
-		const fieldElem = document.getElementById( selector );
-		if ( ! fieldElem ) {
-			return;
-		}
-
-		switch ( field.type ) {
-			case 'size':
-				fieldElem.value = field.default;
-				break;
-			case 'select':
-				fieldElem.value = field.default;
-				break;
-			case 'color':
-				jQuery( fieldElem ).iris( 'color', field.default );
-				break;
+		if ( field ) {
+			const selector = settingField.prefix + '_' + field.id;
+			const fieldElem = document.getElementById( selector );
+			if ( fieldElem ) {
+				switch ( field.type ) {
+					case 'size':
+						fieldElem.value = field.default;
+						break;
+					case 'select':
+						fieldElem.value = field.default;
+						break;
+					case 'color':
+						jQuery( fieldElem ).iris( 'color', field.default );
+						break;
+				}
+			}
 		}
 	},
 
@@ -358,7 +304,7 @@ const settingField = {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param {Array} fields Containing the fields to be set its value to default.
+	 * @param {Array} fields Contains the fields to be set its value to default.
 	 */
 	setAllFieldDefaultValue( fields = [] ) {
 		Object.entries( this.getFieldSchema() ).forEach( function( schema ) {
@@ -378,12 +324,12 @@ const settingField = {
 	 * @since 1.0.0
 	 *
 	 * @param {Array}  groups     Contains the names of the group field to be modified.
-	 * @param {string} visibility The updated visibility state.
+	 * @param {string} visibility Contains the updated visibility state.
 	 */
 	setGroupFieldsVisibility( groups, visibility ) {
 		if ( groups && visibility ) {
 			groups.forEach( function( group ) {
-				settingField.setAttribute( `[data-group-field="${ settingField.prefix }_${ group }"]`, 'data-visible', visibility );
+				setAttribute.elem( `[data-group-field="${ settingField.prefix }_${ group }"]`, 'data-visible', visibility );
 			} );
 		}
 	},
@@ -394,7 +340,7 @@ const settingField = {
 	 * @since 1.0.0
 	 */
 	onChangeTypeField() {
-		this.eventListener( 'change', this.type, function( e ) {
+		eventListener( 'change', this.type, function( e ) {
 			const target = e.target;
 			const type = target.value;
 			const prefix = target.getAttribute( 'data-prefix' );
@@ -441,7 +387,7 @@ const settingField = {
 	 * @since 1.0.0
 	 */
 	onChangeStyleField() {
-		this.eventListener( 'change', this.style, function( e ) {
+		eventListener( 'change', this.style, function( e ) {
 			const target = e.target;
 			const style = target.value;
 			const prefix = target.getAttribute( 'data-prefix' );
@@ -453,23 +399,19 @@ const settingField = {
 			settingField.prefix = prefix;
 
 			const typeElem = document.querySelector( settingField.getTypeSelector() );
-			if ( ! typeElem ) {
-				return;
+			if ( typeElem ) {
+				const type = typeElem.value;
+				if ( [ 'button', 'color', 'image' ].includes( type ) ) {
+					const groups = settingField.getGroupFields();
+					const fields = settingField.getFieldsByType( type );
+
+					settingField.setGroupFieldsVisibility( groups, 'no' );
+					settingField.setGroupFieldsVisibility( fields, ( style === 'custom' ? 'yes' : 'no' ) );
+
+					fields.push( 'dimension', 'border_radius' );
+					settingField.setAllFieldDefaultValue( fields );
+				}
 			}
-
-			const type = typeElem.value;
-			if ( ! [ 'button', 'color', 'image' ].includes( type ) ) {
-				return;
-			}
-
-			const groups = settingField.getGroupFields();
-			const fields = settingField.getFieldsByType( type );
-
-			settingField.setGroupFieldsVisibility( groups, 'no' );
-			settingField.setGroupFieldsVisibility( fields, ( style === 'custom' ? 'yes' : 'no' ) );
-
-			fields.push( 'dimension', 'border_radius' );
-			settingField.setAllFieldDefaultValue( fields );
 		} );
 	},
 
@@ -479,7 +421,7 @@ const settingField = {
 	 * @since 1.0.0
 	 */
 	onChangeShapeField() {
-		this.eventListener( 'change', this.shape, function( e ) {
+		eventListener( 'change', this.shape, function( e ) {
 			const target = e.target;
 			const shape = target.value;
 			const prefix = target.getAttribute( 'data-prefix' );
@@ -491,26 +433,22 @@ const settingField = {
 			settingField.prefix = prefix;
 
 			const typeElem = document.querySelector( settingField.getTypeSelector() );
-			if ( ! typeElem ) {
-				return;
-			}
+			if ( typeElem ) {
+				const type = typeElem.value;
+				if ( [ 'button', 'color', 'image' ].includes( type ) ) {
+					const groups = removeArrayItem( settingField.getGroupFields(), 'shape' );
+					const fields = settingField.getFieldsByType( type );
 
-			const type = typeElem.value;
-			if ( ! [ 'button', 'color', 'image' ].includes( type ) ) {
-				return;
-			}
+					settingField.setGroupFieldsVisibility( groups, 'no' );
+					settingField.setGroupFieldsVisibility( fields, 'yes' );
+					if ( shape === 'custom' ) {
+						setAttribute.elem( `[data-group-field="${ prefix }_border_radius"]`, 'data-visible', 'yes' );
 
-			const groups = settingField.removeArrayItem( settingField.getGroupFields(), 'shape' );
-			const fields = settingField.getFieldsByType( type );
-
-			settingField.setGroupFieldsVisibility( groups, 'no' );
-			settingField.setGroupFieldsVisibility( fields, 'yes' );
-			if ( shape === 'custom' ) {
-				settingField.setAttribute( `[data-group-field="${ prefix }_border_radius"]`, 'data-visible', 'yes' );
-
-				if ( [ 'color', 'image' ].includes( type ) ) {
-					settingField.setAttribute( `[data-group-field="${ prefix }_size"]`, 'data-visible', 'no' );
-					settingField.setAttribute( `[data-group-field="${ prefix }_dimension"]`, 'data-visible', 'yes' );
+						if ( [ 'color', 'image' ].includes( type ) ) {
+							setAttribute.elem( `[data-group-field="${ prefix }_size"]`, 'data-visible', 'no' );
+							setAttribute.elem( `[data-group-field="${ prefix }_dimension"]`, 'data-visible', 'yes' );
+						}
+					}
 				}
 			}
 		} );

@@ -1,94 +1,132 @@
-/**
- * Buttons.
- */
-.hd {
+// Button
+.hd-btn {
+	position: relative;
+	display: inline-block;
+	padding: 0 20px;
+	width: fit-content;
+	min-width: 150px;
+	height: 40px;
+	font-weight: 600 !important;
+	fill: $clr-white-1;
+	color: $clr-white-1;
+	background-color: $clr-blue-1;
+	border-radius: $br-radius-2;
+	border: 0;
 
-	&-btn {
-		position: relative;
-		display: inline-block;
-		padding: 11px 23px;
-		width: fit-content;
-		min-width: 150px;
-		color: $clr-white;
-		font-weight: 600 !important;
-		background-color: $clr-blue;
-		border-radius: $br-radius;
-		border: 0;
+	&[data-state="loading"] {
+		fill: transparent;
+		color: transparent;
 
-		&[data-state="loading"] {
-			color: transparent;
-
-			.hd-loader {
-				display: block;
-			}
-		}
-
-		&:hover,
-		&:focus {
-			background-color: $clr-dark-blue;
-
-			@include transition;
-		}
-
-		.hd-loader {
-			display: none;
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
-		}
-
-		&--fit {
-			min-width: 0;
-		}
-
-		&--default {
-			color: $clr-black;
-			background-color: $clr-gray;
-
-			&:hover,
-			&:focus {
-				background-color: $clr-dark-gray;
-			}
-		}
-
-		&--white {
-			color: $clr-blue !important;
-			background-color: $clr-white;
-
-			&:hover,
-			&:focus {
-				background-color: #e2eefd;
-			}
+		.hd-btn__loader {
+			display: block;
 		}
 	}
 
-	&-btn-circle {
-		width: 40px;
-		height: 40px;
-		fill: $clr-black;
-		background-color: $clr-gray;
-		border: 0;
-		border-radius: 50%;
+	&--fit {
+		min-width: 0;
+	}
 
-		@include flex-center;
-
-		svg {
-			width: 20px;
-		}
+	&--default {
+		fill: $clr-black-1;
+		color: $clr-black-1;
+		background-color: $clr-gray-1;
 
 		&:hover,
-		&:focus {
-			background-color: $clr-dark-gray;
+		&:focus,
+		&[data-state="active"] {
+			background-color: $clr-gray-2 !important;
 
 			@include transition;
 		}
+	}
+
+	&__detail {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 10px;
+	}
+
+	&__icon {
+		display: block;
+		width: 16px;
+		height: 16px;
+	}
+
+	&__loader {
+		display: none;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+
+	&:hover,
+	&:focus,
+	&[data-state="active"] {
+		background-color: $clr-blue-4;
+
+		@include transition;
 	}
 }
 
-// Link button.
 a.hd-btn {
 	display: flex;
+	align-items: center;
 	justify-content: center;
-	color: $clr-white;
+	line-height: 14px;
+	color: $clr-white-1;
+
+	&:hover,
+	&:focus {
+		color: $clr-white-1;
+	}
+}
+
+// Button Square
+.hd-btn-square {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	width: 40px;
+	height: 40px;
+	fill: $clr-black-1;
+	color: $clr-black-1;
+	background-color: $clr-gray-1;
+	border-radius: $br-radius-2;
+	border: 0;
+
+	svg {
+		width: 18px;
+		height: 18px;
+	}
+
+	&:hover,
+	&:focus,
+	&[data-state="active"] {
+		background-color: $clr-gray-2;
+
+		@include transition;
+	}
+
+	&[data-state="default"] {
+
+		.hd-btn-nav__icon {
+
+			&--active {
+				display: none;
+			}
+		}
+	}
+
+	&[data-state="active"] {
+
+		.hd-btn-nav__icon {
+
+			&--default {
+				display: none;
+			}
+		}
+	}
 }

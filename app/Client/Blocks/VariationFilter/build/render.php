@@ -7,6 +7,6 @@ use HVSFW\Client\Blocks\VariationFilter\Inc\BlockRender;
  * @since 1.0.0
  */
 echo BlockRender::render([
-	'attributes' => $attributes,
+	'attributes'   => $attributes,
 	'bloc_wrapper' => get_block_wrapper_attributes()
 ]);

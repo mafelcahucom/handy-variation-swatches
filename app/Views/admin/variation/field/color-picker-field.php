@@ -13,10 +13,10 @@ defined( 'ABSPATH' ) || exit;
 
 /** 
  * $args = [
- *     'id'		 => (string)  The id of the image input.
- *     'name'	 => (string)  The name of the image input.
- *     'term_id' => (integer) The id of the term.
- *     'default' => (array)   The default colors.
+ *     'id'		 => (string)  Contains the id of the image input.
+ *     'name'	 => (string)  Contains the name of the image input.
+ *     'term_id' => (integer) Contains the id of the term.
+ *     'default' => (array)   Contains the default colors.
  * ]
  **/
 
@@ -43,10 +43,14 @@ if ( isset( $args['term_id'] ) ) {
 					<input type="hidden" name="<?php echo esc_attr( $args['name'] ); ?>" class="hvsfw-color-picker__input" value="<?php echo esc_attr( $color ); ?>">
 				</div>
 				<div class="hvsfw-col__right">
-					<button type="button" class="hvsfw-js-color-picker-delete-btn hvsfw-color-picker__delete-btn button">Delete</button>
+					<button type="button" class="hvsfw-js-color-picker-delete-btn hvsfw-color-picker__delete-btn button">
+						<?php echo __( 'Delete', HVSFW_PLUGIN_DOMAIN ); ?>
+					</button>
 				</div>
 			</div>
 		<?php endforeach; ?>
 	</div>
-	<button type="button" class="hvsfw-js-color-picker-add-btn button">Add More</button>
+	<button type="button" class="hvsfw-js-color-picker-add-btn button">
+		<?php echo __( 'Add More', HVSFW_PLUGIN_DOMAIN ); ?>
+	</button>
 </div>

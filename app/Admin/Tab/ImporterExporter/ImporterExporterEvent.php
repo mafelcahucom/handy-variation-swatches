@@ -10,21 +10,25 @@ use HVSFW\Admin\Tab\Setting\SettingApi;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Admin > Tab Importer & Exporter Event.
+ * Admin > Tab > Importer & Exporter Event.
  *
  * @since 	1.0.0
  * @version 1.0.0
- * @author Mafel John Cahucom
+ * @author  Mafel John Cahucom
  */
 final class ImporterExporterEvent {
 
 	/**
 	 * Inherit Singleton.
+     * 
+     * @since 1.0.0
 	 */
 	use Singleton;
 
     /**
      * Inherit Security.
+     * 
+     * @since 1.0.0
      */
     use Security;
 
@@ -55,18 +59,56 @@ final class ImporterExporterEvent {
             ]);
         }
 
-        // Get settings.
+        if ( self::has_post_empty_data( $_POST, [ 'groups' ] ) ) {
+            wp_send_json_error([
+                'error' => 'MISSING_DATA_ERROR'
+            ]);
+        }
+
+        $groups = explode( ',', $_POST['groups'] );
+        if ( empty( $groups ) ) {
+            wp_send_json_error([
+                'error' => 'MISSING_DATA_ERROR'
+            ]);
+        }
+
+        // Get the current settings.
         $settings = get_option( '_hvsfw_main_settings' );
         if ( empty( $settings ) ) {
             $settings = SettingApi::get_fields_default_values();
         }
 
-        $encoded_settings = json_encode( $settings );
-        $encrypted        = Helper::get_encrypted( $encoded_settings );
+        // Filter settings based on groups.
+        if ( ! in_array( 'ALL', $groups ) ) {
+            // Get field keys based on group.
+            $raw_rules  = SettingApi::get_field_rules( 'raw' );
+            $field_keys = []; 
+            foreach ( $groups as $group ) {
+                if ( array_key_exists( $group, $raw_rules ) ) {
+                    $field_keys = array_merge( $field_keys, array_keys( $raw_rules[ $group ] ) );
+                }
+            }
 
+            // Get the setting field intersected with $field_keys.
+            if ( ! empty( $field_keys ) ) {
+                $intersected = array_intersect_key( $settings, array_flip( $field_keys ) );
+                $settings    = $intersected;
+            } else {
+                $settings = [];
+            }
+
+            if ( empty( $settings ) ) {
+                wp_send_json_error([
+                    'error' => 'MISSING_DATA_ERROR'
+                ]);
+            }
+        }
+
+        // Encrypt settings and export.
+        $encrypted_settings = Helper::get_encrypted( json_encode( $settings ) );
         wp_send_json_success([
             'response' => 'SETTINGS_EXPORTED',
-            'settings' => $encrypted
+            'settings' => $encrypted_settings
         ]);
     }
 
@@ -90,7 +132,7 @@ final class ImporterExporterEvent {
             ]);
         }
 
-        // Decrypt settings.
+        // Decrypt the ecrypted settings.
         $decrypted_settings = Helper::get_decrypted( $_POST['settings'] );
         if ( $decrypted_settings === false ) {
             wp_send_json_error([
@@ -99,40 +141,42 @@ final class ImporterExporterEvent {
             ]);
         }
 
-        // Decoded settings.
+        // Decode the decrypted settings.
         $decoded_settings = json_decode( stripslashes( sanitize_text_field( $decrypted_settings ) ), true );
         if ( $decrypted_settings === null || json_last_error() !== JSON_ERROR_NONE ) {
             wp_send_json_error([
                 'error'  => 'CORRUPTED_SETTING_FILE',
-                'detail' => 'Failed to decode settings.',
+                'detail' => __( 'Failed to decode settings.', HVSFW_PLUGIN_DOMAIN ),
             ]);
         }
 
-        // Check if settings has missing keys.
-        $has_missing_keys = SettingApi::has_missing_fields( $decoded_settings );
-        if ( $has_missing_keys === true ) {
+        // Get the fields that are existed in current settings.
+        $field_rules      = SettingApi::get_field_rules( 'rules' );
+        $updated_settings = array_intersect_key( $decoded_settings, $field_rules );
+        if ( empty( $updated_settings ) ) {
             wp_send_json_error([
                 'error'  => 'CORRUPTED_SETTING_FILE',
-                'detail' => 'Settings has missing keys.'
+                'detail' => __( 'Failed to decode settings.', HVSFW_PLUGIN_DOMAIN ),
             ]);
         }
 
-        // Validate settings.
+        // Validate updated settings.
         $validation = FieldValidation::validate([
-            'fields'        => $decoded_settings,
-            'current_value' => $decoded_settings,
-            'field_rules'   => SettingApi::get_field_rules()
+            'fields'        => $updated_settings,
+            'current_value' => $updated_settings,
+            'field_rules'   => $field_rules
         ]);
 
         if ( count( $validation['validation']['invalid'] ) > 0 ) {
             wp_send_json_error([
                 'error'  => 'CORRUPTED_SETTING_FILE',
-                'detail' => 'Settings failed in validation.'
+                'detail' => __( 'Settings failed in validation.', HVSFW_PLUGIN_DOMAIN )
             ]);
         }
-
-        // Update the settings in wp_options.
-        update_option( '_hvsfw_main_settings', $decoded_settings );
+    
+        // Merge current and updated settings and save in wp_options.
+        $merged_settings = array_merge( SettingApi::get_settings(), $updated_settings );
+        update_option( '_hvsfw_main_settings', $merged_settings );
         wp_send_json_success([
             'response' => 'SUCCESSFULLY IMPORTED'
         ]);

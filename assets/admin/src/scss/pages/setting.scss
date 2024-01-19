@@ -1,0 +1,16 @@
+// Setting Tab
+.hd-tab__panel {
+
+	.hd-save-setting-btn {
+		display: block;
+		margin-left: auto;
+
+		&:first-child {
+			margin-bottom: 30px;
+		}
+
+		&:last-child {
+			margin-top: 30px;
+		}
+	}
+}

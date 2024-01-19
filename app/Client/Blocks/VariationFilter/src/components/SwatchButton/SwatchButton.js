@@ -1,7 +1,7 @@
 /**
- * Internal dependencies
+ * Internal Dependencies.
  */
-import { helper } from '../../utils/Helper';
+import { helper } from '../../utils/helper';
 import { attributeData } from '../../data/attributeData';
 import './swatchbutton.scss';
 
@@ -24,7 +24,7 @@ const SwatchButton = ( { attributes } ) => {
      * 
      * @since 1.0.0
      * 
-     * @param {Object} e The target element event.
+     * @param {Object} e Contains the target element event.
      */
     const handleMouseEnter = ( e ) => {
         const target = e.target;
@@ -40,7 +40,7 @@ const SwatchButton = ( { attributes } ) => {
      * 
      * @since 1.0.0
      * 
-     * @param {Object} e The target element event.
+     * @param {Object} e Contains the target element event.
      */
     const handleMouseLeave = ( e ) => {
         const target = e.target;

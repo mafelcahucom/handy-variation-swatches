@@ -1,21 +1,25 @@
-/**
- * Variables.
- */
-$clr-red: #f02848;
-$clr-white: #fff;
-$clr-black: #050506;
-$clr-light-black: #606771;
-$clr-gray: #e4e6ec;
-$clr-dark-gray: #d6d8dc;
-$clr-blue: #0071f2;
-$clr-dark-blue: #0261cd;
+// Variables
+$clr-red-1:   #f02848;
+$clr-blue-1:  #0071f2;
+$clr-blue-2:  #034da2;
+$clr-blue-3:  #f2f7fd;
+$clr-blue-4:  #1a82ea;
+$clr-gray-1:  #f3f4f5;
+$clr-gray-2:  #e5e7e9;
+$clr-gray-3:  #bfbfbf;
+$clr-gray-4:  #e8e8eb;
+$clr-gray-5:  #d0d1d7;
+$clr-white-1: #fff;
+$clr-black-1: #141b38;
+$clr-black-2: #2c3338;
+$clr-black-3: #9ca9b3;
+$clr-black-4: #8c8f9a;
+$clr-black-5: #434960;
 
-$br-radius: 8px;
-$br-clr: #e4e6ec;
+$br-radius-1: 4px;
+$br-radius-2: 2px;
 
-$shadow-1: rgba(0, 0, 0, 0.2) 0 1px 2px 0;
+$shadow-1: 0 2px 5px #0000000d;
 $shadow-2: rgba(0, 0, 0, 0.2) 0 12px 28px 0,
 	rgba(0, 0, 0, 0.1) 0 2px 4px 0,
 	rgba(255, 255, 255, 0.5) 0 0 0 1px inset;
-$shadow-3: rgba(0, 0, 0, 0.1) 0 2px 4px 0,
-	rgba(0, 0, 0, 0.2) 0 12px 28px 0;

@@ -13,29 +13,35 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * $args = [
- *     'title'        => (string) The title of the note field.
- *     'content'      => (string) The content that will be displayed in note field.
+ *     'type'    => (string)  Contains the type of note field |message|alert.
+ *     'title'   => (string)  Contains the title of the note field.
+ *     'content' => (string)  Contains the content that will be displayed in note field.
+ *     'icon'    => (boolean) Contains the flag whether to show icon in note field, default false.
  * ]
- **/
+**/
 
-$title       = ( isset( $args['title'] ) ? $args['title'] : '' );
-$message     = ( isset( $args['message'] ) ? $args['message'] : '' );
+$type    = ( isset( $args['type'] ) ? $args['type'] : 'default' );
+$title   = ( isset( $args['title'] ) ? $args['title'] : '' );
+$content = ( isset( $args['content'] ) ? $args['content'] : '' );
+$icon    = ( isset( $args['icon'] ) ? $args['icon'] : true );
 ?>
 
-<div class="hd-form-field">
-    <div class="hd-note-field hd-bg-clr-white hd-p-15 hd-br-default">
-        <div class="hd-flex">
-            <div>
-                <?php echo Helper::get_icon( 'information-circle', 'hd-svg' ); ?>
-            </div>
-            <div class="hd-ml-10">
-                <p class="hd-fw-700">
-                    <?php echo esc_html( $title ); ?>
-                </p>
-                <p>
-                    <?php echo $message; ?>
-                </p>
-            </div>
+<div class="hd-note-field hd-note-field--<?php echo esc_attr( $type ); ?>">
+    <?php if ( $icon ): ?>
+        <div class="hd-note-field__icon">
+            <?php echo Helper::get_icon( 'information-circle', 'hd-svg' ); ?>
         </div>
+    <?php endif; ?>
+    <div class="hd-note-field__message">
+        <?php if ( ! empty( $title ) ): ?>
+            <p class="hd-note-field__title">
+                <?php echo esc_html( $title ); ?>
+            </p>
+        <?php endif; ?>
+        <?php if ( ! empty( $content ) ): ?>
+            <p class="hd-note-field__content">
+                <?php echo $content; ?>
+            </p>
+        <?php endif; ?>
     </div>
 </div>

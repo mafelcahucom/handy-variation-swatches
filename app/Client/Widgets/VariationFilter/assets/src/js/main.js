@@ -1,99 +1,29 @@
 /**
+ * Internal Dependencies.
+ */
+import {
+	getUCFirst,
+	setAttribute, 
+	eventListener 
+} from "../../../../../../../assets/helpers";
+
+/**
+ * Strict mode.
+ *
+ * @since 1.0.0
+ *
+ * @author Mafel John Cahucom
+ */
+'use strict';
+
+/**
  * Namespace.
  *
  * @since 1.0.0
  *
  * @type {Object}
- * @author Mafel John Cahucom
  */
 const hvsfw = hvsfw || {};
-
-/**
- * Helper.
- *
- * @since 1.0.0
- *
- * @type {Object}
- */
-hvsfw.fn = {
-
-	/**
-	 * Global event listener delegation.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param {string}   type     Event type can be multiple seperate with space.
-	 * @param {string}   selector Target element.
-	 * @param {Function} callback Callback function.
-	 */
-	async eventListener( type, selector, callback ) {
-		const events = type.split( ' ' );
-		events.forEach( function( event ) {
-			document.addEventListener( event, function( e ) {
-				if ( e.target.matches( selector ) ) {
-					callback( e );
-				}
-			} );
-		} );
-	},
-
-	/**
-	 * Sets the attribute of target elements.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param {string} selector  The element selector.
-	 * @param {string} attribute The Attribute to be set.
-	 * @param {string} value     The value of the attribute.
-	 */
-	setAttribute( selector, attribute, value ) {
-		if ( ! selector || ! attribute ) {
-			return;
-		}
-
-		const elems = document.querySelectorAll( selector );
-		if ( elems.length > 0 ) {
-			elems.forEach( function( elem ) {
-				elem.setAttribute( attribute, value );
-			} );
-		}
-	},
-
-	/**
-	 * Sets the children attribute of target elements.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param {Object} parent    The parent element.
-	 * @param {string} selector  The element selector.
-	 * @param {string} attribute The Attribute to be set.
-	 * @param {string} value     The value of the attribute.
-	 */
-	setChildAttribute( parent, selector, attribute, value ) {
-		if ( ! parent || ! selector || ! attribute ) {
-			return;
-		}
-
-		const elems = parent.querySelectorAll( selector );
-		if ( elems.length > 0 ) {
-			elems.forEach( function( elem ) {
-				elem.setAttribute( attribute, value );
-			} );
-		}
-	},
-
-	/**
-	 * Returned the capitalized first letter of the string.
-	 * 
-	 * @since 1.0.0
-	 * 
-	 * @param {string}  string  The string to be capitalize. 
-	 * @return {string}
-	 */
-	getUcFirst( string ) {
-		return string.charAt( 0 ) .toUpperCase() + string.slice( 1 );
-	}
-};
 
 /**
  * Holds Accordion Component.
@@ -119,28 +49,26 @@ hvsfw.accordion = {
 	 * @since 1.0.0
 	 */
 	toggle() {
-		hvsfw.fn.eventListener( 'click', '.hvsfw-vf-accordion__toggle-btn', function( e ) {
+		eventListener( 'click', '.hvsfw-vf-accordion__toggle-btn', function( e ) {
 			e.preventDefault();
 			const target = e.target;
 			const state = target.getAttribute( 'data-state' );
 			const bodyElem = target.closest( '.hvsfw-vf-accordion__header' ).nextElementSibling;
-			if ( ! [ 'open', 'close' ].includes( state ) || ! bodyElem ) {
-				return;
-			}
-
-			bodyElem.style.maxHeight = bodyElem.scrollHeight + 'px';
-			if ( state === 'open' ) {
-				setTimeout( function() {
-					bodyElem.style.maxHeight = null;
-				}, 300 );
-				target.setAttribute( 'data-state', 'close' );
-				bodyElem.setAttribute( 'data-state', 'close' );
-			} else {
-				setTimeout( function() {
-					bodyElem.style.maxHeight = 'max-content';
-				}, 500 );
-				target.setAttribute( 'data-state', 'open' );
-				bodyElem.setAttribute( 'data-state', 'open' );
+			if ( bodyElem && [ 'open', 'close' ].includes( state ) ) {
+				bodyElem.style.maxHeight = bodyElem.scrollHeight + 'px';
+				if ( state === 'open' ) {
+					setTimeout( function() {
+						bodyElem.style.maxHeight = null;
+					}, 300 );
+					target.setAttribute( 'data-state', 'close' );
+					bodyElem.setAttribute( 'data-state', 'close' );
+				} else {
+					setTimeout( function() {
+						bodyElem.style.maxHeight = 'max-content';
+					}, 500 );
+					target.setAttribute( 'data-state', 'open' );
+					bodyElem.setAttribute( 'data-state', 'open' );
+				}
 			}
 		} );
 	},
@@ -171,7 +99,7 @@ hvsfw.variationFilter = {
      */
     init() {
 		this.setColorPickerField();
-		this.onWidgetUpdated();
+		this.onWidgetAddedAndUpdated();
        	this.onChangeSizeField();
 		this.onChangeSelectAttribute();
 		this.onChangeSelectDisplayType();
@@ -185,7 +113,7 @@ hvsfw.variationFilter = {
 	 * 
 	 * @since 1.0.0
 	 * 
-	 * @param {Object} parent The form parent element.
+	 * @param {Object} parent Contains the form parent element.
 	 */
 	getDisplayType( parent ) {
 		if ( ! parent ) {
@@ -230,48 +158,41 @@ hvsfw.variationFilter = {
 	},
 
 	/**
-	 * Set all the accordion visibility state based on 
-	 * select attribute and select display type.
+	 * Set all the accordion visibility state based on select attribute 
+	 * and select display type.
 	 * 
 	 * @since 1.0.0
 	 * 
-	 * @param {Object}  parent  The form parent element.
+	 * @param {Object} parent Contains form parent element.
 	 */
 	setAllAccordionState( parent ) {
-		if ( ! parent ) {
-			return;
+		if ( parent ) {
+			const displayType = hvsfw.variationFilter.getDisplayType( parent );
+			const accordions = [ 'list', 'select', 'button', 'color', 'image' ];
+			accordions.forEach( function( value ) {
+				const title = `${ getUCFirst( value ) } Style`;
+				const selector = `.hvsfw-vf-accordion[data-title="${ title }"]`;
+				const accordion = parent.querySelector( selector );
+				if ( accordion ) {
+					accordion.setAttribute( 'data-show', ( displayType == value ? 'yes' : 'no' ) );
+				}
+			});
 		}
-
-		const displayType = hvsfw.variationFilter.getDisplayType( parent );
-		const accordions = [ 'list', 'select', 'button', 'color', 'image' ];
-		accordions.forEach( function( value ) {
-			const title = `${ hvsfw.fn.getUcFirst( value ) } Style`;
-			const selector = `.hvsfw-vf-accordion[data-title="${ title }"]`;
-			const accordion = parent.querySelector( selector );
-			if ( accordion ) {
-				accordion.setAttribute( 'data-show', ( displayType == value ? 'yes' : 'no' ) );
-			}
-		});
 	},
 
 	/**
-	 * Fires an event after widget has been updated.
+	 * Fires an event after widget has been added and updated.
 	 * 
 	 * @since 1.0.0
 	 */
-	onWidgetUpdated() {
-		jQuery( document ).on( 'widget-updated', function( e, widget ) {
-			if ( widget[0] ) {
-				const id = widget[0].getAttribute( 'id' );
-				if ( id ) {
-					jQuery( `#${ id } .hvsfw-vf-color` ).wpColorPicker({
-						change: function( event, ui ) {
-							jQuery( event.target ).val( ui.color.toString() );
-							jQuery( event.target ).trigger( 'change' );
-						}
-					});
+	onWidgetAddedAndUpdated() {
+		jQuery( document ).on( 'widget-added widget-updated', function( e, widget ) {
+			widget.find( '.hvsfw-vf-color' ).wpColorPicker( {
+				change: function( event, ui ) {
+					jQuery( event.target ).val( ui.color.toString() );
+					jQuery( event.target ).trigger( 'change' );
 				}
-			}
+			} );
 		});
 	},
 
@@ -281,7 +202,7 @@ hvsfw.variationFilter = {
 	 * @since 1.0.0
 	 */
 	onChangeSizeField() {
-		hvsfw.fn.eventListener( 'keyup', '.hvsfw-vf-size', function( e ) {
+		eventListener( 'keyup', '.hvsfw-vf-size', function( e ) {
 			const target = e.target;
 			const value = target.value;
 
@@ -323,16 +244,14 @@ hvsfw.variationFilter = {
 	 * @since 1.0.0
 	 */
 	onChangeSelectAttribute() {
-		hvsfw.fn.eventListener( 'change', '[data-input="[general][attribute]"]', function( e ) {
+		eventListener( 'change', '[data-input="[general][attribute]"]', function( e ) {
 			const target = e.target;
 			const parent = target.closest( '.hvsfw-vf' );
-			if ( ! parent ) {
-				return;
+			if ( parent ) {
+				const updatedType = target.options[ target.selectedIndex ].getAttribute( 'data-type' );
+				target.setAttribute( 'data-type', updatedType );
+				hvsfw.variationFilter.setAllAccordionState( parent );
 			}
-
-			const updatedType = target.options[ target.selectedIndex ].getAttribute( 'data-type' );
-			target.setAttribute( 'data-type', updatedType );
-			hvsfw.variationFilter.setAllAccordionState( parent );
 		});
 	}, 
 
@@ -342,14 +261,12 @@ hvsfw.variationFilter = {
 	 * @since 1.0.0
 	 */
 	onChangeSelectDisplayType() {
-		hvsfw.fn.eventListener( 'change', '[data-input="[general][display_type]"]', function( e ) {
+		eventListener( 'change', '[data-input="[general][display_type]"]', function( e ) {
 			const target = e.target;
 			const parent = target.closest( '.hvsfw-vf' );
-			if ( ! parent ) {
-				return;
+			if ( parent ) {
+				hvsfw.variationFilter.setAllAccordionState( parent );
 			}
-
-			hvsfw.variationFilter.setAllAccordionState( parent );
 		});
 	},
 
@@ -359,15 +276,13 @@ hvsfw.variationFilter = {
 	 * @since 1.0.0
 	 */
 	onChangeSelectButtonShape() {
-		hvsfw.fn.eventListener( 'change', '[data-input="[button][shape]"]', function( e ) {
+		eventListener( 'change', '[data-input="[button][shape]"]', function( e ) {
 			const target = e.target;
 			const value = target.value;
 			const parent = target.closest( '.hvsfw-vf' );
-			if ( ! parent || ! value ) {
-				return;
+			if ( parent && value ) {
+				setAttribute.child( parent, '[data-field="[button][border_radius]"]', 'data-show', ( value === 'custom' ? 'yes' : 'no' ) );
 			}
-
-			hvsfw.fn.setChildAttribute( parent, '[data-field="[button][border_radius]"]', 'data-show', ( value === 'custom' ? 'yes' : 'no' ) );
 		});
 	},
 
@@ -377,17 +292,15 @@ hvsfw.variationFilter = {
 	 * @since 1.0.0
 	 */
 	onChangeSelectColorShape() {
-		hvsfw.fn.eventListener( 'change', '[data-input="[color][shape]"]', function( e ) {
+		eventListener( 'change', '[data-input="[color][shape]"]', function( e ) {
 			const target = e.target;
 			const value = target.value;
 			const parent = target.closest( '.hvsfw-vf' );
-			if ( ! parent || ! value ) {
-				return;
+			if ( parent && value ) {
+				setAttribute.child( parent, '[data-field="[color][size]"]', 'data-show', ( value !== 'custom' ? 'yes' : 'no' ) );
+				setAttribute.child( parent, '[data-field="[color][group][size]"]', 'data-show', ( value === 'custom' ? 'yes' : 'no' ) );
+				setAttribute.child( parent, '[data-field="[color][border_radius]"]', 'data-show', ( value === 'custom' ? 'yes' : 'no' ) );
 			}
-
-			hvsfw.fn.setChildAttribute( parent, '[data-field="[color][size]"]', 'data-show', ( value !== 'custom' ? 'yes' : 'no' ) );
-			hvsfw.fn.setChildAttribute( parent, '[data-field="[color][group][size]"]', 'data-show', ( value === 'custom' ? 'yes' : 'no' ) );
-			hvsfw.fn.setChildAttribute( parent, '[data-field="[color][border_radius]"]', 'data-show', ( value === 'custom' ? 'yes' : 'no' ) );
 		});
 	},
 
@@ -397,17 +310,15 @@ hvsfw.variationFilter = {
 	 * @since 1.0.0
 	 */
 	onChangeSelectImageShape() {
-		hvsfw.fn.eventListener( 'change', '[data-input="[image][shape]"]', function( e ) {
+		eventListener( 'change', '[data-input="[image][shape]"]', function( e ) {
 			const target = e.target;
 			const value = target.value;
 			const parent = target.closest( '.hvsfw-vf' );
-			if ( ! parent || ! value ) {
-				return;
+			if ( parent && value ) {
+				setAttribute.child( parent, '[data-field="[image][size]"]', 'data-show', ( value !== 'custom' ? 'yes' : 'no' ) );
+				setAttribute.child( parent, '[data-field="[image][group][size]"]', 'data-show', ( value === 'custom' ? 'yes' : 'no' ) );
+				setAttribute.child( parent, '[data-field="[image][border_radius]"]', 'data-show', ( value === 'custom' ? 'yes' : 'no' ) );
 			}
-
-			hvsfw.fn.setChildAttribute( parent, '[data-field="[image][size]"]', 'data-show', ( value !== 'custom' ? 'yes' : 'no' ) );
-			hvsfw.fn.setChildAttribute( parent, '[data-field="[image][group][size]"]', 'data-show', ( value === 'custom' ? 'yes' : 'no' ) );
-			hvsfw.fn.setChildAttribute( parent, '[data-field="[image][border_radius]"]', 'data-show', ( value === 'custom' ? 'yes' : 'no' ) );
 		});
 	},
 };
@@ -422,13 +333,14 @@ hvsfw.domReady = {
 	/**
 	 * Execute the code when dom is ready.
 	 *
-	 * @param {Function} func callback
+	 * @param {Function} func Contains the callback function.
 	 * @return {Function} The callback function.
 	 */
 	execute( func ) {
 		if ( typeof func !== 'function' ) {
 			return;
 		}
+
 		if ( document.readyState === 'interactive' || document.readyState === 'complete' ) {
 			return func();
 		}
@@ -437,7 +349,15 @@ hvsfw.domReady = {
 	},
 };
 
+/**
+ * Initialize Widget.
+ *
+ * @since 1.0.0
+ */
 hvsfw.domReady.execute( function() {
-    hvsfw.accordion.init(); // Handle the accordion component.
-    hvsfw.variationFilter.init(); // Handle the variation filter widget.
+	Object.entries( hvsfw ).forEach( function( fragment ) {
+		if ( 'init' in fragment[ 1 ] ) {
+			fragment[ 1 ].init();
+		}
+	} );
 } );

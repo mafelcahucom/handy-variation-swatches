@@ -1,5 +1,5 @@
 /**
- * Internal dependencies
+ * Internal Dependencies.
  */
 import './field.scss';
 
@@ -11,8 +11,8 @@ import './field.scss';
  * @author Mafel John Cahucom
  * 
  * @component
- * @param {Object}  children The children component 
- * @param {boolean} isShow   The component show state.
+ * @param {Object}  children Contains the children component 
+ * @param {boolean} isShow   Contains the component show state.
  */
 const Field = ( { children, isShow = true } ) => {
 	const display = isShow ? 'block' : 'none';

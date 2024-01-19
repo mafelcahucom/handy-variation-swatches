@@ -12,12 +12,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 	1.0.0
  * @version 1.0.0
- * @author Mafel John Cahucom
+ * @author  Mafel John Cahucom
  */
 final class SwatchHelper {
 
 	/**
 	 * Inherit Singleton.
+     * 
+     * @since 1.0.0
 	 */
 	use Singleton;
 
@@ -134,7 +136,7 @@ final class SwatchHelper {
      *
      * @since 1.0.0
      * 
-     * @param  array  $settings  Containg the current value of the swatch setting.
+     * @param  array  $settings  Contains the current value of the swatch setting.
      * @return array
      */
     public static function get_swatch_setting_group_field_visibility( $settings ) {
@@ -200,10 +202,10 @@ final class SwatchHelper {
      *
      * @since 1.0.0
      *
-     * @param  array   $args     Containg the necessary arguments for validating swatch setting.
+     * @param  array  $args  Contains the necessary arguments for validating swatch setting.
      * $args = [
-     *     'type'    => (string) The swatch type.
-     *     'setting' => (array) Containing the setting to be validated.
+     *     'type'    => (string) Contains the swatch type.
+     *     'setting' => (array)  Contains the setting to be validated.
      * ]
      * @return array
      */

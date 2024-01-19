@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 /** 
  * $args = [
- *     'term_id' => (integer) The term ID of the current term editing.
+ *     'term_id' => (integer) Contains the term ID of the current term editing.
  * ]
  **/
 

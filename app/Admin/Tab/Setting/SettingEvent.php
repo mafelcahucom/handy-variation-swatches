@@ -9,21 +9,25 @@ use HVSFW\Admin\Tab\Setting\SettingApi;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Admin > Tab Setting Event.
+ * Admin > Tab > Setting Event.
  *
  * @since 	1.0.0
  * @version 1.0.0
- * @author Mafel John Cahucom
+ * @author  Mafel John Cahucom
  */
 final class SettingEvent {
 
 	/**
 	 * Inherit Singleton.
+     * 
+     * @since 1.0.0
 	 */
 	use Singleton;
 
     /**
      * Inherit Security.
+     * 
+     * @since 1.0.0
      */
     use Security;
 
@@ -66,7 +70,7 @@ final class SettingEvent {
         }
 
         // Get settings field rules.
-        $field_rules = SettingApi::get_field_rules();
+        $field_rules = SettingApi::get_field_rules( 'rules' );
 
         // Remove the element who dont exists in settings field rules.
         foreach ( $fields as $key => $value ) {
@@ -85,7 +89,7 @@ final class SettingEvent {
         // Get the current settings value.
         $current_settings_value = get_option( '_hvsfw_main_settings' );
         if ( empty( $current_settings_value ) ) {
-            // Get the default values of fields if _hvsfw_main_settings is empty.
+            // Get the default values of fields if _hvsfw_main_settings is emty.
             $current_settings_value = SettingApi::get_fields_default_values();
         }
 

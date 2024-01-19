@@ -1,3 +1,51 @@
-/**
- * Footer.
- */
+// Footer
+.hd-footer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	gap: 5px;
+	margin-top: 120px;
+
+	.hd-sitemap {
+		display: flex;
+		gap: 5px;
+
+		a {
+			color: $clr-blue-1;
+			text-decoration: underline;
+
+			&:hover,
+			&:focus {
+				color: $clr-blue-4;
+
+				@include transition;
+			}
+		}
+	}
+
+	.hd-social-media {
+		display: flex;
+		gap: 10px;
+		margin: 0;
+		margin-top: 10px;
+
+		a {
+			fill: $clr-black-1;
+			color: $clr-black-1;
+
+			&:hover,
+			&:focus {
+				fill: $clr-blue-1;
+				color: $clr-blue-1;
+
+				@include transition;
+			}
+		}
+
+		svg {
+			width: 18px;
+			height: 18px;
+		}
+	}
+}

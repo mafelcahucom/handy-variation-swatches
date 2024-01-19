@@ -1,13 +1,13 @@
 /**
- * Get Fetch Handler.
+ * Fetch Handler.
  * 
  * @since 1.0.0
  * 
  * @author Mafel John Cahucom
  * 
  * @async
- * @param {Object} params Containing the parameters.
- * @return {Promise} Fetch response
+ * @param  {Object} params Contains the necessary parameters.
+ * @return {Promise} The fetch response.
  */
 const data = async ( params ) => {
     let result = {

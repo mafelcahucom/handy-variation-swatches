@@ -13,12 +13,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 	1.0.0
  * @version 1.0.0
- * @author Mafel John Cahucom
+ * @author  Mafel John Cahucom
  */
 final class BlockRender {
 
     /**
 	 * Inherit Singleton.
+     * 
+     * @since 1.0.0
 	 */
 	use Singleton;
 
@@ -59,9 +61,9 @@ final class BlockRender {
      * 
      * @since 1.0.0
      *
-     * @param  array  $args  Contains all the arguments for rendering block.
+     * @param  array  $args  Contains the all the arguments for rendering block.
      * $args = [
-     *      'attributes'    => (array) Contains the block attributes.
+     *      'attributes'    => (array)  Contains the block attributes.
      *      'block_wrapper' => (string) Contains the main block wrapper.
      * ]
      * @return HTMLElement
@@ -100,6 +102,7 @@ final class BlockRender {
             </div>
         </div>
         <?php
+        
         return ob_get_clean();
     }
 

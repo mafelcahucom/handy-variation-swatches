@@ -1,0 +1,14 @@
+/**
+ * Font Family.
+ */
+@font-face{
+	font-family: lexend-deca;
+	src: url("../../fonts/lexend-deca/lexend-deca-regular.ttf") format("truetype");
+	font-weight: 400;
+}
+
+@font-face{
+	font-family: lexend-deca;
+	src: url("../../fonts/lexend-deca/lexend-deca-semibold.ttf") format("truetype");
+	font-weight: 600;
+}

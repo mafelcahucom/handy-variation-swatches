@@ -8,16 +8,18 @@ use HVSFW\Admin\Tab\ImporterExporter\ImporterExporterEvent;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Admin > Tab Setting.
+ * Admin > Tab > Setting.
  *
  * @since 	1.0.0
  * @version 1.0.0
- * @author Mafel John Cahucom
+ * @author  Mafel John Cahucom
  */
 final class ImporterExporterTab {
 
 	/**
 	 * Inherit Singleton.
+     * 
+     * @since 1.0.0
 	 */
 	use Singleton;
 
@@ -37,8 +39,6 @@ final class ImporterExporterTab {
      * @since 1.0.0
      */
     public static function render_tab() {
-        echo Helper::render_view( 'tab/importer-exporter', [
-            'page_title' => 'Importer & Exporter'
-        ]);
+        echo Helper::render_view( 'tab/importer-exporter' );
     }
 }

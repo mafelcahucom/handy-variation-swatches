@@ -1,9 +1,26 @@
 /**
- * Internal dependencies
+ * Internal Dependencies.
+ */
+import {
+	getLinearColor,
+	isValidHexaColor
+} from '../../../helpers';
+
+/**
+ * Internal Modules.
  */
 import colorPickerModule from './modules/color-picker.js';
 import imagePickerModule from './modules/image-picker.js';
 import tooltipFieldModule from './modules/tooltip-field.js';
+
+/**
+ * Strict mode.
+ *
+ * @since 1.0.0
+ *
+ * @author Mafel John Cahucom
+ */
+'use strict';
 
 /**
  * Namespace.
@@ -11,9 +28,35 @@ import tooltipFieldModule from './modules/tooltip-field.js';
  * @since 1.0.0
  *
  * @type {Object}
- * @author Mafel John Cahucom
  */
 const hvsfw = hvsfw || {};
+
+/**
+ * Holds the color picker events.
+ * 
+ * @since 1.0.0
+ * 
+ * @type {Object}
+ */
+hvsfw.colorPicker = colorPickerModule;
+
+/**
+ * Holds the image picker events.
+ * 
+ * @since 1.0.0
+ * 
+ * @type {Object}
+ */
+hvsfw.imagePicker = imagePickerModule;
+
+/**
+ * Holds the tooltip field events.
+ * 
+ * @since 1.0.0
+ * 
+ * @type {Object}
+ */
+hvsfw.tooltipField = tooltipFieldModule;
 
 /**
  * Helper.
@@ -22,131 +65,18 @@ const hvsfw = hvsfw || {};
  *
  * @type {Object}
  */
-hvsfw.fn = {
-
-	/**
-	 * Global event listener delegation.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param {string}   type     Event type can be multiple seperate with space.
-	 * @param {string}   selector Target element.
-	 * @param {Function} callback Callback function.
-	 */
-	async eventListener( type, selector, callback ) {
-		const events = type.split( ' ' );
-		events.forEach( function( event ) {
-			document.addEventListener( event, function( e ) {
-				if ( e.target.matches( selector ) ) {
-					callback( e );
-				}
-			} );
-		} );
-	},
-
-	/**
-	 * Sets the attribute of target elements.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param {string} selector  The element selector.
-	 * @param {string} attribute The Attribute to be set.
-	 * @param {string} value     The value of the attribute.
-	 */
-	setAttribute( selector, attribute, value ) {
-		if ( ! selector || ! attribute ) {
-			return;
-		}
-
-		const elems = document.querySelectorAll( selector );
-		if ( elems.length === 0 ) {
-			return;
-		}
-
-		elems.forEach( function( elem ) {
-			elem.setAttribute( attribute, value );
-		} );
-	},
-
-	/**
-	 * Sets the value of target elements.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param {string} selector The element selector.
-	 * @param {mixed}  value    The value of the element.
-	 */
-	setValue( selector, value ) {
-		if ( ! selector ) {
-			return;
-		}
-
-		const elems = document.querySelectorAll( selector );
-		if ( elems.length === 0 ) {
-			return;
-		}
-
-		elems.forEach( function( elem ) {
-			elem.value = value;
-		} );
-	},
+hvsfw.helper = {
 
 	/**
 	 * Return wp list table first row.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return {HTMLElement} The first child th.
+	 * @return {HTMLElement} The first child <th>.
 	 */
 	getListTableFirstRow() {
 		const selector = '#the-list > tr:first-child > th:first-child';
 		return document.querySelector( selector );
-	},
-
-	/**
-	 * Return the linear gradient color or stripe color.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param {Array}  colors Containing the list of colors.
-	 * @param {string} angle  The total angle or rotation of the background.
-	 * @return {string} The gradient background color.
-	 */
-	getLinearColor( colors, angle = '-45deg' ) {
-		if ( colors.length === 0 || ! Array.isArray( colors ) ) {
-			return '#ffffff';
-		}
-
-		let value = `${ angle }, `;
-		const count = colors.length;
-		const length = ( 100 / count );
-
-		colors.forEach( function( color, index ) {
-			index = ( index + 1 );
-			const end = ( length * index );
-			const start = ( end - length );
-
-			value += `${ color } ${ start }%, ${ color } ${ end }% `;
-			value += ( index < count ? ',' : '' );
-		} );
-
-		return `repeating-linear-gradient( ${ value } )`;
-	},
-
-	/**
-	 * Checks if the color is a valid hexa color.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param {string} color The color to be check.
-	 * @return {boolean} Validity of the color.
-	 */
-	isValidHexColor( color ) {
-		if ( ! color ) {
-			return false;
-		}
-
-		return /^#([0-9A-F]{3}){1,2}$/i.test( color );
 	},
 };
 
@@ -190,29 +120,23 @@ hvsfw.swatch = {
 	 */
 	renderColorPreviewer() {
 		const colorInputElems = document.querySelectorAll( 'input[name="hvsfw_color_swatch[]"]' );
-		if ( colorInputElems.length === 0 ) {
-			return;
-		}
-
-		const colors = Array.from( colorInputElems ).map( function( colorInputElem ) {
-			const color = colorInputElem.value;
-			return ( hvsfw.fn.isValidHexColor( color ) ? color : '#ffffff' );
-		} );
-
-		if ( colors.length === 0 ) {
-			return;
-		}
-
-		const element = document.createElement( 'td' );
-		element.className = 'hvsfw_color column-hvsfw_color';
-		element.setAttribute( 'data-colname', 'Color' );
-		element.innerHTML = `
-			<div class="hvsfw-preview hvsfw-preview__color" style="background: ${ hvsfw.fn.getLinearColor( colors ) }"></div>
-		`;
-
-		const tableFirstRowElem = hvsfw.fn.getListTableFirstRow();
-		if ( tableFirstRowElem ) {
-			tableFirstRowElem.after( element );
+		if ( colorInputElems.length > 0 ) {
+			const colors = Array.from( colorInputElems ).map( function( colorInputElem ) {
+				const color = colorInputElem.value;
+				return ( isValidHexaColor( color ) ? color : '#ffffff' );
+			} );
+	
+			if ( colors.length > 0 ) {
+				const element = document.createElement( 'td' );
+				element.className = 'hvsfw_color column-hvsfw_color';
+				element.setAttribute( 'data-colname', 'Color' );
+				element.innerHTML = `<div class="hvsfw-preview hvsfw-preview__color" style="background: ${ getLinearColor( colors ) }"></div>`;
+		
+				const tableFirstRowElem = hvsfw.helper.getListTableFirstRow();
+				if ( tableFirstRowElem ) {
+					tableFirstRowElem.after( element );
+				}
+			}
 		}
 	},
 
@@ -223,37 +147,31 @@ hvsfw.swatch = {
 	 */
 	renderImagePreviewer() {
 		const imagePickerElem = document.getElementById( 'hvsfw-image-picker-swatch' );
-		if ( ! imagePickerElem ) {
-			return;
-		}
+		if ( imagePickerElem ) {
+			const imageElem = imagePickerElem.querySelector( '.hvsfw-image-picker__img' );
+			if ( imageElem ) {
+				const imageSource = imageElem.getAttribute( 'src' );
+				const imageTitle = imageElem.getAttribute( 'title' );
+				const imageAlt = imageElem.getAttribute( 'alt' );
+				if ( imageSource ) {
+					const imagePreviewElem = `
+						<div class="hvsfw-preview hvsfw-preview__image">
+							<img class="hvsfw-preview__image__img" src="${ imageSource }" alt="${ imageAlt }" title="${ imageTitle }">
+						</div>
+					`;
 
-		const imageElem = imagePickerElem.querySelector( '.hvsfw-image-picker__img' );
-		if ( ! imageElem ) {
-			return;
-		}
+					const element = document.createElement( 'td' );
+					element.className = 'hvsfw_image column-hvsfw_image';
+					element.setAttribute( 'data-colname', 'Image' );
+					element.innerHTML = imagePreviewElem;
 
-		const imageSource = imageElem.getAttribute( 'src' );
-		const imageTitle = imageElem.getAttribute( 'title' );
-		const imageAlt = imageElem.getAttribute( 'alt' );
-		if ( ! imageSource ) {
-			return;
-		}
-
-		const imagePreviewElem = `
-			<div class="hvsfw-preview hvsfw-preview__image">
-    			<img class="hvsfw-preview__image__img" src="${ imageSource }" alt="${ imageAlt }" title="${ imageTitle }">
-			</div>
-		`;
-
-		const element = document.createElement( 'td' );
-		element.className = 'hvsfw_image column-hvsfw_image';
-		element.setAttribute( 'data-colname', 'Image' );
-		element.innerHTML = imagePreviewElem;
-
-		const tableFirstRowElem = hvsfw.fn.getListTableFirstRow();
-		if ( tableFirstRowElem ) {
-			tableFirstRowElem.after( element );
-		}
+					const tableFirstRowElem = hvsfw.helper.getListTableFirstRow();
+					if ( tableFirstRowElem ) {
+						tableFirstRowElem.after( element );
+					}
+				}
+			}
+		}		
 	},
 };
 
@@ -311,7 +229,6 @@ hvsfw.wpListTable = {
 	 * @return {boolean} Check if all property element has a value.
 	 */
 	setElementProperties() {
-		// Set tableElem property.
 		const tableElem = document.getElementById( 'the-list' );
 		if ( ! tableElem ) {
 			return false;
@@ -456,13 +373,14 @@ hvsfw.domReady = {
 	/**
 	 * Execute the code when dom is ready.
 	 *
-	 * @param {Function} func callback
+	 * @param {Function} func Contains the callback function.
 	 * @return {Function} The callback function.
 	 */
 	execute( func ) {
 		if ( typeof func !== 'function' ) {
 			return;
 		}
+
 		if ( document.readyState === 'interactive' || document.readyState === 'complete' ) {
 			return func();
 		}
@@ -471,10 +389,15 @@ hvsfw.domReady = {
 	},
 };
 
+/**
+ * Initialize App.
+ *
+ * @since 1.0.0
+ */
 hvsfw.domReady.execute( function() {
-	colorPickerModule.init(); // Handle the color picker field events.
-	imagePickerModule.init(); // Handle the image picker field events.
-	tooltipFieldModule.init(); // Handle the tooltip field events.
-	hvsfw.wpListTable.init(); // Handle the wp list table events.
-	hvsfw.ajax.init(); // Handle the ajax events catcher.
+	Object.entries( hvsfw ).forEach( function( fragment ) {
+		if ( 'init' in fragment[ 1 ] ) {
+			fragment[ 1 ].init();
+		}
+	} );
 } );

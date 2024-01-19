@@ -11,12 +11,12 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * $args = [
- *     'name'        => (string) The name of the image picker field.
- *     'group'       => (string) The name of the group this image picker field.
- *     'value'       => (string) The default value of the image picker field.
- *     'label'       => (string) The label of the image picker field.
- *     'description' => (string) The description of the image picker field.
- *     'max_width'   => (int)    The max width of the image picker thumbnail.
+ *     'name'        => (string) Contains the name of the image picker field.
+ *     'group'       => (string) Contains the name of the group this image picker field.
+ *     'value'       => (string) Contains the default value of the image picker field.
+ *     'label'       => (string) Contains the label of the image picker field.
+ *     'description' => (string) Contains the description of the image picker field.
+ *     'max_width'   => (int)    Contains the max width of the image picker thumbnail.
  *     'choices'     => (array)  Contains the images picker choices |value|label|image|.
  * ]
  **/
@@ -54,6 +54,8 @@ $choices     = ( isset( $args['choices'] ) ? $args['choices'] : [] );
             </div>
             <input type="hidden" id="<?php echo esc_attr( $name ); ?>" name="<?php echo esc_attr( $name ); ?>" data-input-group="<?php echo esc_attr( $group ); ?>" value="<?php echo esc_attr( $value ); ?>">
         <?php endif; ?>
-        <p class="hd-form-field__error hd-clr-red hd-fs-13 hd-mt-15">Error Message</p>
+        <p class="hd-form-field__error">
+            <?php __( 'Error Message', HVSFW_PLUGIN_DOMAIN ); ?>
+        </p>
     </div>
 </div>

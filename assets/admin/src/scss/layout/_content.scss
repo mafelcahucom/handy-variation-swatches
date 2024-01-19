@@ -1,0 +1,8 @@
+// Content
+.hd-content {
+	margin-top: 120px;
+
+	@include media-600 {
+		margin-top: 50px;
+	}
+}

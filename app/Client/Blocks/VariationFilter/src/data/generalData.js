@@ -3,7 +3,7 @@
  * 
  * @since 1.0.0
  * 
- * @type {Object}
+ * @type   {Object}
  * @author Mafel John Cahucom
  */
 const data = {
@@ -13,7 +13,7 @@ const data = {
      * 
      * @since 1.0.0
      * 
-     * @returns {Array} The font weight value and label.
+     * @returns {Array} Contains the font weight value and label.
      */
     fontWeightChoices: [
         { value: '100', label: '100' },

@@ -4,6 +4,7 @@
   "description": "Handy Variation Swatches For WooCommerce will let you replace the default dropdown variation into more detailed and engaging variation (button, radio, color and image) swatches.",
   "main": "app.js",
   "scripts": {
+    "start": "gulp watch",
     "lint-admin-scss": "wp-scripts lint-style assets/admin/src/scss/**/*.scss",
     "lint-admin-scss-fix": "wp-scripts lint-style assets/admin/src/scss/**/*.scss --fix",
     "lint-client-scss": "wp-scripts lint-style assets/client/src/scss/**/*.scss",
