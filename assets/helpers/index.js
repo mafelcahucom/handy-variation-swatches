@@ -9,6 +9,7 @@ import getCheckboxValue from "./getCheckboxValue";
 import getExtractedNumbers from "./getExtractedNumbers";
 import getFetch from "./getFetch";
 import getLinearColor from "./getLinearColor";
+import getPascalString from "./getPascalString";
 import getUCFirst from "./getUcFirst";
 import hasMissingChild from "./hasMissingChild";
 import isAnimationDone from "./isAnimationDone";
@@ -30,6 +31,7 @@ export {
     getExtractedNumbers,
     getFetch,
     getLinearColor,
+    getPascalString,
     getUCFirst,
     hasMissingChild,
     isAnimationDone,

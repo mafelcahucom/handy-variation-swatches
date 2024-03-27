@@ -44,7 +44,7 @@ const colorPicker = {
 		if ( inputElems.length > 0 ) {
 			inputElems.forEach( function( inputElem ) {
 				jQuery( inputElem ).wpColorPicker();
-	
+
 				if ( action === 'reset' ) {
 					jQuery( inputElem ).iris( 'color', '#ffffff' );
 				}
@@ -88,7 +88,7 @@ const colorPicker = {
 						}
 					} );
 				}
-	
+
 				colorPicker.setCount( colorPickerElem );
 				colorPicker.setColorPicker( 'reset', colorPickerElem );
 			} );
@@ -100,7 +100,7 @@ const colorPicker = {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param  {string} name Contains the input name.
+	 * @param {string} name Contains the input name.
 	 * @return {HTMLElement} Contains the new color picker field.
 	 */
 	field( name ) {

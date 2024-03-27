@@ -6,12 +6,12 @@ import {
 	isObject,
 	setInlineStyle,
 	eventListener,
-} from "../../../helpers";
+} from '../../../helpers';
 
 /**
  * Module Dependencies.
  */
-import variationFilterModule from "./modules/variation-filter";
+import variationFilterModule from './modules/variation-filter';
 
 /**
  * Strict mode.
@@ -33,9 +33,9 @@ const hvsfw = hvsfw || {};
 
 /**
  * Holds the variation filter events.
- * 
+ *
  * @since 1.0.0
- * 
+ *
  * @type {Object}
  */
 hvsfw.variationFilter = variationFilterModule;
@@ -479,7 +479,7 @@ hvsfw.swatch = {
 	onResetVariation() {
 		eventListener( 'click', '.reset_variations', function( e ) {
 			const target = e.target;
-			
+
 			// Product Single Page.
 			const variationForm = target.closest( '.variations_form' );
 			if ( variationForm ) {
@@ -695,7 +695,7 @@ hvsfw.addToCart = {
 				if ( href ) {
 					window.location.href = href;
 				}
-				
+
 				return;
 			}
 

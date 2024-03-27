@@ -20,7 +20,7 @@ echo Component::get_header();
 
 <!-- Importer Component -->
 <div class="hd-card hd-mb-30" data-state="opened">
-    <div class="hd-card__header">
+    <div class="hd-card__header" data-type="collapsible">
         <span class="hd-card__title">
             <?php echo __( 'Import / Restore Settings', HVSFW_PLUGIN_DOMAIN ); ?>
         </span>
@@ -63,7 +63,7 @@ echo Component::get_header();
 
 <!-- Exporter Component -->
 <div class="hd-card hd-mb-30" data-state="opened">
-    <div class="hd-card__header">
+    <div class="hd-card__header" data-type="collapsible">
         <span class="hd-card__title">
             <?php echo __( 'Export / Duplicate Settings', HVSFW_PLUGIN_DOMAIN ); ?>
         </span>

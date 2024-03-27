@@ -3,7 +3,7 @@
  */
 import {
 	getLinearColor,
-	isValidHexaColor
+	isValidHexaColor,
 } from '../../../helpers';
 
 /**
@@ -33,27 +33,27 @@ const hvsfw = hvsfw || {};
 
 /**
  * Holds the color picker events.
- * 
+ *
  * @since 1.0.0
- * 
+ *
  * @type {Object}
  */
 hvsfw.colorPicker = colorPickerModule;
 
 /**
  * Holds the image picker events.
- * 
+ *
  * @since 1.0.0
- * 
+ *
  * @type {Object}
  */
 hvsfw.imagePicker = imagePickerModule;
 
 /**
  * Holds the tooltip field events.
- * 
+ *
  * @since 1.0.0
- * 
+ *
  * @type {Object}
  */
 hvsfw.tooltipField = tooltipFieldModule;
@@ -125,13 +125,13 @@ hvsfw.swatch = {
 				const color = colorInputElem.value;
 				return ( isValidHexaColor( color ) ? color : '#ffffff' );
 			} );
-	
+
 			if ( colors.length > 0 ) {
 				const element = document.createElement( 'td' );
 				element.className = 'hvsfw_color column-hvsfw_color';
 				element.setAttribute( 'data-colname', 'Color' );
 				element.innerHTML = `<div class="hvsfw-preview hvsfw-preview__color" style="background: ${ getLinearColor( colors ) }"></div>`;
-		
+
 				const tableFirstRowElem = hvsfw.helper.getListTableFirstRow();
 				if ( tableFirstRowElem ) {
 					tableFirstRowElem.after( element );
@@ -171,7 +171,7 @@ hvsfw.swatch = {
 					}
 				}
 			}
-		}		
+		}
 	},
 };
 

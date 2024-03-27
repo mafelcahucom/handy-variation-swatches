@@ -99,14 +99,25 @@ final class Helper {
     }
 
     /**
-     * Checks if the current page have $_GET['page'] = 'hvsfw'.
+     * Checks if the current page is the right parent menu.
+     * 
+     * @since 1.0.0
+     *
+     * @return boolean
+     */
+    public static function is_correct_menu() {
+        return ( is_admin() && isset( $_GET['page'] ) && $_GET['page'] === 'handy-tools' );
+    }
+
+    /**
+     * Checks if the current page is the right submenu.
      *
      * @since 1.0.0
      * 
      * @return boolean
      */
-    public static function is_correct_page() {
-        return ( is_admin() && isset( $_GET['page'] ) && $_GET['page'] == 'hvsfw' );
+    public static function is_correct_submenu() {
+        return ( is_admin() && isset( $_GET['page'] ) && $_GET['page'] === 'hvsfw' );
     }
 
     /**
@@ -134,24 +145,26 @@ final class Helper {
     }
 
     /**
-     * Returns the additional attribtutes of a html tag.
-     *
-     * @since 1.0.0
+     * Return the formatted attributes.
      * 
-     * @param  array  $attributes  Contains the additional attributes.
+     * @since 1.0.0
+     *
+     * @param  array  $attrs  Contains the attributes to be formated.
      * @return string
      */
-    public static function get_attributes( $attributes = [] ) {
-        if ( empty( $attributes ) ) {
-            return;
+    public static function get_attributes( $attrs = [] ) {
+        $attribute = '';
+        if ( ! empty( $attrs ) ) {
+            foreach ( $attrs as $key => $value ) {
+                $attribute .= sprintf(
+                    ' %s="%s"',
+                    esc_attr( $key ),
+                    esc_attr( $value )
+                );
+            }
         }
-
-        $output = '';
-        foreach( $attributes as $key => $value ) {
-            $output .= esc_attr( $key ) .'="'. esc_attr( $value ) .'" ';
-        }
-
-        return $output;
+        
+        return $attribute;
     }
 
     /**
@@ -277,43 +290,43 @@ final class Helper {
         $choices = [
             [
                 'value' => 'dotted',
-                'label' => 'Dotted'
+                'label' => __( 'Dotted', HVSFW_PLUGIN_DOMAIN )
             ],
             [
                 'value' => 'dashed',
-                'label' => 'Dashed'
+                'label' => __( 'Dashed', HVSFW_PLUGIN_DOMAIN )
             ],
             [
                 'value' => 'solid',
-                'label' => 'Solid'
+                'label' => __( 'Solid', HVSFW_PLUGIN_DOMAIN )
             ],
             [
                 'value' => 'double',
-                'label' => 'Double'
+                'label' => __( 'Double', HVSFW_PLUGIN_DOMAIN )
             ],
             [
                 'value' => 'groove',
-                'label' => 'Groove'
+                'label' => __( 'Groove', HVSFW_PLUGIN_DOMAIN )
             ],
             [
                 'value' => 'ridge',
-                'label' => 'Ridge'
+                'label' => __( 'Ridge', HVSFW_PLUGIN_DOMAIN )
             ],
             [
                 'value' => 'inset',
-                'label' => 'Inset'
+                'label' => __( 'Inset', HVSFW_PLUGIN_DOMAIN )
             ],
             [
                 'value' => 'outset',
-                'label' => 'Outset'
+                'label' => __( 'Outset', HVSFW_PLUGIN_DOMAIN )
             ],
             [
                 'value' => 'none',
-                'label' => 'None'
+                'label' => __( 'None', HVSFW_PLUGIN_DOMAIN )
             ],
             [
                 'value' => 'hidden',
-                'label' => 'Hidden'
+                'label' => __( 'Hidden', HVSFW_PLUGIN_DOMAIN )
             ]
         ];
 

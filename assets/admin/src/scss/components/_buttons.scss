@@ -83,18 +83,20 @@ a.hd-btn {
 	}
 }
 
-// Button Square
-.hd-btn-square {
+// Button Icon.
+.hd-btn-icon {
+	position: relative;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	padding: 0;
-	width: 40px;
-	height: 40px;
+	min-width: 40px;
+	max-width: 40px;
+	min-height: 40px;
+	max-height: 40px;
 	fill: $clr-black-1;
 	color: $clr-black-1;
-	background-color: $clr-gray-1;
-	border-radius: $br-radius-2;
+	background-color: $clr-gray-6;
 	border: 0;
 
 	svg {
@@ -102,9 +104,27 @@ a.hd-btn {
 		height: 18px;
 	}
 
-	&:hover,
-	&:focus,
-	&[data-state="active"] {
+	&[data-visibility="hidden"] {
+		display: none;
+	}
+
+	&[data-type="icon"] {
+		display: block;
+		min-width: 20px;
+		max-width: 20px;
+		min-height: 20px;
+		max-height: 20px;
+		background-color: transparent;
+
+		svg {
+			width: 20px;
+			height: 20px;
+		}
+	}
+
+	&[data-type="button"]:hover,
+	&[data-type="button"]:focus,
+	&[data-type="button"][data-state="active"] {
 		background-color: $clr-gray-2;
 
 		@include transition;
@@ -120,6 +140,17 @@ a.hd-btn {
 		}
 	}
 
+	&[data-type="button"][data-state="loading"] {
+
+		.hd-loader {
+			display: block;
+		}
+
+		svg {
+			display: none;
+		}
+	}
+
 	&[data-state="active"] {
 
 		.hd-btn-nav__icon {
@@ -128,5 +159,29 @@ a.hd-btn {
 				display: none;
 			}
 		}
+	}
+
+	&--square {
+		border-radius: $br-radius-2;
+	}
+
+	&--circle {
+		border-radius: 100%;
+	}
+
+	.hd-loader {
+		display: none;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+}
+
+a.hd-btn-icon {
+
+	&:hover,
+	&:focus {
+		color: $clr-black-1;
 	}
 }

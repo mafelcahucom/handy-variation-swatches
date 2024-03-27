@@ -1,22 +1,22 @@
 <?php
-namespace HVSFW\Admin\Tab\ImporterExporter;
+namespace HVSFW\Admin\Modules\ImporterExporter;
 
 use HVSFW\Inc\Traits\Singleton;
 use HVSFW\Inc\Traits\Security;
 use HVSFW\Admin\Inc\Helper;
 use HVSFW\Admin\Inc\FieldValidation;
-use HVSFW\Admin\Tab\Setting\SettingApi;
+use HVSFW\Api\SettingApi;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Admin > Tab > Importer & Exporter Event.
+ * Admin > Modules > Importer & Exporter > Events.
  *
  * @since 	1.0.0
  * @version 1.0.0
  * @author  Mafel John Cahucom
  */
-final class ImporterExporterEvent {
+final class Events {
 
 	/**
 	 * Inherit Singleton.
@@ -75,13 +75,13 @@ final class ImporterExporterEvent {
         // Get the current settings.
         $settings = get_option( '_hvsfw_main_settings' );
         if ( empty( $settings ) ) {
-            $settings = SettingApi::get_fields_default_values();
+            $settings = SettingApi::get_settings( 'fields' );
         }
 
         // Filter settings based on groups.
         if ( ! in_array( 'ALL', $groups ) ) {
             // Get field keys based on group.
-            $raw_rules  = SettingApi::get_field_rules( 'raw' );
+            $raw_rules  = SettingApi::get_settings( 'raw' );
             $field_keys = []; 
             foreach ( $groups as $group ) {
                 if ( array_key_exists( $group, $raw_rules ) ) {
@@ -137,7 +137,7 @@ final class ImporterExporterEvent {
         if ( $decrypted_settings === false ) {
             wp_send_json_error([
                 'error'  => 'CORRUPTED_SETTING_FILE',
-                'detail' => 'Failed to decrypt settings.'
+                'detail' => __( 'Failed to decrypt settings.', HVSFW_PLUGIN_DOMAIN )
             ]);
         }
 
@@ -151,7 +151,7 @@ final class ImporterExporterEvent {
         }
 
         // Get the fields that are existed in current settings.
-        $field_rules      = SettingApi::get_field_rules( 'rules' );
+        $field_rules      = SettingApi::get_settings( 'schemas' );
         $updated_settings = array_intersect_key( $decoded_settings, $field_rules );
         if ( empty( $updated_settings ) ) {
             wp_send_json_error([
@@ -175,7 +175,7 @@ final class ImporterExporterEvent {
         }
     
         // Merge current and updated settings and save in wp_options.
-        $merged_settings = array_merge( SettingApi::get_settings(), $updated_settings );
+        $merged_settings = array_merge( SettingApi::get_current_settings(), $updated_settings );
         update_option( '_hvsfw_main_settings', $merged_settings );
         wp_send_json_success([
             'response' => 'SUCCESSFULLY IMPORTED'

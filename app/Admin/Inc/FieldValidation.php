@@ -35,7 +35,7 @@ final class FieldValidation {
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Contains all the parameters for validating fields.
+     * @param  array  $args  Contains the necessary parameters for validating fields.
      * $args = [
      *     'fields'        => (array) Contains the all the new fields.
      *     'current_value' => (array) Contains the fields value from get_option().
@@ -152,33 +152,30 @@ final class FieldValidation {
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Contains the parameter need to evaluate text field.
+     * @param  array  $args  Contains the necessary parameters for evaluating text field.
      * $args = [
      *     'value'         => (string)  Contains the value of text field.
      *     'max'           => (integer) Contains the maximum character length.
-     *     'current_value' => (string)  Contains the thee current value from _hvsfw_main_settings.
+     *     'current_value' => (string)  Contains the thee current value from _hwfw_main_settings.
      * ]
      * @return array
      */
     public static function validate_text_field( $args = [] ) {
         $output = [
             'success' => false,
-            'value'   => $args['current_value'],
-            'error'   => 'This field is required'
+            'value'   => $args['current_value']
         ];
 
-        if ( ! empty( $args['value'] ) ) {
-            if ( strlen( $args['value'] ) <= $args['max'] ) {
-                $output = [
-                    'success' => true,
-                    'value'   => $args['value']
-                ];
-            } else {
-                $output['error'] = sprintf(
-                    __( 'Total characters must not exceed in %s.', HVSFW_PLUGIN_DOMAIN ),
-                    $args['max']
-                );
-            }
+        if ( strlen( $args['value'] ) <= $args['max'] ) {
+            $output = [
+                'success' => true,
+                'value'   => $args['value']
+            ];
+        } else {
+            $output['error'] = sprintf(
+                __( 'Total characters must not exceed in %s.', HVSFW_PLUGIN_DOMAIN ),
+                $args['max']
+            );
         }
 
         return $output;

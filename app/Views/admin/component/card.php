@@ -25,7 +25,7 @@ $components = ( isset( $args['components'] ) ? $args['components'] : [] );
 ?>
 
 <div class="hd-card <?php echo esc_attr( $class ); ?>" data-state="opened">
-    <div class="hd-card__header">
+    <div class="hd-card__header" data-type="collapsible">
         <span class="hd-card__title">
             <?php echo esc_html( $title ); ?>
         </span>

@@ -52,7 +52,7 @@ if ( empty( $name ) || empty( $group ) ) {
             </p>
         <?php endif; ?>
         <p class="hd-form-field__error">
-            <?php __( 'Error Message', HVSFW_PLUGIN_DOMAIN ); ?>
+            <?php echo __( 'Error Message', HVSFW_PLUGIN_DOMAIN ); ?>
         </p>
     </div>
 </div>

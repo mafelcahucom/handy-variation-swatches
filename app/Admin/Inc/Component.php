@@ -72,7 +72,7 @@ final class Component {
      *
      * @since 1.0.0
      * 
-     * @param  array  $data  Contains all data for creating navigation list.
+     * @param  array  $data  Contains the necessary parameters for creating navigation list.
      * $args = [
      *     'label' => (string) Contains the label of the link.
      *     'slug'  => (string) Contains the url slug.
@@ -111,7 +111,7 @@ final class Component {
      *
      * @since 1.0.0
      * 
-     * @param  array  $data  Contains all data for creating message component.
+     * @param  array  $data  Contains the necessary parameters for creating message component.
      * $args = [
      *     'title'   => (string) Contains the title of the message.
      *     'content' => (string) Contains the content of the message.
@@ -171,7 +171,7 @@ final class Component {
      *
      * @since 1.0.0
      * 
-     * @param  array  $args  Contains all data for creating button.
+     * @param  array  $args  Contains the necessary parameters for creating button.
      * $args = [
      *     'id'    => (string) Contains the id of the button.
      *     'class' => (string) Contains the additional class.
@@ -190,7 +190,7 @@ final class Component {
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Contains all data for creating button.
+     * @param  array  $args  Contains the necessary parameters for creating button.
      * $args = [
      *     'title'      => (string) Contains the title of the card.
      *     'class'      => (string) Contains the additional class.
@@ -207,7 +207,7 @@ final class Component {
      * 
      * @since 1.0.0
      *
-     * @param  array  $args  Contains all data for creating row.
+     * @param  array  $args  Contains the necessary parameters for creating row.
      * $args = [
      *     'type'        => (string) Contains the type of row |block|grid.
      *     'label'       => (string) Contains the label of the row.

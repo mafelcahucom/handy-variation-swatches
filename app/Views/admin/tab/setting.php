@@ -10,12 +10,12 @@
 use HVSFW\Admin\Inc\Helper;
 use HVSFW\Admin\Inc\Component;
 use HVSFW\Admin\Inc\Field;
-use HVSFW\Admin\Tab\Setting\SettingApi;
+use HVSFW\Api\SettingApi;
 
 defined( 'ABSPATH' ) || exit;
 
 // Get the setting current value.
-$settings = SettingApi::get_settings();
+$settings = SettingApi::get_current_settings();
 
 /**
  * Header
@@ -891,8 +891,8 @@ echo Component::get_tab_panel([
                             'name'  => 'bn_br',
                             'group' => 'button_setting_group',
                             'value' => $settings['bn_br'],
-                            'label' => __( 'Radius', HVSFW_PLUGIN_DOMAIN ),
-                            'placeholder' => __( 'Radius', HVSFW_PLUGIN_DOMAIN )
+                            'label' => __( 'Border Radius', HVSFW_PLUGIN_DOMAIN ),
+                            'placeholder' => __( 'Border Radius', HVSFW_PLUGIN_DOMAIN )
                         ])
                     ]
                 ]),
@@ -1022,8 +1022,8 @@ echo Component::get_tab_panel([
                             'name'  => 'cr_br',
                             'group' => 'color_setting_group',
                             'value' => $settings['cr_br'],
-                            'label' => __( 'Radius', HVSFW_PLUGIN_DOMAIN ),
-                            'placeholder' => __( 'Radius', HVSFW_PLUGIN_DOMAIN )
+                            'label' => __( 'Border Radius', HVSFW_PLUGIN_DOMAIN ),
+                            'placeholder' => __( 'Border Radius', HVSFW_PLUGIN_DOMAIN )
                         ])
                     ]
                 ]),
@@ -1153,8 +1153,8 @@ echo Component::get_tab_panel([
                             'name'  => 'im_br',
                             'group' => 'image_setting_group',
                             'value' => $settings['im_br'],
-                            'label' => __( 'Radius', HVSFW_PLUGIN_DOMAIN ),
-                            'placeholder' => __( 'Radius', HVSFW_PLUGIN_DOMAIN )
+                            'label' => __( 'Border Radius', HVSFW_PLUGIN_DOMAIN ),
+                            'placeholder' => __( 'Border Radius', HVSFW_PLUGIN_DOMAIN )
                         ])
                     ]
                 ]),
@@ -1399,7 +1399,7 @@ echo Component::get_tab_panel([
                             'name'  => 'ad_opt_enable_cache',
                             'group' => 'advanced_setting_group',
                             'value' => $settings['ad_opt_enable_cache'],
-                            'description' => __( 'Enable this to cache the external styles and scripts.', HVSFW_PLUGIN_DOMAIN ),
+                            'description' => __( 'Enable this option to cache the external style and script files so that they can be accessed more quickly.', HVSFW_PLUGIN_DOMAIN ),
                             'choices' => [
                                 'on'  => __( 'Enabled', HVSFW_PLUGIN_DOMAIN ),
                                 'off' => __( 'Disabled', HVSFW_PLUGIN_DOMAIN )
@@ -1415,7 +1415,7 @@ echo Component::get_tab_panel([
                             'name'  => 'ad_opt_enable_minify',
                             'group' => 'advanced_setting_group',
                             'value' => $settings['ad_opt_enable_minify'],
-                            'description' => __( 'Enable this to minify the internal and external styles and scripts.', HVSFW_PLUGIN_DOMAIN ),
+                            'description' => __( 'Enable this option to minify the internal and external style and script files to reduce load times and bandwidth.', HVSFW_PLUGIN_DOMAIN ),
                             'choices' => [
                                 'on'  => __( 'Enabled', HVSFW_PLUGIN_DOMAIN ),
                                 'off' => __( 'Disabled', HVSFW_PLUGIN_DOMAIN )
@@ -1431,7 +1431,7 @@ echo Component::get_tab_panel([
                             'name'  => 'ad_opt_enable_defer',
                             'group' => 'advanced_setting_group',
                             'value' => $settings['ad_opt_enable_defer'],
-                            'description' => __( 'Enable this to load external scripts in deffered way.', HVSFW_PLUGIN_DOMAIN ),
+                            'description' => __( 'Enable this option to defer external scripts so they will be downloaded in parallel to the parsing page and executed after page is finished parsing.', HVSFW_PLUGIN_DOMAIN ),
                             'choices' => [
                                 'on'  => __( 'Enabled', HVSFW_PLUGIN_DOMAIN ),
                                 'off' => __( 'Disabled', HVSFW_PLUGIN_DOMAIN )

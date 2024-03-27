@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
                 <span id="hd-prompt-dialog-title" class="hd-fs-14 hd-fw-600">
                     <?php echo __( 'Title', HVSFW_PLUGIN_DOMAIN ); ?>
                 </span>
-                <button id="hd-prompt-dialog-close-btn" class="hd-btn-square" aria-label="<?php echo __( 'Close Prompt', HVSFW_PLUGIN_DOMAIN ); ?>">
+                <button id="hd-prompt-dialog-close-btn" class="hd-btn-icon hd-btn-icon--circle" title="<?php echo __( 'Close Prompt', HVSFW_PLUGIN_DOMAIN ); ?>" aria-label="<?php echo __( 'Close Prompt', HVSFW_PLUGIN_DOMAIN ); ?>">
                     <?php echo Helper::get_icon( 'close', 'hd-svg' ); ?>
                 </button>
             </div>

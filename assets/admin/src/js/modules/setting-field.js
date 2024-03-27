@@ -232,7 +232,7 @@ const settingField = {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param  {string} type Contains the type value.
+	 * @param {string} type Contains the type value.
 	 * @return {Array} The list of fields on specific type.
 	 */
 	getFieldsByType( type ) {

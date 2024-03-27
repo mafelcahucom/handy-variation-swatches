@@ -42,17 +42,17 @@ const imagePicker = {
 				const removeBtnElem = imagePickerElem.querySelector( '.hvsfw-js-image-picker-remove-btn' );
 				if ( inputElem && imageElem && removeBtnElem ) {
 					const imagePlaceholder = imageElem.getAttribute( 'data-default' );
-	
+
 					inputElem.value = 0;
-	
+
 					imageElem.setAttribute( 'src', imagePlaceholder );
 					imageElem.setAttribute( 'alt', 'WooCommerce Placeholder' );
 					imageElem.setAttribute( 'title', 'WooCommerce Placeholder' );
-	
+
 					removeBtnElem.setAttribute( 'data-state', 'disabled' );
 				}
 			} );
-		}		
+		}
 	},
 
 	/**

@@ -39,18 +39,18 @@ const hvsfw = hvsfw || {};
 
 /**
  * Holds the color picker events.
- * 
+ *
  * @since 1.0.0
- * 
+ *
  * @type {Object}
  */
 hvsfw.colorPicker = colorPickerModule;
 
 /**
  * Holds the image picker events.
- * 
+ *
  * @since 1.0.0
- * 
+ *
  * @type {Object}
  */
 hvsfw.imagePicker = imagePickerModule;
@@ -176,7 +176,7 @@ hvsfw.form = {
 		const colorPickerElems = document.querySelectorAll( '.hvsfw-color-picker' );
 		if ( colorPickerElems.length > 0 ) {
 			jQuery( '.hvsfw-color-picker-style' ).wpColorPicker();
-		}		
+		}
 	},
 
 	/**

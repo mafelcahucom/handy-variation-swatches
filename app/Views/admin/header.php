@@ -19,28 +19,28 @@ defined( 'ABSPATH' ) || exit;
     <div class="hd-header">
         <div class="hd-container">
             <div class="hd-header__col">
-                <div class="hd-header__col--left">
-                    <div class="hd-flex hd-flex-ai-c hd-flex-jc-sb hd-gap-15">
+            <div class="hd-header__col--left">
+                    <div class="hd-flex hd-flex-ai-c hd-flex-jc-sb hd-gap-10">
                         <div class="hd-header__logo">
                             <?php echo Component::get_logo(); ?>
                         </div>
-                        <div class="hd-header__separator"></div>
                         <div class="hd-header__title">
-                            <span class="hd-fw-600">
+                            <span class="hd-fs-18 hd-fw-700">
                                 <?php echo __( 'Variation Swatches', HVSFW_PLUGIN_DOMAIN ); ?>
                             </span>
+                            <?php echo Helper::render_view( 'component/breadcrumb' ); ?>
                         </div>
                     </div>
                 </div>
                 <div class="hd-header__col--right">
                     <div class="hd-flex hd-gap-10">
                         <div>
-                            <a class="hd-btn-square" href="#" title="<?php echo __( 'Help', HVSFW_PLUGIN_DOMAIN ); ?>">
+                            <a class="hd-btn-icon hd-btn-icon--circle" href="#" title="<?php echo __( 'Help', HVSFW_PLUGIN_DOMAIN ); ?>">
                                 <?php echo Helper::get_icon( 'help', 'hd-svg' ); ?>
                             </a>
                         </div>
                         <div class="hd-ps-relative">
-                            <button type="button" id="hd-navigation-btn" class="hd-btn-square" data-state="default" title="<?php echo __( 'Open Navigation', HVSFW_PLUGIN_DOMAIN ); ?>">
+                            <button type="button" id="hd-navigation-btn" class="hd-btn-icon hd-btn-icon--circle" data-state="default" title="<?php echo __( 'Open Navigation', HVSFW_PLUGIN_DOMAIN ); ?>">
                                 <?php
                                     echo Helper::get_icon( 'app', 'hd-svg hd-btn-nav__icon--default' );
                                     echo Helper::get_icon( 'close', 'hd-svg hd-btn-nav__icon--active' );

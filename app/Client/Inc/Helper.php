@@ -175,7 +175,7 @@ final class Helper {
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Contains all the parameters need to render product thumbnail.
+     * @param  array  $args  Contains the necessary parameters need to render product thumbnail.
      * $args = [
      *     'product_id'   => (integer) Contains the target product id.
      *     'variation_id' => (integer) Contains the target variation id.

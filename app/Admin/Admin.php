@@ -3,8 +3,8 @@ namespace HVSFW\Admin;
 
 use HVSFW\Inc\Traits\Singleton;
 use HVSFW\Admin\Inc\Helper;
-use HVSFW\Admin\Tab\Setting\SettingTab;
-use HVSFW\Admin\Tab\ImporterExporter\ImporterExporterTab;
+use HVSFW\Admin\Modules\Setting\Setting;
+use HVSFW\Admin\Modules\ImporterExporter\ImporterExporter;
 use HVSFW\Admin\Variation\AttributeMeta;
 use HVSFW\Admin\Variation\TermMeta;
 use HVSFW\Admin\Variation\ProductMeta;
@@ -48,12 +48,14 @@ final class Admin {
         // Load admin dashboard.
         add_action( 'admin_menu', [ $this, 'menu' ] );
 
-        if ( Helper::is_correct_page() ) {
-            // Register styles and scripts.
-            add_action( 'admin_enqueue_scripts', [ $this, 'register_styles' ] );
-            add_action( 'admin_enqueue_scripts', [ $this, 'register_scripts' ] );
+        if ( Helper::is_correct_menu() ) {
+            add_action( 'admin_enqueue_scripts', [ $this, 'register_menu_styles' ] );
+        }
 
-            // Hide all the notices.
+        if ( Helper::is_correct_submenu() ) {
+            add_action( 'admin_enqueue_scripts', [ $this, 'register_submenu_styles' ] );
+            add_action( 'admin_enqueue_scripts', [ $this, 'register_submenu_scripts' ] );
+
             add_action( 'admin_head', [ $this, 'hide_all_notices' ] );
         }
     }
@@ -64,29 +66,29 @@ final class Admin {
      * @since 1.0.0
      */
     public function menu() {
-        if ( Helper::is_menu_exists( 'handy' ) === false ) {
+        if ( Helper::is_menu_exists( 'handy-tools' ) === false ) {
             add_menu_page( 
-                'Handy', 
-                'Handy', 
+                'Handy Tools', 
+                'Handy Tools', 
                 'manage_options', 
-                'handy', 
+                'handy-tools', 
                 '', 
                 Helper::get_asset_src( 'images/icon.svg' ), 
                 null 
             );
 
             add_submenu_page( 
-                'handy', 
-                'Handy', 
-                'Handy', 
+                'handy-tools', 
+                'Handy Tools', 
+                'Handy Tools', 
                 'manage_options', 
-                'handy', 
+                'handy-tools', 
                 [ $this, 'render_menu_dashboard' ] 
             );
         }
 
         add_submenu_page( 
-            'handy', 
+            'handy-tools', 
             'Variation Swatches', 
             'Variation Swatches', 
             'manage_options', 
@@ -101,7 +103,7 @@ final class Admin {
      * @since 1.0.0
      */
     public function render_menu_dashboard() {
-        echo "<h1>Menu Dashboard</h1>";
+        echo Helper::render_view( 'home' );
     }
 
     /**
@@ -110,29 +112,24 @@ final class Admin {
      * @since 1.0.0
      */
     public function render_submenu_dashboard() {
-        // Check if the plugin has error.
         if ( Helper::plugin_has_error() ) {
             echo Helper::render_view( 'component/error-notice' );
             return;
         }
 
-        // Check if the current page is invalid.
-        if ( ! Helper::is_correct_page() ) {
-            return;
-        }
-
-        // Render the tab content based on current tab slug.
-        if ( isset( $_GET['tab'] ) ) {
-            switch ( $_GET['tab'] ) {
-                case 'setting':
-                    SettingTab::render_tab();
-                    break;
-                case 'import-export':
-                    ImporterExporterTab::render_tab();
-                    break;
+        if ( Helper::is_correct_submenu() ) {
+            if ( isset( $_GET['tab'] ) ) {
+                switch ( $_GET['tab'] ) {
+                    case 'setting':
+                        Setting::render_tab_content();
+                        break;
+                    case 'import-export':
+                        ImporterExporter::render_tab_content();
+                        break;
+                }
+            } else {
+                Setting::render_tab_content();
             }
-        } else {
-            SettingTab::render_tab();
         }
     }
 
@@ -144,8 +141,8 @@ final class Admin {
      */
     private static function get_classes() {
         return [
-            SettingTab::class,
-            ImporterExporterTab::class,
+            Setting::class,
+            ImporterExporter::class,
             AttributeMeta::class,
             TermMeta::class,
             ProductMeta::class
@@ -159,7 +156,6 @@ final class Admin {
      */
     public static function register_classes() {
         foreach ( self::get_classes() as $class ) {
-            // For instantiating.
             if ( method_exists( $class, 'get_instance' ) ) {
                 self::instantiate( $class );
             }
@@ -179,11 +175,24 @@ final class Admin {
     }
 
     /**
-     * Register all styles.
+     * Register all parent menu styles.
      *
      * @since 1.0.0
      */
-    public function register_styles() {
+    public function register_menu_styles() {
+        wp_register_style( 'lexend-deca', Helper::get_asset_src( 'fonts/lexend-deca/lexend-deca.css' ), [], '1.0.0', 'all' );
+        wp_enqueue_style( 'lexend-deca' );
+        
+        wp_register_style( 'hvsfw-home', Helper::get_asset_src( 'css/hvsfw-home.min.css' ), [], '1.0.0', 'all' );
+        wp_enqueue_style( 'hvsfw-home' );
+    }
+
+    /**
+     * Register all submenu styles.
+     *
+     * @since 1.0.0
+     */
+    public function register_submenu_styles() {
         wp_register_style( 'lexend-deca', Helper::get_asset_src( 'fonts/lexend-deca/lexend-deca.css' ), [], '1.0.0', 'all' );
         wp_enqueue_style( 'lexend-deca' );
 
@@ -195,22 +204,21 @@ final class Admin {
     }
 
     /**
-     * Register all scripts.
+     * Register all submenu scripts.
      *
      * @since 1.0.0
      */
-    public function register_scripts() {
+    public function register_submenu_scripts() {
         wp_register_script( 'pickr', Helper::get_asset_src( 'pickr/pickr.min.js' ), [], '1.0.0', true );
         wp_enqueue_script( 'pickr' );
 
         wp_register_script( 'hvsfw-admin', Helper::get_asset_src( 'js/hvsfw-admin.min.js' ), [], '1.0.0', true );
         wp_enqueue_script( 'hvsfw-admin' );
 
-        // Localize variables.
         wp_localize_script( 'hvsfw-admin', 'hvsfwLocal', [
-            'crafter' => 'Y35qwbAlyt+y60cldwAatUDyxikpRb30wBPT9Y1Xymk=',
-            'url'     => admin_url( 'admin-ajax.php' ),
-            'tab'     => [
+            'api'    => 'HNJOELMAFUCOHACM',
+            'url'    => admin_url( 'admin-ajax.php' ),
+            'module' => [
                 'setting' => [
                     'nonce' => [
                         'saveSettings' => wp_create_nonce( 'hvsfw_save_settings' )

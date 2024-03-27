@@ -24,7 +24,7 @@ $tabs  = ( isset( $args['tabs'] ) ? $args['tabs'] : [] );
 
 <div class="hd-tab__nav <?php echo esc_attr( $args['class'] ) ?>" data-visibility="hidden">
     <div class="hd-tab__nav__container">
-        <button class="hd-tab__nav__action-btn hd-btn-square" data-event="prev" data-state="disabled" aria-label="<?php echo __( 'Previous', HVSFW_PLUGIN_DOMAIN ); ?>">
+        <button class="hd-tab__nav__action-btn hd-btn-icon hd-btn-icon--square" data-event="prev" data-state="disabled" aria-label="<?php echo __( 'Previous', HVSFW_PLUGIN_DOMAIN ); ?>">
             <?php echo Helper::get_icon( 'chevron-backward', 'hd-svg' ); ?>
         </button>
         <ul class="hd-tab__nav__list">
@@ -36,7 +36,7 @@ $tabs  = ( isset( $args['tabs'] ) ? $args['tabs'] : [] );
                 </li>
             <?php endforeach; ?>
         </ul>
-        <button class="hd-tab__nav__action-btn hd-btn-square" data-event="next" data-state="default" aria-label="<?php echo __( 'Next', HVSFW_PLUGIN_DOMAIN ); ?>">
+        <button class="hd-tab__nav__action-btn hd-btn-icon hd-btn-icon--square" data-event="next" data-state="default" aria-label="<?php echo __( 'Next', HVSFW_PLUGIN_DOMAIN ); ?>">
             <?php echo Helper::get_icon( 'chevron-forward', 'hd-svg' ); ?>
         </button>
     </div>

@@ -1,7 +1,7 @@
 {
   "name": "handy-variation-swatches",
   "version": "1.0.0",
-  "description": "Handy Variation Swatches For WooCommerce will let you replace the default dropdown variation into more detailed and engaging variation (button, radio, color and image) swatches.",
+  "description": "Handy Variation Swatches is a very helpful WooCommerce plugin that will let the store owners to replace the default dropdown variation with more detailed and engaging variation (button, color, and image) swatches.",
   "main": "app.js",
   "scripts": {
     "start": "gulp watch",

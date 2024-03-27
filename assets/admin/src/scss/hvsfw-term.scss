@@ -35,7 +35,7 @@
 			width: 40px;
 			height: 40px;
 			border: 1px solid #8c8f94;
-			border-radius: 5px;
+			border-radius: 2px;
 		}
 
 		// Image.
@@ -48,14 +48,14 @@
 			max-width: 40px;
 			max-height: 40px;
 			border: 1px solid #8c8f94;
-			border-radius: 5px;
+			border-radius: 2px;
 
 			&__img {
 				display: block;
 				width: 100%;
 				max-width: fit-content;
 				max-height: inherit;
-				border-radius: 4px;
+				border-radius: inherit;
 			}
 		}
 	}

@@ -24,7 +24,6 @@
 	figure,
 	picture {
 		margin: 0;
-		letter-spacing: 0.2px;
 	}
 
 	p {
@@ -44,7 +43,6 @@
 	textarea,
 	select {
 		font: inherit;
-		letter-spacing: 0.5px;
 	}
 
 	a,
@@ -64,7 +62,6 @@
 	a {
 		color: $clr-black-1;
 		text-decoration: none;
-		letter-spacing: 0.5px;
 		outline: none !important;
 		box-shadow: none !important;
 
@@ -83,7 +80,7 @@
 
 #wpcontent {
 	padding-left: 0;
-	background: #f0f2f5;
+	background: #f4f7f9;
 }
 
 .wrap {

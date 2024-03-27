@@ -1,5 +1,8 @@
 // Variables
-$clr-red-1:   #f02848;
+$clr-red-1:   #e44141;
+$clr-red-2:   #e4414133;
+$clr-green-1: #28a745;
+$clr-green-2: #0da75933;
 $clr-blue-1:  #0071f2;
 $clr-blue-2:  #034da2;
 $clr-blue-3:  #f2f7fd;
@@ -9,7 +12,9 @@ $clr-gray-2:  #e5e7e9;
 $clr-gray-3:  #bfbfbf;
 $clr-gray-4:  #e8e8eb;
 $clr-gray-5:  #d0d1d7;
+$clr-gray-6:  #f0f0f0;
 $clr-white-1: #fff;
+$clr-white-2: #f9f9f9;
 $clr-black-1: #141b38;
 $clr-black-2: #2c3338;
 $clr-black-3: #9ca9b3;
@@ -19,7 +24,7 @@ $clr-black-5: #434960;
 $br-radius-1: 4px;
 $br-radius-2: 2px;
 
-$shadow-1: 0 2px 5px #0000000d;
-$shadow-2: rgba(0, 0, 0, 0.2) 0 12px 28px 0,
-	rgba(0, 0, 0, 0.1) 0 2px 4px 0,
-	rgba(255, 255, 255, 0.5) 0 0 0 1px inset;
+$shadow-1: 0 4px 40px rgba(39, 32, 120, 0.1);
+$shadow-2: 0 9px 20px rgba(46, 35, 94, 0.07);
+$shadow-3: rgba(0, 0, 0, 0.15) 0 8px 16px 0;
+$shadow-4: rgba(89, 102, 122, 0.1) 0 0 20px 0;

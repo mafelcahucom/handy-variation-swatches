@@ -37,13 +37,11 @@ $choices     = ( isset( $args['choices'] ) ? $args['choices'] : [] );
                 <?php echo esc_html( $label ); ?>
             </label>
         <?php endif; ?>
-
         <?php if ( ! empty( $description ) ): ?>
             <p class="hd-text hd-mb-15">
                 <?php echo esc_html( $description ); ?>
             </p>
         <?php endif; ?>
-
         <?php if ( ! empty( $name ) && ! empty( $choices ) ): ?>
             <div class="hd-image-picker-field" style="grid-template-columns: repeat(auto-fill, minmax(<?php echo esc_attr( $max_width ) .'px'; ?>, 3fr));">
                 <?php foreach ( $choices as $choice ): ?>
@@ -55,7 +53,7 @@ $choices     = ( isset( $args['choices'] ) ? $args['choices'] : [] );
             <input type="hidden" id="<?php echo esc_attr( $name ); ?>" name="<?php echo esc_attr( $name ); ?>" data-input-group="<?php echo esc_attr( $group ); ?>" value="<?php echo esc_attr( $value ); ?>">
         <?php endif; ?>
         <p class="hd-form-field__error">
-            <?php __( 'Error Message', HVSFW_PLUGIN_DOMAIN ); ?>
+            <?php echo __( 'Error Message', HVSFW_PLUGIN_DOMAIN ); ?>
         </p>
     </div>
 </div>
