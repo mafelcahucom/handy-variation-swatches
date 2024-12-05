@@ -5,7 +5,7 @@ import {
 	getUCFirst,
 	setAttribute, 
 	eventListener 
-} from "../../../../../../../assets/helpers";
+} from "../../../../../../../resources/helpers";
 
 /**
  * Strict mode.

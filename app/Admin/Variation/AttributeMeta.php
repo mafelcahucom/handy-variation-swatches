@@ -1,4 +1,14 @@
 <?php
+/**
+ * App > Admin > Variation > Attribute Meta.
+ *
+ * @since   1.0.0
+ *
+ * @version 1.0.0
+ * @author  Mafel John Cahucom
+ * @package handy-variation-swatches
+ */
+
 namespace HVSFW\Admin\Variation;
 
 use HVSFW\Inc\Traits\Singleton;
@@ -9,17 +19,16 @@ use HVSFW\Admin\Inc\SwatchHelper;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Attribute Meta.
+ * The `AttributeMeta` class contains the all swatch
+ * attribute meta data.
  *
- * @since 	1.0.0
- * @version 1.0.0
- * @author  Mafel John Cahucom
+ * @since 1.0.0
  */
 final class AttributeMeta {
 
 	/**
 	 * Inherit Singleton.
-     * 
+     *
      * @since 1.0.0
 	 */
 	use Singleton;
@@ -30,31 +39,42 @@ final class AttributeMeta {
      * @since 1.0.0
      */
     protected function __construct() {
-        // Register styles and scripts.
-        add_action( 'admin_enqueue_scripts', [ $this, 'register_styles' ] );
-        add_action( 'admin_enqueue_scripts', [ $this, 'register_scripts' ] );
+        /**
+         * Register styles and scripts.
+         */
+        add_action( 'admin_enqueue_scripts', array( $this, 'register_styles' ) );
+        add_action( 'admin_enqueue_scripts', array( $this, 'register_scripts' ) );
 
-        // Render attribute type selector.
-        add_filter( 'product_attributes_type_selector', [ $this, 'attribute_type_selector_field' ], 10, 1 );
-        
-        // Render attribute swatch form in adding and edit.
-        add_action( 'woocommerce_after_add_attribute_fields', [ $this, 'attribute_swatch_setting_form' ] );
-        add_action( 'woocommerce_after_edit_attribute_fields', [ $this, 'attribute_swatch_setting_form' ] );
+        /**
+         * Render attribute type selector.
+         */
+        add_filter( 'product_attributes_type_selector', array( $this, 'attribute_type_selector_field' ), 10, 1 );
 
-        // Saving the attribute swatch form data.
-        add_action( 'woocommerce_attribute_added', [ $this, 'save_attribute_swatch_setting' ] );
-        add_action( 'woocommerce_attribute_updated', [ $this, 'save_attribute_swatch_setting' ] );
+        /**
+         * Render attribute swatch form in adding and edit.
+         */
+        add_action( 'woocommerce_after_add_attribute_fields', array( $this, 'attribute_swatch_setting_form' ) );
+        add_action( 'woocommerce_after_edit_attribute_fields', array( $this, 'attribute_swatch_setting_form' ) );
 
-        // Deleting the attribute swatch form data.
-        add_action( 'woocommerce_attribute_deleted', [ $this, 'delete_attribute_swatch_setting' ] );
+        /**
+         * Saving the attribute swatch form data.
+         */
+        add_action( 'woocommerce_attribute_added', array( $this, 'save_attribute_swatch_setting' ) );
+        add_action( 'woocommerce_attribute_updated', array( $this, 'save_attribute_swatch_setting' ) );
+
+        /**
+         * Deleting the attribute swatch form data.
+         */
+        add_action( 'woocommerce_attribute_deleted', array( $this, 'delete_attribute_swatch_setting' ) );
     }
 
     /**
      * Register all styles.
-     * 
+     *
      * @since 1.0.0
      *
-     * @param string  $hook_suffix  Contains the hook suffix for the current admin page.
+     * @param  string $hook_suffix Contains the hook suffix for the current admin page.
+     * @return void
      */
     public function register_styles( $hook_suffix ) {
         if ( $hook_suffix !== 'product_page_product_attributes' ) {
@@ -63,24 +83,29 @@ final class AttributeMeta {
 
         wp_enqueue_style( 'wp-color-picker' );
 
-        wp_register_style( 'hvsfw-attribute', Helper::get_asset_src( 'css/hvsfw-attribute.min.css' ), [], '1.0.0', 'all' );
+        $asset        = include HVSFW_PLUGIN_PATH . 'public/admin/styles/hvsfw-attribute.asset.php';
+        $asset['src'] = Helper::get_public_src( 'styles/hvsfw-attribute.css' );
+        wp_register_style( 'hvsfw-attribute', $asset['src'], $asset['dependencies'], $asset['version'], 'all' );
         wp_enqueue_style( 'hvsfw-attribute' );
     }
 
     /**
      * Register all scripts.
-     * 
+     *
      * @since 1.0.0
      *
-     * @param string  $hook_suffix  Contains the hook suffix for the current admin page.
+     * @param  string $hook_suffix Contains the hook suffix for the current admin page.
+     * @return void
      */
     public function register_scripts( $hook_suffix ) {
         if ( $hook_suffix !== 'product_page_product_attributes' ) {
             return;
         }
 
-        $dependency = [ 'jquery', 'wp-color-picker' ];
-        wp_register_script( 'hvsfw-attribute', Helper::get_asset_src( 'js/hvsfw-attribute.min.js' ), $dependency, '1.0.0', true );
+        $asset                 = include HVSFW_PLUGIN_PATH . 'public/admin/scripts/hvsfw-attribute.asset.php';
+        $asset['src']          = Helper::get_public_src( 'scripts/hvsfw-attribute.js' );
+        $asset['dependencies'] = array( 'jquery', 'wp-color-picker' );
+        wp_register_script( 'hvsfw-attribute', $asset['src'], $asset['dependencies'], $asset['version'], true );
         wp_enqueue_script( 'hvsfw-attribute' );
     }
 
@@ -89,63 +114,68 @@ final class AttributeMeta {
      *
      * @since 1.0.0
      *
-     * @param  array  $types  Contains the current attribute types.
+     * @param  array $types Contains the current attribute types.
      * @return array
      */
     public function attribute_type_selector_field( $types ) {
         $screen = get_current_screen();
         if ( isset( $screen->id ) && $screen->id === 'product_page_product_attributes' ) {
-            $types = [
+            $types = array(
                 'select' => 'Select',
                 'button' => 'Button',
                 'color'  => 'Color',
-                'image'  => 'Image'
-            ];
+                'image'  => 'Image',
+            );
         }
 
         return $types;
     }
 
     /**
-     * Render the product attribute swatch setting form in adding and edit attribute page.
+     * Render the product attribute swatch setting form in
+     * adding and edit attribute page.
      *
      * @since 1.0.0
+     *
+     * @return void
      */
     public function attribute_swatch_setting_form() {
         $id      = isset( $_GET['edit'] ) ? absint( $_GET['edit'] ) : 0;
-        $setting = ( $id !== 0 ? get_option( "_hvsfw_swatch_attribute_setting_$id" ) : [] );
+        $setting = ( $id !== 0 ? get_option( "_hvsfw_swatch_attribute_setting_$id" ) : array() );
 
-        $default = [];
+        $default = array();
         foreach ( SwatchHelper::get_swatch_setting_schema() as $key => $field ) {
             $default[ $key ] = $field['default'];
         }
 
         $form_type = ( $id === 0 ? 'add' : 'edit' );
-        echo Helper::render_view( "variation/attribute/swatch-setting-form-$form_type", [
+        echo Helper::render_view( "variation/attribute/swatch-setting-form-$form_type", array(
             'setting' => $setting,
-            'default' => $default
-        ]);
+            'default' => $default,
+        ));
     }
 
     /**
-     * Saving the attribute swatch setting during adding and editing attribute.
+     * Saving the attribute swatch setting during adding
+     * and editing attribute.
      *
      * @since 1.0.0
-     * 
-     * @param integer  $id  Contains the added attribute ID.
+     *
+     * @param  integer $id Contains the added attribute ID.
+     * @return void
      */
     public function save_attribute_swatch_setting( $id ) {
         // Validate the swatch setting value.
-        $validated = SwatchHelper::validate_swatch_setting_value([
+        $validated = SwatchHelper::validate_swatch_setting_value(array(
             'type'    => 'UNSET',
-            'setting' => $_POST
-        ]);
+            'setting' => $_POST,
+        ));
 
         // Delete term metas of this attribute if type has changed.
         $current_setting = Utility::get_swatch_settings( $id );
         if ( ! empty( $current_setting ) ) {
             $is_changed     = ( $current_setting['type'] !== $validated['type'] );
-            $in_color_image = in_array( $current_setting['type'], [ 'color', 'image' ] );
+            $in_color_image = in_array( $current_setting['type'], array( 'color', 'image' ), true );
             if ( $is_changed && $in_color_image ) {
                 $this->delete_term_meta_associate_by_attribute( $id );
             }
@@ -159,8 +189,9 @@ final class AttributeMeta {
      * Deleting the attribute swatch setting during deleting attribute.
      *
      * @since 1.0.0
-     * 
-     * @param integer  $id  Contains the added attribute ID.
+     *
+     * @param  integer $id Contains the added attribute ID.
+     * @return void
      */
     public function delete_attribute_swatch_setting( $id ) {
         delete_option( "_hvsfw_swatch_attribute_setting_$id" );
@@ -171,7 +202,8 @@ final class AttributeMeta {
      *
      * @since 1.0.0
      *
-     * @param integer  $attribute_id  Contains the target attribute id.
+     * @param  integer $attribute_id Contains the target attribute id.
+     * @return void
      */
     private function delete_term_meta_associate_by_attribute( $attribute_id ) {
         if ( empty( $attribute_id ) ) {
@@ -179,10 +211,10 @@ final class AttributeMeta {
         }
 
         $taxonomy = wc_attribute_taxonomy_name_by_id( $attribute_id );
-        $terms    = get_terms([
+        $terms    = get_terms(array(
             'taxonomy'   => $taxonomy,
-            'hide_empty' => false
-        ]);
+            'hide_empty' => false,
+        ));
 
         if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
             foreach ( $terms as $term ) {

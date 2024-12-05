@@ -1,4 +1,14 @@
 <?php
+/**
+ * App > Admin > Inc > Field Validation.
+ *
+ * @since   1.0.0
+ *
+ * @version 1.0.0
+ * @author  Mafel John Cahucom
+ * @package handy-variation-swatches
+ */
+
 namespace HVSFW\Admin\Inc;
 
 use HVSFW\Inc\Traits\Singleton;
@@ -6,17 +16,16 @@ use HVSFW\Inc\Traits\Singleton;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Admin Field Validation.
+ * The `FieldValidation` class contains all the field
+ * data validations.
  *
- * @since 	1.0.0
- * @version 1.0.0
- * @author  Mafel John Cahucom
+ * @since 1.0.0
  */
 final class FieldValidation {
 
 	/**
 	 * Inherit Singleton.
-     * 
+     *
      * @since 1.0.0
 	 */
 	use Singleton;
@@ -35,15 +44,15 @@ final class FieldValidation {
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Contains the necessary parameters for validating fields.
+     * @param  array $args Contains the necessary arguments for validating fields.
      * $args = [
-     *     'fields'        => (array) Contains the all the new fields.
-     *     'current_value' => (array) Contains the fields value from get_option().
-     *     'field_rules'   => (array) Contains the set of rules for each fields.
+     *    'fields'        => (array) Contains the all the new fields.
+     *    'current_value' => (array) Contains the fields value from get_option().
+     *    'field_rules'   => (array) Contains the set of rules for each fields.
      * ]
      * @return array
      */
-    public static function validate( $args = [] ) {
+    public static function validate( $args = array() ) {
         if ( ! isset( $args['fields'] ) || ! isset( $args['current_value'] ) || ! isset( $args['field_rules'] ) ) {
             return false;
         }
@@ -53,79 +62,79 @@ final class FieldValidation {
         $current_value = $args['current_value'];
 
         // Holds all the validation results in each field.
-        $validation_results = [
-            'valid'   => [],
-            'invalid' => []
-        ];
+        $validation_results = array(
+            'valid'   => array(),
+            'invalid' => array(),
+        );
 
         // Validating each fields.
         foreach ( $fields as $key => $value ) {
             switch ( $field_rules[ $key ]['type'] ) {
                 case 'text':
-                    $validation = self::validate_text_field([
+                    $validation = self::validate_text_field(array(
                         'value'         => $value,
                         'max'           => $field_rules[ $key ]['max'],
-                        'current_value' => $current_value[ $key ]
-                    ]);
+                        'current_value' => $current_value[ $key ],
+                    ));
                     break;
                 case 'textarea':
-                    $validation = self::validate_textarea_field([
-                        'value'         => $value
-                    ]);
+                    $validation = self::validate_textarea_field(array(
+                        'value'         => $value,
+                    ));
                     break;
                 case 'number':
-                    $validation = self::validate_number_field([
+                    $validation = self::validate_number_field(array(
                         'value'         => $value,
-                        'current_value' => $current_value[ $key ]
-                    ]);
+                        'current_value' => $current_value[ $key ],
+                    ));
                     $value = absint( $value );
                     break;
                 case 'size':
-                    $validation = self::validate_size_field([
+                    $validation = self::validate_size_field(array(
                         'value'         => $value,
-                        'current_value' => $current_value[ $key ]
-                    ]);
+                        'current_value' => $current_value[ $key ],
+                    ));
                     break;
                 case 'select':
-                    $validation = self::validate_select_field([
+                    $validation = self::validate_select_field(array(
                         'value'         => $value,
                         'choices'       => $field_rules[ $key ]['choices'],
-                        'current_value' => $current_value[ $key ]
-                    ]);
+                        'current_value' => $current_value[ $key ],
+                    ));
                     break;
                 case 'switch':
-                    $validation = self::validate_switch_field([
+                    $validation = self::validate_switch_field(array(
                         'value'         => $value,
-                        'current_value' => $current_value[ $key ]
-                    ]);
+                        'current_value' => $current_value[ $key ],
+                    ));
                     $value = absint( $value );
                     break;
                 case 'color':
-                    $validation = self::validate_color_picker_field([
+                    $validation = self::validate_color_picker_field(array(
                         'value'         => $value,
-                        'current_value' => $current_value[ $key ]
-                    ]);
+                        'current_value' => $current_value[ $key ],
+                    ));
                     break;
                 case 'icon':
-                    $validation = self::validate_icon_picker_field([
+                    $validation = self::validate_icon_picker_field(array(
                         'value'         => $value,
                         'icons'         => $field_rules[ $key ]['icons'],
-                        'current_value' => $current_value[ $key ]
-                    ]);
+                        'current_value' => $current_value[ $key ],
+                    ));
                     break;
                 case 'image':
-                    $validation = self::validate_image_picker_field([
+                    $validation = self::validate_image_picker_field(array(
                         'value'         => $value,
                         'choices'       => $field_rules[ $key ]['choices'],
-                        'current_value' => $current_value[ $key ]
-                    ]);
+                        'current_value' => $current_value[ $key ],
+                    ));
                     break;
                 case 'loader':
-                    $validation = self::validate_loader_picker_field([
+                    $validation = self::validate_loader_picker_field(array(
                         'value'         => $value,
                         'choices'       => $field_rules[ $key ]['choices'],
-                        'current_value' => $current_value[ $key ]
-                    ]);
+                        'current_value' => $current_value[ $key ],
+                    ));
                     break;
             }
 
@@ -141,10 +150,10 @@ final class FieldValidation {
             }
         }
 
-        return [
+        return array(
             'validation'    => $validation_results,
-            'updated_value' => $current_value
-        ];
+            'updated_value' => $current_value,
+        );
     }
 
     /**
@@ -152,28 +161,28 @@ final class FieldValidation {
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Contains the necessary parameters for evaluating text field.
+     * @param  array $args Contains the necessary arguments for evaluating text field.
      * $args = [
-     *     'value'         => (string)  Contains the value of text field.
-     *     'max'           => (integer) Contains the maximum character length.
-     *     'current_value' => (string)  Contains the thee current value from _hwfw_main_settings.
+     *    'value'         => (string)  Contains the value of text field.
+     *    'max'           => (integer) Contains the maximum character length.
+     *    'current_value' => (string)  Contains the thee current value from _hwfw_main_settings.
      * ]
      * @return array
      */
-    public static function validate_text_field( $args = [] ) {
-        $output = [
+    public static function validate_text_field( $args = array() ) {
+        $output = array(
             'success' => false,
-            'value'   => $args['current_value']
-        ];
+            'value'   => $args['current_value'],
+        );
 
         if ( strlen( $args['value'] ) <= $args['max'] ) {
-            $output = [
+            $output = array(
                 'success' => true,
-                'value'   => $args['value']
-            ];
+                'value'   => $args['value'],
+            );
         } else {
             $output['error'] = sprintf(
-                __( 'Total characters must not exceed in %s.', HVSFW_PLUGIN_DOMAIN ),
+                __( 'Total characters must not exceed in %s.', 'handy-variation-swatches' ),
                 $args['max']
             );
         }
@@ -186,17 +195,17 @@ final class FieldValidation {
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Contains the parameter need to evaluate textarea field.
+     * @param  array $args Contains the necessary arguments to evaluate textarea field.
      * $args = [
-     *     'value' => (string) Contains the value of textarea field.
+     *    'value' => (string) Contains the value of textarea field.
      * ]
      * @return array
      */
-    public static function validate_textarea_field( $args = [] ) {
-        return [
+    public static function validate_textarea_field( $args = array() ) {
+        return array(
             'success' => true,
-            'value'   => $args['value']
-        ];
+            'value'   => $args['value'],
+        );
     }
 
     /**
@@ -204,29 +213,29 @@ final class FieldValidation {
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Contains the parameter need to evaluate number field.
+     * @param  array $args Contains the necessary arguments to evaluate number field.
      * $args = [
-     *     'value'         => (integer) Contains the value of number field.
-     *     'current_value' => (integer) Contains the current value from _hvsfw_main_settings.
+     *    'value'         => (integer) Contains the value of number field.
+     *    'current_value' => (integer) Contains the current value from _hvsfw_main_settings.
      * ]
      * @return array
      */
-    public static function validate_number_field( $args = [] ) {
-        $output = [
+    public static function validate_number_field( $args = array() ) {
+        $output = array(
             'success' => false,
             'value'   => $args['current_value'],
-            'error'   => 'This field is required.'
-        ];
+            'error'   => 'This field is required.',
+        );
 
         if ( $args['value'] !== '' && $args['value'] !== null ) {
             $number = filter_var( $args['value'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION );
             if ( is_numeric( $number ) ) {
-                $output = [
+                $output = array(
                     'success' => true,
-                    'value'   => round( $number )
-                ];
+                    'value'   => round( $number ),
+                );
             } else {
-                $output['error'] = __( 'Invalid value. Please enter the appropriate value.', HVSFW_PLUGIN_DOMAIN );
+                $output['error'] = __( 'Invalid value. Please enter the appropriate value.', 'handy-variation-swatches' );
             }
         }
 
@@ -238,25 +247,26 @@ final class FieldValidation {
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Contains the parameter need to evaluate switch field.
+     * @param  array $args Contains the necessary arguments to evaluate switch field.
      * $args = [
-     *     'value'         => (boolean) Contains the value of switch field.
-     *     'current_value' => (boolean) Contains the current value from _hvsfw_main_settings.
+     *    'value'         => (boolean) Contains the value of switch field.
+     *    'current_value' => (boolean) Contains the current value from _hvsfw_main_settings.
      * ]
      * @return array
      */
-    public static function validate_switch_field( $args = [] ) {
-        $output = [
+    public static function validate_switch_field( $args = array() ) {
+        $output = array(
             'success' => false,
             'value'   => $args['current_value'],
-            'error'   => __( 'Invalid value. Please enter the appropriate value.', HVSFW_PLUGIN_DOMAIN )
-        ];
+            'error'   => __( 'Invalid value. Please enter the appropriate value.', 'handy-variation-swatches' ),
+        );
 
-        if ( in_array( $args['value'], ['0', '1'] ) ) {
-            $output = [
+        // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
+        if ( in_array( $args['value'], array( '0', '1' ) ) ) {
+            $output = array(
                 'success' => true,
-                'value'   => $args['value']
-            ];
+                'value'   => $args['value'],
+            );
         }
 
         return $output;
@@ -267,63 +277,65 @@ final class FieldValidation {
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Contains the parameter need to evaluate select field.
+     * @param  array $args Contains the necessary arguments to evaluate select field.
      * $args = [
-     *     'value'         => (integer|string) Contains the value of select field.
-     *     'choices'       => (array)          Contains the choices in select field.
-     *     'current_value' => (integer|string) Contains the current value from _hvsfw_main_settings.
+     *    'value'         => (integer|string) Contains the value of select field.
+     *    'choices'       => (array)          Contains the choices in select field.
+     *    'current_value' => (integer|string) Contains the current value from _hvsfw_main_settings.
      * ]
      * @return array
      */
-    public static function validate_select_field( $args = [] ) {
-        $output = [
+    public static function validate_select_field( $args = array() ) {
+        $output = array(
             'success' => false,
             'value'   => $args['current_value'],
-            'error'   => __( 'This field is required.', HVSFW_PLUGIN_DOMAIN )
-        ];
+            'error'   => __( 'This field is required.', 'handy-variation-swatches' ),
+        );
 
         if ( ! empty( $args['value'] ) ) {
+            // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
             if ( in_array( $args['value'], $args['choices'] ) ) {
-                $output = [
+                $output = array(
                     'success' => true,
-                    'value'   => $args['value']
-                ];
+                    'value'   => $args['value'],
+                );
             } else {
-                $output['error'] = __( 'Invalid value. Please enter the appropriate value.', HVSFW_PLUGIN_DOMAIN );
+                $output['error'] = __( 'Invalid value. Please enter the appropriate value.', 'handy-variation-swatches' );
             }
         }
 
         return $output;
     }
-    
+
     /**
      * Validate the value of icon picker field.
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Contains the parameter need to evaluate icon picker field.
+     * @param  array $args Contains the necessary arguments to evaluate icon picker field.
      * $args = [
-     *     'value'         => (string) Contains the value of icon picker field.
-     *     'icons'         => (array)  Contains the list of icons in icon picker field.
-     *     'current_value' => (string) Contains the current value from _hvsfw_main_settings.
+     *    'value'         => (string) Contains the value of icon picker field.
+     *    'icons'         => (array)  Contains the list of icons in icon picker field.
+     *    'current_value' => (string) Contains the current value from _hvsfw_main_settings.
      * ]
      * @return array
      */
-    public static function validate_icon_picker_field( $args = [] ) {
-        $output = [
+    public static function validate_icon_picker_field( $args = array() ) {
+        $output = array(
             'success' => false,
             'value'   => $args['current_value'],
-            'error'   => __( 'This field is required.', HVSFW_PLUGIN_DOMAIN )
-        ];
+            'error'   => __( 'This field is required.', 'handy-variation-swatches' ),
+        );
 
         if ( ! empty( $args['value'] ) ) {
+            // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
             if ( in_array( $args['value'], $args['icons'] ) ) {
-                $output = [
+                $output = array(
                     'success' => true,
-                    'value'   => $args['value']
-                ];
+                    'value'   => $args['value'],
+                );
             } else {
-                $output['error'] = __( 'Invalid icon. Please select the appropriate icon.', HVSFW_PLUGIN_DOMAIN );
+                $output['error'] = __( 'Invalid icon. Please select the appropriate icon.', 'handy-variation-swatches' );
             }
         }
 
@@ -335,29 +347,30 @@ final class FieldValidation {
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Contains the parameter need to evaluate image picker field.
+     * @param  array $args Contains the necessary arguments to evaluate image picker field.
      * $args = [
-     *     'value'         => (string) Contains the value of image picker field.
-     *     'choices'       => (array)  Contains the list of images in image picker field.
-     *     'current_value' => (string) Contains the current value from _hvsfw_main_settings.
+     *    'value'         => (string) Contains the value of image picker field.
+     *    'choices'       => (array)  Contains the list of images in image picker field.
+     *    'current_value' => (string) Contains the current value from _hvsfw_main_settings.
      * ]
      * @return array
      */
-    public static function validate_image_picker_field( $args = [] ) {
-        $output = [
+    public static function validate_image_picker_field( $args = array() ) {
+        $output = array(
             'success' => false,
             'value'   => $args['current_value'],
-            'error'   => __( 'This field is required.', HVSFW_PLUGIN_DOMAIN )
-        ];
+            'error'   => __( 'This field is required.', 'handy-variation-swatches' ),
+        );
 
         if ( ! empty( $args['value'] ) ) {
+            // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
             if ( in_array( $args['value'], $args['choices'] ) ) {
-                $output = [
+                $output = array(
                     'success' => true,
-                    'value'   => $args['value']
-                ];
+                    'value'   => $args['value'],
+                );
             } else {
-                $output['error'] = __( 'Invalid image. Please select the appropriate image.', HVSFW_PLUGIN_DOMAIN );
+                $output['error'] = __( 'Invalid image. Please select the appropriate image.', 'handy-variation-swatches' );
             }
         }
 
@@ -369,29 +382,30 @@ final class FieldValidation {
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Contains the parameter need to evalualoader picker field.
+     * @param  array $args Contains the necessary arguments to evalualoader picker field.
      * $args = [
-     *     'value'         => (string) Contains the value loader picker field.
-     *     'choices'       => (array)  Contains the list of loaders choices.
-     *     'current_value' => (string) Contains the current value from _hvsfw_main_settings.
+     *    'value'         => (string) Contains the value loader picker field.
+     *    'choices'       => (array)  Contains the list of loaders choices.
+     *    'current_value' => (string) Contains the current value from _hvsfw_main_settings.
      * ]
      * @return array
      */
-    public static function validate_loader_picker_field( $args = [] ) {
-        $output = [
+    public static function validate_loader_picker_field( $args = array() ) {
+        $output = array(
             'success' => false,
             'value'   => $args['current_value'],
-            'error'   => __( 'This field is required.', HVSFW_PLUGIN_DOMAIN )
-        ];
+            'error'   => __( 'This field is required.', 'handy-variation-swatches' ),
+        );
 
         if ( ! empty( $args['value'] ) ) {
+            // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
             if ( in_array( $args['value'], $args['choices'] ) ) {
-                $output = [
+                $output = array(
                     'success' => true,
-                    'value'   => $args['value']
-                ];
+                    'value'   => $args['value'],
+                );
             } else {
-                $output['error'] = __( 'Invalid loader. Please select the appropriate loader.', HVSFW_PLUGIN_DOMAIN );
+                $output['error'] = __( 'Invalid loader. Please select the appropriate loader.', 'handy-variation-swatches' );
             }
         }
 
@@ -403,28 +417,28 @@ final class FieldValidation {
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Contains the parameter need to evaluate color picker field.
+     * @param  array $args Contains the necessary arguments to evaluate color picker field.
      * $args = [
-     *     'value'         => (string) Contains the value of color picker field.
-     *     'current_value' => (string) Contains the current value from _hvsfw_main_settings.
+     *    'value'         => (string) Contains the value of color picker field.
+     *    'current_value' => (string) Contains the current value from _hvsfw_main_settings.
      * ]
      * @return array
      */
-    public static function validate_color_picker_field( $args = [] ) {
-        $output = [
+    public static function validate_color_picker_field( $args = array() ) {
+        $output = array(
             'success' => false,
             'value'   => $args['current_value'],
-            'error'   => __( 'This field is required.', HVSFW_PLUGIN_DOMAIN )
-        ];
+            'error'   => __( 'This field is required.', 'handy-variation-swatches' ),
+        );
 
         if ( ! empty( $args['value'] ) ) {
             if ( preg_match( '/^rgba\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3}),\s*(\d*(?:\.\d+)?)\)$/', $args['value'] ) == true ) {
-                $output = [
+                $output = array(
                     'success' => true,
-                    'value'   => $args['value']
-                ];
+                    'value'   => $args['value'],
+                );
             } else {
-                $output['error'] = __( 'Invalid color format. Please enter the appropriate color format.', HVSFW_PLUGIN_DOMAIN );
+                $output['error'] = __( 'Invalid color format. Please enter the appropriate color format.', 'handy-variation-swatches' );
             }
         }
 
@@ -436,31 +450,32 @@ final class FieldValidation {
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Contains the parameter need to evaluate text field size.
+     * @param  array $args Contains the necessary arguments to evaluate text field size.
      * $args = [
-     *     'value'         => (string) Contains the value of text field size.
-     *     'current_value' => (string) Contains the current value from _hvsfw_main_settings.
+     *    'value'         => (string) Contains the value of text field size.
+     *    'current_value' => (string) Contains the current value from _hvsfw_main_settings.
      * ]
      * @return array
      */
-    public static function validate_size_field( $args = [] ) {
-        $output = [
+    public static function validate_size_field( $args = array() ) {
+        $output = array(
             'success' => false,
             'value'   => $args['current_value'],
-            'error'   => __( 'This field is required.', HVSFW_PLUGIN_DOMAIN )
-        ];
+            'error'   => __( 'This field is required.', 'handy-variation-swatches' ),
+        );
 
         if ( ! empty( $args['value'] ) ) {
-            $valid_keywords = [ 'unset', 'auto', 'max-content', 'min-content', 'fit-content' ];
+            $valid_keywords = array( 'unset', 'auto', 'max-content', 'min-content', 'fit-content' );
+            // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
             if ( in_array( $args['value'], $valid_keywords ) ) {
-                $output = [
+                $output = array(
                     'success' => true,
-                    'value'   => $args['value']
-                ];
+                    'value'   => $args['value'],
+                );
             } else {
                 // Validate the size unit.
                 $unit       = '';
-                $valid_unit = [ '%', 'px', 'em', 'rem', 'vw', 'vh' ];
+                $valid_unit = array( '%', 'px', 'em', 'rem', 'vw', 'vh' );
                 foreach ( $valid_unit as $value ) {
                     if ( strpos( $args['value'], $value ) !== false ) {
                         $unit = $value;
@@ -471,16 +486,16 @@ final class FieldValidation {
                 // Get the number only.
                 $number = filter_var( $args['value'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION );
                 if ( $number !== '' || $number === 0 ) {
-                    $output = [
+                    $output = array(
                         'success' => true,
-                        'value'   => $number . $unit
-                    ];
+                        'value'   => $number . $unit,
+                    );
                 } else {
-                    $output['error'] = __( 'Invalid value. Please enter the appropriate value.', HVSFW_PLUGIN_DOMAIN );
+                    $output['error'] = __( 'Invalid value. Please enter the appropriate value.', 'handy-variation-swatches' );
                 }
             }
         }
-        
+
         return $output;
     }
 }

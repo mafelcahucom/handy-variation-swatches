@@ -1,4 +1,14 @@
 <?php
+/**
+ * App > Inc > Utility.
+ *
+ * @since   1.0.0
+ *
+ * @version 1.0.0
+ * @author  Mafel John Cahucom
+ * @package handy-variation-swatches
+ */
+
 namespace HVSFW\Inc;
 
 use HVSFW\Inc\Traits\Singleton;
@@ -6,17 +16,16 @@ use HVSFW\Inc\Traits\Singleton;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Global Validator.
+ * The `Validator` class contains the global field or
+ * data validator.
  *
- * @since 	1.0.0
- * @version 1.0.0
- * @author  Mafel John Cahucom
+ * @since 1.0.0
  */
 final class Validator {
 
 	/**
 	 * Inherit Singleton.
-     * 
+     *
      * @since 1.0.0
 	 */
 	use Singleton;
@@ -30,25 +39,24 @@ final class Validator {
 
     /**
      * Validate text value.
-     * 
+     *
      * @sinc 1.0.0
      *
-     * @param  array  $args  Contains the parameter need to evaluate text value.
+     * @param  array $args Contains the necessary arguments to evaluate text value.
      * $args = [
-     *      'value'   => (mixed)   Contains the current value.
-     *      'default' => (mixed)   Contains the default value.
-     *      'empty'   => (boolean) Contains the flag if the value can be empty.
+     *     'value'   => (mixed)   Contains the current value.
+     *     'default' => (mixed)   Contains the default value.
+     *     'empty'   => (boolean) Contains the flag if the value can be empty.
      * ]
      * @return mixed
      */
-    public static function validate_text( $args = [] ) {
+    public static function validate_text( $args = array() ) {
         $output = '';
+        // phpcs:ignore Universal.Operators.StrictComparisons.LooseNotEqual
         if ( $args['value'] != '' ) {
             $output = sanitize_text_field( $args['value'] );
-        } else {
-            if ( ! $args['empty'] ) {
+        } elseif ( ! $args['empty'] ) {
                 $output = $args['default'];
-            }
         }
 
         return $output;
@@ -58,18 +66,19 @@ final class Validator {
      * Validate select value.
      *
      * @since 1.0.0
-     * 
-     * @param  array  $args  Contains the parameter need to evaluate select value.
+     *
+     * @param  array $args Contains the necessary arguments to evaluate select value.
      * $args = [
-     *     'value'   => (mixed) Contains the current value.
-     *     'default' => (mixed) Contains the default value.
-     *     'choices' => (array) Contains the array of choices value.
+     *    'value'   => (mixed) Contains the current value.
+     *    'default' => (mixed) Contains the default value.
+     *    'choices' => (array) Contains the array of choices value.
      * ]
      * @return mixed
      */
-    public static function validate_select( $args = []  ) {
+    public static function validate_select( $args = array() ) {
         $output = $args['default'];
         if ( ! empty( $args['value'] ) ) {
+            // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
             if ( in_array( $args['value'], $args['choices'] ) ) {
                 $output = sanitize_text_field( $args['value'] );
             }
@@ -82,15 +91,15 @@ final class Validator {
      * Validate color value.
      *
      * @since 1.0.0
-     * 
-     * @param  array  $args  Contains the parameter need to evaluate color value.
+     *
+     * @param  array $args Contains the necessary arguments to evaluate color value.
      * $args = [
-     *     'value'   => (string) Contains the current value.
-     *     'default' => (string) Contains the default value.
+     *    'value'   => (string) Contains the current value.
+     *    'default' => (string) Contains the default value.
      * ]
      * @return string
      */
-    public static function validate_color( $args = [] ) {
+    public static function validate_color( $args = array() ) {
         $output = $args['default'];
         if ( ! empty( $args['value'] ) ) {
             if ( preg_match( '/^#[a-f0-9]{6}$/i', $args['value'] ) ) {
@@ -105,24 +114,25 @@ final class Validator {
      * Validate size value.
      *
      * @since 1.0.0
-     * 
-     * @param  array  $args  Contains the parameter need to evaluate size value.
+     *
+     * @param  array $args Contains the necessary arguments to evaluate size value.
      * $args = [
-     *     'value'   => (string) Contains the current value.
-     *     'default' => (string) Contains the default value.
+     *    'value'   => (string) Contains the current value.
+     *    'default' => (string) Contains the default value.
      * ]
      * @return string
      */
-    public static function validate_size( $args = [] ) {
+    public static function validate_size( $args = array() ) {
         $output = $args['default'];
         if ( ! empty( $args['value'] ) ) {
-            $valid_keywords = [ 'unset', 'auto', 'max-content', 'min-content', 'fit-content' ];
+            $valid_keywords = array( 'unset', 'auto', 'max-content', 'min-content', 'fit-content' );
+            // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
             if ( in_array( $args['value'], $valid_keywords ) ) {
                 $output = sanitize_text_field( $args['value'] );
             } else {
                 // Validate the size unit.
                 $unit       = '';
-                $valid_unit = [ '%', 'px', 'em', 'rem', 'vw', 'vh' ];
+                $valid_unit = array( '%', 'px', 'em', 'rem', 'vw', 'vh' );
                 foreach ( $valid_unit as $value ) {
                     if ( strpos( $args['value'], $value ) !== false ) {
                         $unit = $value;

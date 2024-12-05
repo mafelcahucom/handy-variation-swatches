@@ -1,0 +1,58 @@
+/**
+ * Color Picker.
+ */
+.hvsfw {
+
+	&-color-picker {
+
+		&[data-count="1"] {
+
+			.hvsfw-color-picker__list:first-child {
+
+				.hvsfw-color-picker__delete-btn {
+					display: none;
+				}
+			}
+		}
+
+		&__list {
+			margin-bottom: 10px;
+		}
+
+		&__item {
+			display: flex;
+			padding: 5px 0;
+		}
+
+		&__delete-btn {
+			margin-left: 10px !important;
+		}
+
+		.button {
+			min-height: 30px;
+			line-height: 26px;
+			margin-bottom: 0 !important;
+		}
+
+		.wp-picker-holder {
+			position: absolute;
+		}
+
+		.wp-picker-container,
+		.wp-picker-container .wp-color-result.button {
+			margin: 0;
+		}
+
+		.wp-picker-input-wrap .button.wp-picker-clear {
+			display: none;
+		}
+
+		@media ( max-width: 782px ) {
+
+			.button {
+				min-height: 32px;
+			}
+
+		}
+	}
+}

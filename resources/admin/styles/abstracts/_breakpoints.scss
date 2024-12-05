@@ -1,0 +1,55 @@
+// Extra Large
+@mixin media-xlg {
+
+	@media ( min-width: 1201px ) {
+		@content;
+	}
+}
+
+// Large
+@mixin media-lg {
+
+	@media ( max-width: 1200px ) {
+		@content;
+	}
+}
+
+// Medium
+@mixin media-md {
+
+	@media ( max-width: 992px ) {
+		@content;
+	}
+}
+
+// 960
+@mixin media-960 {
+
+	@media ( max-width: 960px ) {
+		@content;
+	}
+}
+
+// Small
+@mixin media-sm {
+
+	@media ( max-width: 782px ) {
+		@content;
+	}
+}
+
+// 600
+@mixin media-600 {
+
+	@media ( max-width: 600px ) {
+		@content;
+	}
+}
+
+// Extra Small
+@mixin media-xs {
+
+	@media ( max-width: 400px ) {
+		@content;
+	}
+}

@@ -1,4 +1,14 @@
 <?php
+/**
+ * App > Client > Blocks > Variation Filter > Inc > Block Render.
+ *
+ * @since   1.0.0
+ *
+ * @version 1.0.0
+ * @author  Mafel John Cahucom
+ * @package handy-variation-swatches
+ */
+
 namespace HVSFW\Client\Blocks\VariationFilter\Inc;
 
 use HVSFW\Inc\Traits\Singleton;
@@ -9,17 +19,16 @@ use HVSFW\Client\Inc\SwatchFilter;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Block Render.
+ * The `BlockRender` class contains the block components
+ * and renderer.
  *
- * @since 	1.0.0
- * @version 1.0.0
- * @author  Mafel John Cahucom
+ * @since 1.0.0
  */
 final class BlockRender {
 
     /**
 	 * Inherit Singleton.
-     * 
+     *
      * @since 1.0.0
 	 */
 	use Singleton;
@@ -28,19 +37,19 @@ final class BlockRender {
      * Holds the block attributes.
      *
      * @since 1.0.0
-     * 
+     *
      * @var array
      */
-    private static $attributes = [];
+    private static $attributes = array();
 
     /**
      * Holds the selected variation attribute.
-     * 
+     *
      * @since 1.0.0
      *
      * @var array
      */
-    private static $attribute = [];
+    private static $attribute = array();
 
     /**
      * Holds the block wrapper.
@@ -58,17 +67,17 @@ final class BlockRender {
 
     /**
      * Return the block front-end component.
-     * 
+     *
      * @since 1.0.0
      *
-     * @param  array  $args  Contains the all the arguments for rendering block.
+     * @param  array $args Contains the necessary arguments for rendering block.
      * $args = [
-     *      'attributes'    => (array)  Contains the block attributes.
-     *      'block_wrapper' => (string) Contains the main block wrapper.
+     *     'attributes'    => (array)  Contains the block attributes.
+     *     'block_wrapper' => (string) Contains the main block wrapper.
      * ]
-     * @return HTMLElement
+     * @return string
      */
-    public static function render( $args = [] ) {
+    public static function render( $args = array() ) {
         if ( ! isset( $args['attributes'] ) || empty( $args['attributes'] ) ) {
             return;
         }
@@ -93,25 +102,25 @@ final class BlockRender {
                 <?php echo self::get_title(); ?>
                 <div class="hvsfw-vf-swatch">
                     <?php
-                        $swatch_method = 'get_swatch_'. self::get_display_type();
+                        $swatch_method = 'get_swatch_' . self::get_display_type();
                         if ( method_exists( __CLASS__, $swatch_method ) ) {
-                            echo call_user_func( [ __CLASS__, $swatch_method ] );
+						echo call_user_func( array( __CLASS__, $swatch_method ) );
                         }
                     ?>
                 </div>
             </div>
         </div>
         <?php
-        
+
         return ob_get_clean();
     }
 
     /**
      * Return the title component.
-     * 
+     *
      * @since 1.0.0
      *
-     * @return HTMLElement
+     * @return string
      */
     private static function get_title() {
         $setting = self::$attributes['title'];
@@ -123,18 +132,18 @@ final class BlockRender {
             margin-bottom: {$setting['marginBottom']};
         ");
 
-        return SwatchFilter::get_title_component([
+        return SwatchFilter::get_title_component(array(
             'text'  => $setting['text'],
-            'style' => $style
-        ]);
+            'style' => $style,
+        ));
     }
 
     /**
      * Return the swatch list component.
-     * 
+     *
      * @since 1.0.0
      *
-     * @return HTMLElement
+     * @return string
      */
     private static function get_swatch_list() {
         $setting      = self::$attributes['list'];
@@ -157,27 +166,27 @@ final class BlockRender {
             color: {$setting['color']};
         ");
 
-        return SwatchFilter::get_swatch_list_component([
+        return SwatchFilter::get_swatch_list_component(array(
             'attribute'  => self::$attribute,
             'query_type' => self::$attributes['settings']['queryType'],
             'show_count' => self::$attributes['settings']['showCount'],
-            'styles'     => $styles
-        ]);
+            'styles'     => $styles,
+        ));
     }
 
     /**
      * Return the swatch select component.
-     * 
+     *
      * @since 1.0.0
      *
-     * @return HTMLElement
+     * @return string
      */
     private static function get_swatch_select() {
         $setting = self::$attributes['select'];
         $padding = self::get_padding( $setting['padding'] );
         $borders = self::get_borders( $setting['border'] );
 
-        $styles  = [
+        $styles = array(
             'parent' => Helper::minify_css("
                 width:  {$setting['width']};
                 height: {$setting['height']};
@@ -192,23 +201,23 @@ final class BlockRender {
             "),
             'button' => Helper::minify_css("
                 fill: {$setting['color']};
-            ")
-        ];
+            "),
+        );
 
-        return SwatchFilter::get_swatch_select_component([
+        return SwatchFilter::get_swatch_select_component(array(
             'attribute'  => self::$attribute,
             'query_type' => self::$attributes['settings']['queryType'],
             'show_count' => self::$attributes['settings']['showCount'],
-            'styles'     => $styles
-        ]);
+            'styles'     => $styles,
+        ));
     }
 
     /**
      * Return the swatch button component.
-     * 
+     *
      * @since 1.0.0
      *
-     * @return HTMLElement
+     * @return string
      */
     private static function get_swatch_button() {
         $setting        = self::$attributes['button'];
@@ -259,20 +268,20 @@ final class BlockRender {
             ");
         }
 
-        return SwatchFilter::get_swatch_button_component([
+        return SwatchFilter::get_swatch_button_component(array(
             'attribute'  => self::$attribute,
             'query_type' => self::$attributes['settings']['queryType'],
             'show_count' => self::$attributes['settings']['showCount'],
-            'styles'     => $styles
-        ]);
+            'styles'     => $styles,
+        ));
     }
 
     /**
      * Return the swatch color component.
-     * 
+     *
      * @since 1.0.0
      *
-     * @return HTMLElement
+     * @return string
      */
     private static function get_swatch_color() {
         $setting        = self::$attributes['color'];
@@ -314,19 +323,19 @@ final class BlockRender {
             ");
         }
 
-        return SwatchFilter::get_swatch_color_component([
+        return SwatchFilter::get_swatch_color_component(array(
             'attribute'  => self::$attribute,
             'query_type' => self::$attributes['settings']['queryType'],
-            'styles'     => $styles
-        ]);
+            'styles'     => $styles,
+        ));
     }
 
     /**
      * Return the swatch color component.
-     * 
+     *
      * @since 1.0.0
      *
-     * @return HTMLElement
+     * @return string
      */
     private static function get_swatch_image() {
         $setting        = self::$attributes['image'];
@@ -368,17 +377,17 @@ final class BlockRender {
             ");
         }
 
-        return SwatchFilter::get_swatch_image_component([
+        return SwatchFilter::get_swatch_image_component(array(
             'attribute'  => self::$attribute,
             'query_type' => self::$attributes['settings']['queryType'],
-            'styles'     => $styles
-        ]);
+            'styles'     => $styles,
+        ));
     }
 
     /**
      * Return the final display type based on block displayType and
 	 * product attribute_type.
-     * 
+     *
      * @since 1.0.0
      *
      * @return string
@@ -388,8 +397,8 @@ final class BlockRender {
         $attribute_type = self::$attribute['attribute_type'];
 
         if ( $display_type === 'swatch' ) {
-            $types = [ 'button', 'color', 'image', 'select' ];
-            if ( in_array( $attribute_type, $types ) ) {
+            $types = array( 'button', 'color', 'image', 'select' );
+            if ( in_array( $attribute_type, $types, true ) ) {
                 return $attribute_type;
             }
         }
@@ -399,10 +408,10 @@ final class BlockRender {
 
     /**
      * Return a single line padding value.
-     * 
+     *
      * @since 1.0.0
      *
-     * @param  array  $padding  Contains the top, right, bottom and left value.
+     * @param  array $padding Contains the top, right, bottom and left value.
      * @return string
      */
     private static function get_padding( $padding ) {
@@ -417,13 +426,13 @@ final class BlockRender {
 
         return "{$top} {$right} {$bottom} {$left}";
     }
-    
+
     /**
      * Return a single line border value.
-     * 
+     *
      * @since 1.0.0
      *
-     * @param  array  $border  Contains the width, style and color value.
+     * @param  array $border Contains the width, style and color value.
      * @return string
      */
     private static function get_border( $border ) {
@@ -440,10 +449,10 @@ final class BlockRender {
 
     /**
      * Returns border top, right, bottom, left and its value in single line.
-     * 
+     *
      * @since 1.0.0
      *
-     * @param  array  $border  Contains the border top, right, bottom and left.
+     * @param  array $borders Contains the border top, right, bottom and left.
      * @return string
      */
     private static function get_borders( $borders ) {
@@ -454,10 +463,10 @@ final class BlockRender {
         $value = '';
         if ( count( $borders ) === 4 ) {
             foreach ( $borders as $key => $border ) {
-                $value .= 'border-'. $key .': '. self::get_border( $border ) .';';
+                $value .= 'border-' . $key . ': ' . self::get_border( $border ) . ';';
             }
         } else {
-            $value = 'border: '. self::get_border( $borders ) .';';
+            $value = 'border: ' . self::get_border( $borders ) . ';';
         }
 
         return $value;

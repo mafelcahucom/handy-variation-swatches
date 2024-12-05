@@ -1,4 +1,14 @@
 <?php
+/**
+ * App > Admin > Modules > Setting > Events.
+ *
+ * @since   1.0.0
+ *
+ * @version 1.0.0
+ * @author  Mafel John Cahucom
+ * @package handy-variation-swatches
+ */
+
 namespace HVSFW\Admin\Modules\Setting;
 
 use HVSFW\Inc\Traits\Singleton;
@@ -9,24 +19,23 @@ use HVSFW\Api\SettingApi;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Admin > Modules > Setting > Events.
+ * The `Events` class contains all the AJAX events for
+ * the setting module.
  *
- * @since 	1.0.0
- * @version 1.0.0
- * @author  Mafel John Cahucom
+ * @since 1.0.0
  */
 final class Events {
 
 	/**
 	 * Inherit Singleton.
-     * 
+     *
      * @since 1.0.0
 	 */
 	use Singleton;
 
     /**
      * Inherit Security.
-     * 
+     *
      * @since 1.0.0
      */
     use Security;
@@ -37,36 +46,38 @@ final class Events {
      * @since 1.0.0
      */
     protected function __construct() {
-        // Save Settings.
-        add_action( 'wp_ajax_hvsfw_save_settings', [ $this, 'save_settings' ] );
+        /**
+         * Save settings.
+         */
+        add_action( 'wp_ajax_hvsfw_save_settings', array( $this, 'save_settings' ) );
     }
 
     /**
      * Save all fields in settings tab in wp_option.
      *
      * @since 1.0.0
-     * 
-     * @return json
+     *
+     * @return void
      */
     public function save_settings() {
         if ( ! self::is_security_passed( $_POST ) ) {
-            wp_send_json_error([
-                'error' => 'SECURITY_ERROR'
-            ]);
+            wp_send_json_error(array(
+                'error' => 'SECURITY_ERROR',
+            ));
         }
 
-        if ( self::has_post_empty_data( $_POST, [ 'fields' ] ) ) {
-            wp_send_json_error([
-                'error' => 'MISSING_DATA_ERROR'
-            ]);
+        if ( self::has_post_empty_data( $_POST, array( 'fields' ) ) ) {
+            wp_send_json_error(array(
+                'error' => 'MISSING_DATA_ERROR',
+            ));
         }
 
         // Decode & sanitize $_POST['fileds'].
         $fields = json_decode( stripslashes( sanitize_text_field( $_POST['fields'] ) ), true );
         if ( empty( $fields ) || ! is_array( $fields ) ) {
-            wp_send_json_error([
-                'error' => 'MISSING_DATA_ERROR'
-            ]);
+            wp_send_json_error(array(
+                'error' => 'MISSING_DATA_ERROR',
+            ));
         }
 
         // Get settings field rules.
@@ -81,9 +92,9 @@ final class Events {
 
         // Check again if the $field is empty.
         if ( empty( $fields ) ) {
-            wp_send_json_error([
-                'error' => 'MISSING_DATA_ERROR'
-            ]);
+            wp_send_json_error(array(
+                'error' => 'MISSING_DATA_ERROR',
+            ));
         }
 
         // Get the current settings value.
@@ -94,20 +105,20 @@ final class Events {
         }
 
         // Validate all fields.
-        $validation = FieldValidation::validate([
+        $validation = FieldValidation::validate(array(
             'fields'        => $fields,
             'current_value' => $current_settings_value,
-            'field_rules'   => $field_rules
-        ]);
+            'field_rules'   => $field_rules,
+        ));
 
         // Update option field _hvsfw_main_settings.
         if ( count( $validation['validation']['valid'] ) > 0 ) {
             update_option( '_hvsfw_main_settings', $validation['updated_value'] );
         }
-        
-        wp_send_json_success([
+
+        wp_send_json_success(array(
             'response'   => 'SUCCESSFULLY_SAVED',
-            'validation' => $validation['validation']
-        ]);
+            'validation' => $validation['validation'],
+        ));
     }
 }

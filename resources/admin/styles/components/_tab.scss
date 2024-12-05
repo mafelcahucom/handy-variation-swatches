@@ -1,0 +1,91 @@
+// Tab
+.hd-tab {
+
+	&__nav {
+		position: relative;
+		display: flex;
+		align-items: center;
+		padding: 12px 16px;
+		background-color: $color-white-1;
+		border-radius: $radius-2;
+		box-shadow: $shadow-1;
+
+		&[data-visibility="hidden"] {
+			display: none;
+		}
+
+		&__item-btn {
+			width: max-content !important;
+			min-width: auto !important;
+			color: $color-black-1 !important;
+			background-color: $color-white-1 !important;
+
+			&[data-state="active"] {
+				color: $color-white-1 !important;
+				background-color: $color-blue-1 !important;
+			}
+
+			&:hover,
+			&:focus {
+				color: $color-white-1 !important;
+				background-color: $color-blue-1 !important;
+
+				@include transition;
+			}
+		}
+
+		&__container {
+			position: relative;
+			display: flex;
+			width: 100%;
+			overflow: hidden;
+		}
+
+		&__action-btn {
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			z-index: 99;
+
+			&[data-event="prev"] {
+				left: 0;
+			}
+
+			&[data-event="next"] {
+				right: 0;
+			}
+		}
+
+		&__list {
+			position: relative;
+			display: flex;
+			align-items: center;
+			padding: 5px 0;
+			margin: 0;
+			width: 100%;
+			left: 0;
+			transition: 0.25s;
+		}
+
+		&__item {
+			margin: 0 5px;
+
+			&:first-child {
+				padding-left: 55px;
+			}
+
+			&:last-child {
+				padding-right: 55px;
+			}
+		}
+	}
+
+	&__panel {
+		display: none;
+
+		&[data-state="active"] {
+			display: block;
+			animation: fade-in 500ms cubic-bezier(0.39, 0.575, 0.565, 1) both;
+		}
+	}
+}

@@ -14,12 +14,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-if ( file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) ) {
-    require_once dirname( __FILE__ ) . '/vendor/autoload.php';
-}
-
-if ( ! defined( 'HVSFW_PLUGIN_DOMAIN' ) ) {
-    define( 'HVSFW_PLUGIN_DOMAIN', 'handy-variation-swatches' );
+if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+    require_once __DIR__ . '/vendor/autoload.php';
 }
 
 if ( ! defined( 'HVSFW_PLUGIN_VERSION' ) ) {
@@ -39,20 +35,20 @@ if ( ! defined( 'HVSFW_PLUGIN_PATH' ) ) {
 }
 
 if ( class_exists( 'HVSFW\\Inc\\Installer' ) ) {
-    register_activation_hook( __FILE__, [ 'HVSFW\\Inc\\Installer', 'activate' ] );
+    register_activation_hook( __FILE__, array( 'HVSFW\\Inc\\Installer', 'activate' ) );
 
-    register_deactivation_hook( __FILE__, [ 'HVSFW\\Inc\\Installer', 'deactivate' ] );
+    register_deactivation_hook( __FILE__, array( 'HVSFW\\Inc\\Installer', 'deactivate' ) );
 }
 
-if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ), true ) ) {
     if ( class_exists( 'HVSFW\\Init' ) ) {
         HVSFW\Init::get_instance();
     }
 } else {
     add_action( 'admin_notices', function() {
-        echo sprintf(
+        printf(
             '<div class="notice notice-error is-dismissible"><p>%s</p></div>',
-            'Handy Variation Swatches for WooCommerce requires WooCommerce Plugin to be activated. Please install WooCommerce to continue.'
+            __( 'Handy Variation Swatches for WooCommerce requires WooCommerce Plugin to be activated. Please install WooCommerce to continue.', 'handy-variation-swatches' )
         );
     });
 }

@@ -1,0 +1,155 @@
+// Toast
+@keyframes hd-toast-fade-in-bottom {
+
+	0% {
+		transform: translateY(50px);
+		opacity: 0;
+	}
+
+	100% {
+		transform: translateY(0);
+		opacity: 1;
+	}
+}
+
+@keyframes hd-toast-fade-out-right {
+
+	0% {
+		transform: translateX(0);
+		opacity: 1;
+	}
+
+	100% {
+		transform: translateX(50px);
+		opacity: 0;
+	}
+}
+
+#hd-toast-container {
+	position: fixed;
+	bottom: 5%;
+	right: 3%;
+	z-index: 999999;
+}
+
+.hd-toast {
+	position: relative;
+	top: 0;
+	left: 0;
+	margin-bottom: 10px;
+	box-sizing: border-box;
+	width: 300px;
+	font-family: "Lexend Deca", sans-serif;
+	background: $color-white-1;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	border-radius: $radius-2;
+	box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+	backdrop-filter: blur(10px);
+	opacity: 0;
+	z-index: 999999;
+
+	&__head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 10px 12px;
+	}
+
+	&__info {
+		display: flex;
+		align-items: center;
+	}
+
+	&__title {
+		display: inline-block;
+		font-size: 14px;
+		line-height: 16.8px;
+		letter-spacing: 0.5px;
+		color: $color-black-1;
+	}
+
+	&__status {
+		margin-right: 10px;
+		width: 20px;
+		height: 20px;
+		border-radius: $radius-2;
+
+		&--success {
+			background-color: #28A745;
+		}
+
+		&--danger {
+			background-color: #D83939;
+		}
+	}
+
+	&__close-btn {
+		padding: 0;
+		width: 20px;
+		height: 20px;
+		border: 0;
+		background: transparent;
+		cursor: pointer;
+
+		&__svg {
+			fill: $color-black-2;
+			width: 20px;
+
+			&:hover,
+			&:focus {
+				fill: $color-black-1;
+
+				@include transition;
+			}
+		}
+	}
+
+	&__body {
+		padding: 0 12px;
+	}
+
+	&__message {
+		margin: 0;
+		color: $color-black-1;
+		font-size: 14px;
+		line-height: 20px;
+		letter-spacing: 0.5px;
+	}
+
+	&__alert {
+
+		.hd-toast__head {
+			border-bottom: 1px solid $color-gray-4;
+		}
+
+		.hd-toast__body {
+			padding: 12px;
+		}
+	}
+
+	&__two-col {
+		display: flex;
+
+		&--left {
+			width: 85px;
+			background: $color-gray-1;
+		}
+
+		&--right {
+			flex-grow: 1;
+		}
+	}
+
+	&__img {
+		width: 100%;
+		display: block;
+	}
+
+	&[data-visibility="visible"] {
+		animation: hd-toast-fade-in-bottom 0.6s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+	}
+
+	&[data-visibility="hidden"] {
+		animation: hd-toast-fade-out-right 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+	}
+}

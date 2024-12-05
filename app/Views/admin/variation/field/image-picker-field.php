@@ -1,30 +1,32 @@
 <?php
 /**
- * Views > Admin > Variation > Field > Image Picker Field.
+ * App > Views > Admin > Variation > Field > Image Picker Field.
  *
  * @since   1.0.0
+ *
  * @version 1.0.0
- * @author  Mafel John Cahucom 
+ * @author  Mafel John Cahucom
+ * @package handy-variation-swatches
  */
 
 use HVSFW\Inc\Utility;
 
 defined( 'ABSPATH' ) || exit;
 
-/** 
+/**
  * $args = [
  *     'id'			   => (string) 	Contains the id of the image input.
  *     'name'		   => (string)  Contains the name of the image input.
  *     'term_id'	   => (integer) Contains the id of the term.
  *     'attachment_id' => (integer) Contains the id of the attachment.
  * ]
- **/
+ */
 
 if ( ! isset( $args['id'] ) || ! isset( $args['name'] ) ) {
 	return;
 }
 
-$image 		   = [];
+$image 		   = array();
 $attachment_id = 0;
 $placeholder   = Utility::get_product_thumbnail_placeholder_src();
 
@@ -49,12 +51,12 @@ $remove_state = ( $attachment_id === 0 ? 'disabled' : 'default' );
 	<div class="hvsfw-image-picker__control">
 		<div class="hvsfw-col__left">
 			<button type="button" class="hvsfw-js-image-picker-select-btn button button-primary" data-state="default">
-				<?php echo __( 'Upload', HVSFW_PLUGIN_DOMAIN ); ?>
+				<?php echo __( 'Upload', 'handy-variation-swatches' ); ?>
 			</button>
 		</div>
 		<div class="hvsfw-col__right">
 			<button type="button" class="hvsfw-js-image-picker-remove-btn button" data-state="<?php echo $remove_state; ?>">
-				<?php echo __( 'Remove', HVSFW_PLUGIN_DOMAIN ); ?>
+				<?php echo __( 'Remove', 'handy-variation-swatches' ); ?>
 			</button>
 		</div>
 	</div>

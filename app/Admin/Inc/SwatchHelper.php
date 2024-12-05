@@ -18,7 +18,7 @@ final class SwatchHelper {
 
 	/**
 	 * Inherit Singleton.
-     * 
+     *
      * @since 1.0.0
 	 */
 	use Singleton;
@@ -34,109 +34,109 @@ final class SwatchHelper {
      * Return the swatch setting field schema.
      *
      * @since 1.0.0
-     * 
+     *
      * @return array
      */
     public static function get_swatch_setting_schema() {
-        return [
-            'type'                    => [
+        return array(
+            'type'                    => array(
                 'type'    => 'select',
                 'default' => 'select',
-                'choices' => [ 'select', 'button', 'color', 'image' ]
-            ],
-            'style'                   => [
+                'choices' => array( 'select', 'button', 'color', 'image' ),
+            ),
+            'style'                   => array(
                 'type'    => 'select',
                 'default' => 'default',
-                'choices' => [ 'default', 'custom' ]
-            ],
-            'shape'                   => [
+                'choices' => array( 'default', 'custom' ),
+            ),
+            'shape'                   => array(
                 'type'    => 'select',
                 'default' => 'square',
-                'choices' => [ 'square', 'circle', 'custom' ]
-            ],
-            'size'                    => [
+                'choices' => array( 'square', 'circle', 'custom' ),
+            ),
+            'size'                    => array(
                 'type'    => 'size',
                 'default' => '40px',
-            ],
-            'width'                   => [
+            ),
+            'width'                   => array(
                 'type'    => 'size',
                 'default' => '40px',
-            ],
-            'height'                  => [
+            ),
+            'height'                  => array(
                 'type'    => 'size',
                 'default' => '40px',
-            ],
-            'font_size'               => [
+            ),
+            'font_size'               => array(
                 'type'    => 'size',
                 'default' => '14px',
-            ],
-            'font_weight'             => [
+            ),
+            'font_weight'             => array(
                 'type'    => 'select',
                 'default' => '500',
-                'choices' => Helper::get_font_weight_choices( 'value' )
-            ],
-            'font_color'              => [
+                'choices' => Helper::get_font_weight_choices( 'value' ),
+            ),
+            'font_color'              => array(
                 'type'    => 'color',
-                'default' => '#000000'
-            ],
-            'font_hover_color'        => [
+                'default' => '#000000',
+            ),
+            'font_hover_color'        => array(
                 'type'    => 'color',
-                'default' => '#0071f2'
-            ],
-            'background_color'        => [
+                'default' => '#0071f2',
+            ),
+            'background_color'        => array(
                 'type'    => 'color',
-                'default' => '#ffffff'
-            ],
-            'background_hover_color'  => [
+                'default' => '#ffffff',
+            ),
+            'background_hover_color'  => array(
                 'type'    => 'color',
-                'default' => '#ffffff'
-            ],
-            'padding_top'             => [
+                'default' => '#ffffff',
+            ),
+            'padding_top'             => array(
                 'type'    => 'size',
                 'default' => '5px',
-            ],
-            'padding_bottom'          => [
+            ),
+            'padding_bottom'          => array(
                 'type'    => 'size',
                 'default' => '5px',
-            ],
-            'padding_left'            => [
+            ),
+            'padding_left'            => array(
                 'type'    => 'size',
                 'default' => '5px',
-            ],
-            'padding_right'           => [
+            ),
+            'padding_right'           => array(
                 'type'    => 'size',
                 'default' => '5px',
-            ],
-            'border_style'            => [
+            ),
+            'border_style'            => array(
                 'type'    => 'select',
                 'default' => 'solid',
-                'choices' => Helper::get_border_style_choices( 'value' )
-            ],
-            'border_width'            => [
+                'choices' => Helper::get_border_style_choices( 'value' ),
+            ),
+            'border_width'            => array(
                 'type'    => 'size',
                 'default' => '1px',
-            ],
-            'border_color'            => [
+            ),
+            'border_color'            => array(
                 'type'    => 'color',
-                'default' => '#000000'
-            ],
-            'border_hover_color'      => [
+                'default' => '#000000',
+            ),
+            'border_hover_color'      => array(
                 'type'    => 'color',
-                'default' => '#0071f2'
-            ],
-            'border_radius'           => [
+                'default' => '#0071f2',
+            ),
+            'border_radius'           => array(
                 'type'    => 'size',
                 'default' => '0px',
-            ]
-        ];
+            ),
+        );
     }
 
     /**
      * Return the visibility state of each setting group field.
      *
      * @since 1.0.0
-     * 
-     * @param  array  $settings  Contains the current value of the swatch setting.
+     *
+     * @param  array $settings  Contains the current value of the swatch setting.
      * @return array
      */
     public static function get_swatch_setting_group_field_visibility( $settings ) {
@@ -144,7 +144,7 @@ final class SwatchHelper {
             return;
         }
 
-        $visible = [
+        $visible = array(
             'style'            => 'no',
             'shape'            => 'no',
             'size'             => 'no',
@@ -154,15 +154,15 @@ final class SwatchHelper {
             'background_color' => 'no',
             'padding'          => 'no',
             'border'           => 'no',
-            'border_radius'    => 'no'
-        ];
+            'border_radius'    => 'no',
+        );
 
         // Style.
-        if ( ! in_array( $settings['type'], [ 'default', 'select', 'assorted' ] ) ) {
+        if ( ! in_array( $settings['type'], array( 'default', 'select', 'assorted' ), true ) ) {
             $visible['style'] = 'yes';
 
             if ( $settings['style'] === 'custom' ) {
-                $is_color_image = in_array( $settings['type'], [ 'color', 'image' ] );
+                $is_color_image = in_array( $settings['type'], array( 'color', 'image' ), true );
 
                 // Shape, Border.
                 $visible['shape']  = 'yes';
@@ -202,26 +202,26 @@ final class SwatchHelper {
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Contains the necessary arguments for validating swatch setting.
+     * @param  array $args  Contains the necessary arguments for validating swatch setting.
      * $args = [
-     *     'type'    => (string) Contains the swatch type.
-     *     'setting' => (array)  Contains the setting to be validated.
+     *    'type'    => (string) Contains the swatch type.
+     *    'setting' => (array)  Contains the setting to be validated.
      * ]
      * @return array
      */
-    public static function validate_swatch_setting_value( $args = [] ) {
+    public static function validate_swatch_setting_value( $args = array() ) {
         if ( ! isset( $args['type'] ) || ! isset( $args['setting'] ) ) {
             return;
         }
 
-        $validated    = []; // Store the validated value.
+        $validated    = array(); // Store the validated value.
         $field_schema = self::get_swatch_setting_schema();
         foreach ( $field_schema as $key => $field ) {
             $validated[ $key ] = $field['default'];
 
             $post_key = $key;
             if ( $args['type'] === 'UNSET' ) {
-                $post_key = ( $key === 'type' ? "attribute_type" : "hvsfw_$key" );
+                $post_key = ( $key === 'type' ? 'attribute_type' : "hvsfw_$key" );
             } else {
                 $args['setting']['type'] = $args['type'];
             }
@@ -229,48 +229,58 @@ final class SwatchHelper {
             if ( isset( $args['setting'][ $post_key ] ) ) {
                 switch ( $field['type'] ) {
                     case 'size':
-                        $validated[ $key ] = Validator::validate_size([
-                            'value'   => $args['setting'][ $post_key ],
-                            'default' => $field['default'] 
-                        ]);
-                        break;
-                    case 'color':
-                        $validated[ $key ] = Validator::validate_color([
-                            'value'   => $args['setting'][ $post_key ],
-                            'default' => $field['default']
-                        ]);
-                        break;
-                    case 'select':
-                        $validated[ $key ] = Validator::validate_select([
+                        $validated[ $key ] = Validator::validate_size(array(
                             'value'   => $args['setting'][ $post_key ],
                             'default' => $field['default'],
-                            'choices' => $field['choices']
-                        ]);
+                        ));
+                        break;
+                    case 'color':
+                        $validated[ $key ] = Validator::validate_color(array(
+                            'value'   => $args['setting'][ $post_key ],
+                            'default' => $field['default'],
+                        ));
+                        break;
+                    case 'select':
+                        $validated[ $key ] = Validator::validate_select(array(
+                            'value'   => $args['setting'][ $post_key ],
+                            'default' => $field['default'],
+                            'choices' => $field['choices'],
+                        ));
                         break;
                 }
             }
         }
 
         // Set the necessary fields.
-        $remove          = [];
-        $fields_to_save  = [ 'type', 'style' ];
-        $has_unnecessary = ( in_array( $validated['type'], [ 'button', 'color', 'image' ] ) && $validated['style'] === 'custom' );
+        $remove          = array();
+        $fields_to_save  = array( 'type', 'style' );
+        $has_unnecessary = ( in_array( $validated['type'], array( 'button', 'color', 'image' ), true ) && $validated['style'] === 'custom' );
         if ( $has_unnecessary ) {
             // Button.
             if ( $validated['type'] === 'button' ) {
-                $remove = [ 'size', 'border_radius' ];
+                $remove = array( 'size', 'border_radius' );
                 if ( $validated['shape'] === 'custom' ) {
                     unset( $remove[1] );
                 }
             }
 
             // Color & Image.
-            if ( in_array( $validated['type'], [ 'color', 'image' ] ) ) {
-                $remove = [
-                    'width', 'height', 'font_size', 'font_weight', 'font_color', 'font_hover_color',
-                    'background_color', 'background_hover_color', 'padding_top', 'padding_bottom',
-                    'padding_left', 'padding_right', 'border_radius'
-                ];
+            if ( in_array( $validated['type'], array( 'color', 'image' ), true ) ) {
+                $remove = array(
+                    'width',
+                    'height',
+                    'font_size',
+                    'font_weight',
+                    'font_color',
+                    'font_hover_color',
+                    'background_color',
+                    'background_hover_color',
+                    'padding_top',
+                    'padding_bottom',
+                    'padding_left',
+                    'padding_right',
+                    'border_radius',
+                );
 
                 if ( $validated['shape'] === 'custom' ) {
                     unset( $remove[0] );
@@ -286,6 +296,7 @@ final class SwatchHelper {
 
         // Unset the unnecessary fields.
         foreach ( $validated as $key => $value ) {
+            // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
             if ( ! in_array( $key, $fields_to_save ) ) {
                 unset( $validated[ $key ] );
             }

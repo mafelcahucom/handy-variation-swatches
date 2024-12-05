@@ -1,0 +1,187 @@
+// Button
+.hd-btn {
+	position: relative;
+	display: inline-block;
+	padding: 0 20px;
+	width: fit-content;
+	min-width: 150px;
+	height: 40px;
+	font-weight: 600 !important;
+	fill: $color-white-1;
+	color: $color-white-1;
+	background-color: $color-blue-1;
+	border-radius: $radius-2;
+	border: 0;
+
+	&[data-state="loading"] {
+		fill: transparent;
+		color: transparent;
+
+		.hd-btn__loader {
+			display: block;
+		}
+	}
+
+	&--fit {
+		min-width: 0;
+	}
+
+	&--default {
+		fill: $color-black-1;
+		color: $color-black-1;
+		background-color: $color-gray-1;
+
+		&:hover,
+		&:focus,
+		&[data-state="active"] {
+			background-color: $color-gray-2 !important;
+
+			@include transition;
+		}
+	}
+
+	&__detail {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 10px;
+	}
+
+	&__icon {
+		display: block;
+		width: 16px;
+		height: 16px;
+	}
+
+	&__loader {
+		display: none;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+
+	&:hover,
+	&:focus,
+	&[data-state="active"] {
+		background-color: $color-blue-4;
+
+		@include transition;
+	}
+}
+
+a.hd-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	line-height: 14px;
+	color: $color-white-1;
+
+	&:hover,
+	&:focus {
+		color: $color-white-1;
+	}
+}
+
+// Button Icon.
+.hd-btn-icon {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	min-width: 40px;
+	max-width: 40px;
+	min-height: 40px;
+	max-height: 40px;
+	fill: $color-black-1;
+	color: $color-black-1;
+	background-color: $color-gray-6;
+	border: 0;
+
+	svg {
+		width: 18px;
+		height: 18px;
+	}
+
+	&[data-visibility="hidden"] {
+		display: none;
+	}
+
+	&[data-type="icon"] {
+		display: block;
+		min-width: 20px;
+		max-width: 20px;
+		min-height: 20px;
+		max-height: 20px;
+		background-color: transparent;
+
+		svg {
+			width: 20px;
+			height: 20px;
+		}
+	}
+
+	&[data-type="button"]:hover,
+	&[data-type="button"]:focus,
+	&[data-type="button"][data-state="active"] {
+		background-color: $color-gray-2;
+
+		@include transition;
+	}
+
+	&[data-state="default"] {
+
+		.hd-btn-nav__icon {
+
+			&--active {
+				display: none;
+			}
+		}
+	}
+
+	&[data-type="button"][data-state="loading"] {
+
+		.hd-loader {
+			display: block;
+		}
+
+		svg {
+			display: none;
+		}
+	}
+
+	&[data-state="active"] {
+
+		.hd-btn-nav__icon {
+
+			&--default {
+				display: none;
+			}
+		}
+	}
+
+	&--square {
+		border-radius: $radius-2;
+	}
+
+	&--circle {
+		border-radius: 100%;
+	}
+
+	.hd-loader {
+		display: none;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+}
+
+a.hd-btn-icon {
+
+	&:hover,
+	&:focus {
+		color: $color-black-1;
+	}
+}

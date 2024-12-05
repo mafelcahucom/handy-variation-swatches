@@ -6,7 +6,7 @@
  * @author Mafel John Cahucom
  * 
  * @async
- * @param  {Object} params Contains the necessary parameters.
+ * @param  {Object} params Contains the necessary arguments.
  * @return {Promise} The fetch response.
  */
 const data = async ( params ) => {

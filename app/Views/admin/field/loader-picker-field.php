@@ -1,13 +1,15 @@
 <?php
 /**
- * Views > Admin > Field > Loader Picker Field.
+ * App > Views > Admin > Field > Loader Picker Field.
  *
  * @since   1.0.0
+ *
  * @version 1.0.0
- * @author  Mafel John Cahucom 
+ * @author  Mafel John Cahucom
+ * @package handy-variation-swatches
  */
 
-defined( 'ABSPATH' ) || exit; 
+defined( 'ABSPATH' ) || exit;
 
 /**
  * $args = [
@@ -18,14 +20,14 @@ defined( 'ABSPATH' ) || exit;
  *     'description' => (string) Contains the description of the loader picker field.
  *     'choices'     => (array)  Contains the name of the loaders.
  *]
- **/
+ */
 
 $name        = ( isset( $args['name'] ) ? $args['name'] : '' );
 $group       = ( isset( $args['group'] ) ? $args['group'] : '' );
 $value       = ( isset( $args['value'] ) ? $args['value'] : '' );
 $label       = ( isset( $args['label'] ) ? $args['label'] : '' );
 $description = ( isset( $args['description'] ) ? $args['description'] : '' );
-$choices     = ( isset( $args['choices'] ) ? $args['choices'] : [] );
+$choices     = ( isset( $args['choices'] ) ? $args['choices'] : array() );
 
 if ( empty( $name ) || empty( $group ) || empty( $choices ) ) {
     return;
@@ -35,32 +37,32 @@ if ( empty( $name ) || empty( $group ) || empty( $choices ) ) {
 <div id="hd-form-field-<?php echo esc_attr( $name ); ?>" class="hd-form-field" data-has-error="0">
     <div class="hd-form-field--loader-picker-field">
         <input type="hidden" id="<?php echo esc_attr( $name ) ?>" name="<?php echo esc_attr( $name ); ?>" data-input-group="<?php echo esc_attr( $group ); ?>" value="<?php echo esc_attr( $value ); ?>">
-        <?php if ( ! empty( $label ) ): ?>
+        <?php if ( ! empty( $label ) ) : ?>
             <label class="hd-form-field__label hd-mb-5" for="<?php echo esc_attr( $name ); ?>">
                 <?php echo esc_html( $label ); ?>
             </label>
         <?php endif; ?>
             <div class="hd-loader-picker-field">
-            <?php foreach ( $choices as $key => $choice ): ?>
+            <?php foreach ( $choices as $key => $choice ) : ?>
                 <button type="button" class="hd-loader-picker-field__item" data-value="<?php echo esc_attr( $choice ) ?>" data-input="<?php echo esc_attr( $name ); ?>" data-visibility="<?php echo ( $key > 9 ? 'hidden' : 'visible' ); ?>" data-state="<?php echo ( $value == $choice ? 'active' : 'default' ); ?>">
                     <div class="hd-loader-picker-field__loader">
                         <div class="hd-<?php echo esc_attr( $choice ); ?>"></div>
                     </div>
                 </button>
             <?php endforeach; ?>
-            <?php if ( count( $choices ) > 10 ): ?>
+            <?php if ( count( $choices ) > 10 ) : ?>
                 <span class="hd-loader-picker-field__pagination hd-form-field__pagination" data-event="more">
-                    <?php echo __( 'Show More', HVSFW_PLUGIN_DOMAIN ); ?>
+                    <?php echo __( 'Show More', 'handy-variation-swatches' ); ?>
                 </span>
             <?php endif; ?>
         </div>
-        <?php if ( ! empty( $description ) ): ?>
+        <?php if ( ! empty( $description ) ) : ?>
             <p class="hd-form-field__description">
                 <?php echo esc_html( $description ); ?>
             </p>
         <?php endif; ?>
         <p class="hd-form-field__error">
-            <?php echo __( 'Error Message', HVSFW_PLUGIN_DOMAIN ); ?>
+            <?php echo __( 'Error Message', 'handy-variation-swatches' ); ?>
         </p>
     </div>
 </div>

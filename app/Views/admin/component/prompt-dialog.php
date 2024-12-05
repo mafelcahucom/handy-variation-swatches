@@ -1,15 +1,17 @@
 <?php
 /**
- * Views > Admin > Component > Prompt Dialog.
+ * App > Views > Admin > Component > Prompt Dialog.
  *
  * @since   1.0.0
+ *
  * @version 1.0.0
- * @author  Mafel John Cahucom 
+ * @author  Mafel John Cahucom
+ * @package handy-variation-swatches
  */
 
 use HVSFW\Admin\Inc\Helper;
 
-defined( 'ABSPATH' ) || exit; 
+defined( 'ABSPATH' ) || exit;
 ?>
 
 <div id="hd-prompt-dialog" class="hd-pop-up" data-state="default">
@@ -17,25 +19,25 @@ defined( 'ABSPATH' ) || exit;
         <div class="hd-modal__head hd-p-15 hd-line-bottom">
             <div class="hd-flex hd-flex-jc-sb hd-flex-ai-c hd-gap-10">
                 <span id="hd-prompt-dialog-title" class="hd-fs-14 hd-fw-600">
-                    <?php echo __( 'Title', HVSFW_PLUGIN_DOMAIN ); ?>
+                    <?php echo __( 'Title', 'handy-variation-swatches' ); ?>
                 </span>
-                <button id="hd-prompt-dialog-close-btn" class="hd-btn-icon hd-btn-icon--circle" title="<?php echo __( 'Close Prompt', HVSFW_PLUGIN_DOMAIN ); ?>" aria-label="<?php echo __( 'Close Prompt', HVSFW_PLUGIN_DOMAIN ); ?>">
+                <button id="hd-prompt-dialog-close-btn" class="hd-btn-icon hd-btn-icon--circle" title="<?php echo __( 'Close Prompt', 'handy-variation-swatches' ); ?>" aria-label="<?php echo __( 'Close Prompt', 'handy-variation-swatches' ); ?>">
                     <?php echo Helper::get_icon( 'close', 'hd-svg' ); ?>
                 </button>
             </div>
         </div>
         <div class="hd-modal__body hd-p-15">
             <p id="hd-prompt-dialog-message">
-                <?php echo __( 'Message', HVSFW_PLUGIN_DOMAIN ); ?>
+                <?php echo __( 'Message', 'handy-variation-swatches' ); ?>
             </p>
         </div>
         <div class="hd-modal__footer hd-p-15">
             <div class="hd-flex hd-flex-jc-fe hd-gap-10">
                 <button type="button" id="hd-prompt-dialog-no-btn" class="hd-btn hd-btn--default hd-btn--fit">
-                    <?php echo __( 'No', HVSFW_PLUGIN_DOMAIN ); ?>
+                    <?php echo __( 'No', 'handy-variation-swatches' ); ?>
                 </button>
                 <button type="button" id="hd-prompt-dialog-yes-btn" class="hd-btn hd-btn--fit">
-                    <?php echo __( 'Yes', HVSFW_PLUGIN_DOMAIN ); ?>
+                    <?php echo __( 'Yes', 'handy-variation-swatches' ); ?>
                 </button>
             </div>
         </div>

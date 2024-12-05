@@ -1,42 +1,50 @@
 <?php
+/**
+ * App > Client > Widgets > Variation Filter > Widget.
+ *
+ * @since   1.0.0
+ *
+ * @version 1.0.0
+ * @author  Mafel John Cahucom
+ * @package handy-variation-swatches
+ */
+
 namespace HVSFW\Client\Widgets\VariationFilter;
 
 use HVSFW\Inc\Traits\Singleton;
 use HVSFW\Inc\Utility;
 use HVSFW\Client\Inc\Helper;
 use HVSFW\Client\Inc\SwatchFilter;
-Use HVSFW\Client\Widgets\VariationFilter\Inc\LocalHelper;
+use HVSFW\Client\Widgets\VariationFilter\Inc\LocalHelper;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Variation Filter Widget.
+ * The `Widget` class contains the Variation Filter widget.
  *
- * @since 	1.0.0
- * @version 1.0.0
- * @author  Mafel John Cahucom
+ * @since 1.0.0
  */
 final class Widget {
 
 	/**
 	 * Inherit Singleton.
-     * 
+     *
      * @since 1.0.0
 	 */
 	use Singleton;
 
     /**
      * Holds the widget form instance.
-     * 
+     *
      * @since 1.0.0
      *
      * @var array
      */
-    private static $instance = [];
+    private static $instance = array();
 
     /**
      * Holds general setting show count.
-     * 
+     *
      * @since 1.0.0
      *
      * @var boolean
@@ -45,16 +53,16 @@ final class Widget {
 
     /**
      * Holds general setting display type.
-     * 
+     *
      * @since 1.0.0
      *
      * @var string
      */
     private static $display_type = '';
-    
+
     /**
      * Holds general setting query type.
-     * 
+     *
      * @since 1.0.0
      *
      * @var string
@@ -63,12 +71,12 @@ final class Widget {
 
     /**
      * Holds the selected variation attribute.
-     * 
+     *
      * @since 1.0.0
      *
      * @var array
      */
-    private static $attribute = [];
+    private static $attribute = array();
 
 	/**
      * Protected class constructor to prevent direct object creation.
@@ -79,16 +87,16 @@ final class Widget {
 
     /**
      * Render Variation Filter Widget.
-     * 
+     *
      * @since 1.0.0
      *
-     * @param  array  $args  Contains the arguments for rendering widget.
+     * @param  array $args Contains the necessary arguments for rendering widget.
      * $args = [
-     *     'instance' => (array) Contains the available instance of the widget.
+     *    'instance' => (array) Contains the available instance of the widget.
      * ]
-     * @return HTMLElement
+     * @return string
      */
-    public static function render( $args = [] ) {
+    public static function render( $args = array() ) {
         if ( ! isset( $args['instance'] ) || empty( $args['instance'] ) ) {
             return;
         }
@@ -114,9 +122,9 @@ final class Widget {
             <?php echo self::get_title(); ?>
             <div class="hvsfw-vf-swatch">
                 <?php
-                    $swatch_method = 'get_swatch_'. self::$display_type;
+                    $swatch_method = 'get_swatch_' . self::$display_type;
                     if ( method_exists( __CLASS__, $swatch_method ) ) {
-                        echo call_user_func( [ __CLASS__, $swatch_method ] );
+					echo call_user_func( array( __CLASS__, $swatch_method ) );
                     }
                 ?>
             </div>
@@ -127,10 +135,10 @@ final class Widget {
 
     /**
      * Return the title component.
-     * 
+     *
      * @since 1.0.0
      *
-     * @return HTMLElement
+     * @return string
      */
     private static function get_title() {
         $setting = self::$instance['title'];
@@ -142,18 +150,18 @@ final class Widget {
             margin-bottom: {$setting['margin_bottom']};
         ");
 
-        return SwatchFilter::get_title_component([
+        return SwatchFilter::get_title_component(array(
             'text'  => $setting['text'],
-            'style' => $style
-        ]);
+            'style' => $style,
+        ));
     }
 
     /**
      * Return the swatch list component.
-     * 
+     *
      * @since 1.0.0
      *
-     * @return HTMLElement
+     * @return string
      */
     private static function get_swatch_list() {
         $setting      = self::$instance['list'];
@@ -176,27 +184,27 @@ final class Widget {
             color: {$setting['color']};
         ");
 
-        return SwatchFilter::get_swatch_list_component([
+        return SwatchFilter::get_swatch_list_component(array(
             'attribute'  => self::$attribute,
             'query_type' => self::$query_type,
             'show_count' => self::$show_count,
-            'styles'     => $styles
-        ]);
+            'styles'     => $styles,
+        ));
     }
 
     /**
      * Return the swatch select component.
-     * 
+     *
      * @since 1.0.0
      *
-     * @return HTMLElement
+     * @return string
      */
     private static function get_swatch_select() {
         $setting = self::$instance['select'];
         $padding = self::get_padding( $setting );
         $border  = self::get_border( $setting );
 
-        $styles  = [
+        $styles = array(
             'parent' => Helper::minify_css("
                 width:  {$setting['width']};
                 height: {$setting['height']};
@@ -211,23 +219,23 @@ final class Widget {
             "),
             'button' => Helper::minify_css("
                 fill: {$setting['color']};
-            ")
-        ];
+            "),
+        );
 
-        return SwatchFilter::get_swatch_select_component([
+        return SwatchFilter::get_swatch_select_component(array(
             'attribute'  => self::$attribute,
             'query_type' => self::$query_type,
             'show_count' => self::$show_count,
-            'styles'     => $styles
-        ]);
+            'styles'     => $styles,
+        ));
     }
 
     /**
      * Return the swatch button component.
-     * 
+     *
      * @since 1.0.0
      *
-     * @return HTMLElement
+     * @return string
      */
     private static function get_swatch_button() {
         $setting       = self::$instance['button'];
@@ -268,20 +276,20 @@ final class Widget {
             border:     {$border_active} !important;
         ");
 
-        return SwatchFilter::get_swatch_button_component([
+        return SwatchFilter::get_swatch_button_component(array(
             'attribute'  => self::$attribute,
             'query_type' => self::$query_type,
             'show_count' => self::$show_count,
-            'styles'     => $styles
-        ]);
+            'styles'     => $styles,
+        ));
     }
 
     /**
      * Return the swatch color component.
-     * 
+     *
      * @since 1.0.0
      *
-     * @return HTMLElement
+     * @return string
      */
     private static function get_swatch_color() {
         $setting       = self::$instance['color'];
@@ -316,19 +324,19 @@ final class Widget {
             border: {$border_active} !important;
         ");
 
-        return SwatchFilter::get_swatch_color_component([
+        return SwatchFilter::get_swatch_color_component(array(
             'attribute'  => self::$attribute,
             'query_type' => self::$query_type,
-            'styles'     => $styles
-        ]);
+            'styles'     => $styles,
+        ));
     }
 
     /**
      * Return the swatch image component.
-     * 
+     *
      * @since 1.0.0
      *
-     * @return HTMLElement
+     * @return string
      */
     private static function get_swatch_image() {
         $setting       = self::$instance['image'];
@@ -363,19 +371,19 @@ final class Widget {
             border: {$border_active} !important;
         ");
 
-        return SwatchFilter::get_swatch_image_component([
+        return SwatchFilter::get_swatch_image_component(array(
             'attribute'  => self::$attribute,
             'query_type' => self::$query_type,
-            'styles'     => $styles
-        ]);
+            'styles'     => $styles,
+        ));
     }
 
     /**
      * Return a single line padding value.
-     * 
+     *
      * @since 1.0.0
      *
-     * @param  array  $setting  Contains the style settings.
+     * @param  array $setting Contains the style settings.
      * @return string
      */
     private static function get_padding( $setting ) {
@@ -393,11 +401,11 @@ final class Widget {
 
     /**
      * Return a single line border value.
-     * 
+     *
      * @since 1.0.0
      *
-     * @param  array   $setting  Contains the style setting.
-     * @param  string  $state    Contains the state for border color selection [defaut, active].
+     * @param  array  $setting Contains the style setting.
+     * @param  string $state   Contains the state for border color selection [defaut, active].
      * @return string
      */
     private static function get_border( $setting, $state = 'default' ) {

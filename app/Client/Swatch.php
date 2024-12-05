@@ -1,4 +1,14 @@
 <?php
+/**
+ * App > Client > Swatch.
+ *
+ * @since   1.0.0
+ *
+ * @version 1.0.0
+ * @author  Mafel John Cahucom
+ * @package handy-variation-swatches
+ */
+
 namespace HVSFW\Client;
 
 use HVSFW\Inc\Traits\Singleton;
@@ -10,24 +20,23 @@ use HVSFW\Client\Inc\Helper;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Swatch.
+ * The `Swatch` class contains the all services, components,
+ * and helper for rendering swatches in the client side.
  *
- * @since 	1.0.0
- * @version 1.0.0
- * @author  Mafel John Cahucom
+ * @since 1.0.0
  */
 final class Swatch {
 
 	/**
 	 * Inherit Singleton.
-     * 
+     *
      * @since 1.0.0
 	 */
 	use Singleton;
 
     /**
      * Inherit Security.
-     * 
+     *
      * @since 1.0.0
      */
     use Security;
@@ -47,47 +56,56 @@ final class Swatch {
      * @since 1.0.0
      */
     protected function __construct() {
-        // Set global setting property.
+        /**
+         * Set global setting property.
+         */
         $this->settings = get_option( '_hvsfw_main_settings' );
 
-        // Override the default dropdown variation to swatches.
-        add_filter( 'woocommerce_dropdown_variation_attribute_options_html', [ $this, 'custom_swatch_variation_attribute' ], 100, 2 );
+        /**
+         * Override the default dropdown variation to swatches.
+         */
+        add_filter( 'woocommerce_dropdown_variation_attribute_options_html', array( $this, 'custom_swatch_variation_attribute' ), 100, 2 );
 
-        // Modify the product's available variation.
-        add_filter( 'woocommerce_available_variation', [ $this, 'modify_available_variations' ], 100, 3 );
+        /**
+         * Modify the product's available variation.
+         */
+        add_filter( 'woocommerce_available_variation', array( $this, 'modify_available_variations' ), 100, 3 );
 
-        // Render the variation attributes in shop page.
+        /**
+         * Render the variation attributes in shop page.
+         */
         if ( $this->settings['gn_sp_enable'] == true ) {
-            add_action( 'woocommerce_after_shop_loop_item', [ $this, 'render_shop_page_swatches' ], 10 );
+            add_action( 'woocommerce_after_shop_loop_item', array( $this, 'render_shop_page_swatches' ), 10 );
 
-            // Shop page add to cart button.
+            /**
+             * Shop page add to cart button.
+             */
             if ( ! Plugins::is_active( 'handy-add-to-cart' ) ) {
-                add_action( 'wp_ajax_hvsfw_variation_add_to_cart', [ $this, 'variation_add_to_cart' ] );
-                add_action( 'wp_ajax_nopriv_hvsfw_variation_add_to_cart', [ $this, 'variation_add_to_cart' ] );
+                add_action( 'wp_ajax_hvsfw_variation_add_to_cart', array( $this, 'variation_add_to_cart' ) );
+                add_action( 'wp_ajax_nopriv_hvsfw_variation_add_to_cart', array( $this, 'variation_add_to_cart' ) );
 
-                add_filter( 'woocommerce_loop_add_to_cart_args', [ $this, 'modify_add_to_cart_args' ], 10, 2 );
+                add_filter( 'woocommerce_loop_add_to_cart_args', array( $this, 'modify_add_to_cart_args' ), 10, 2 );
             }
         }
     }
-
 
     /**
      * Override the default dropdown variation attribute to swatches.
      *
      * @since 1.0.0
-     * 
-     * @param  string  $html  Contains the current variation html representation.
-     * @param  array   $args  Contains the the default arguments from a filter hook.
+     *
+     * @param  string $html Contains the current variation html representation.
+     * @param  array  $args Contains the the default arguments from a filter hook.
      * @return string
      */
     public function custom_swatch_variation_attribute( $html, $args ) {
         $select_html = $html;
         $product     = $args['product'];
         $template    = ( isset( $args['hvsfw_template'] ) ? $args['hvsfw_template'] : 'single-product' );
-        
+
         if ( $template === 'single-product' && $this->settings['gn_pp_enable'] == false ) {
             return $select_html;
-        } 
+        }
 
         $attribute = $this->get_attribute( $product, $args['attribute'] );
         if ( empty( $attribute ) ) {
@@ -95,12 +113,13 @@ final class Swatch {
         }
 
         $saved_swatches = Utility::get_product_swatches( $product->get_id() );
+        // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
         if ( ! in_array( $attribute['slug'], array_keys( $saved_swatches ) ) ) {
             return $select_html;
         }
 
         $swatch = $saved_swatches[ $attribute['slug'] ];
-        if ( $swatch['custom'] === 'yes' && in_array( $swatch['type'], [ 'default', 'select' ] ) ) {
+        if ( $swatch['custom'] === 'yes' && in_array( $swatch['type'], array( 'default', 'select' ), true ) ) {
             return $select_html;
         }
 
@@ -117,12 +136,12 @@ final class Swatch {
             }
         }
 
-        $variation_html = $this->get_variation_attribute([
+        $variation_html = $this->get_variation_attribute(array(
             'product_id' => $product->get_id(),
             'attribute'  => $attribute,
             'swatch'     => $swatch,
-            'template'   => $template
-        ]);
+            'template'   => $template,
+        ));
 
         ob_start();
         ?>
@@ -133,7 +152,7 @@ final class Swatch {
             <?php echo $variation_html; ?>
         </div>
         <?php
-        
+
         return ob_get_clean();
     }
 
@@ -141,10 +160,12 @@ final class Swatch {
      * Render the variation swatches in shop page.
      *
      * @since 1.0.0
+     *
+     * @return void
      */
     public function render_shop_page_swatches() {
         global $product;
-        
+
         if ( ! $product->is_type( 'variable' ) ) {
             return;
         }
@@ -153,7 +174,7 @@ final class Swatch {
         if ( ! $variations ) {
             return;
         }
-        
+
         $product_id              = $product->get_id();
         $attributes              = $product->get_variation_attributes();
         $attribute_keys          = array_keys( $attributes );
@@ -162,9 +183,9 @@ final class Swatch {
         <div class="hvsfw-variations-form variations_form" data-product_id="<?php echo absint( $product_id ); ?>" data-product_variations="<?php echo esc_attr( $encoded_variations ); ?>">
             <table class="hvsfw-variations-table variations" cellspacing="0" role="presentation">
                 <tbody>
-                    <?php foreach ( $attributes as $attribute_name => $options ): ?>
+                    <?php foreach ( $attributes as $attribute_name => $options ) : ?>
                         <tr>
-                            <?php if ( $this->settings['gs_sp_sw_label_position'] !== 'hidden' ): ?>
+                            <?php if ( $this->settings['gs_sp_sw_label_position'] !== 'hidden' ) : ?>
                                 <th class="label">
                                     <label for="<?php echo esc_attr( $attribute_name ); ?>">
                                         <?php echo esc_html( wc_attribute_label( $attribute_name ) ); ?>
@@ -178,14 +199,14 @@ final class Swatch {
                                             'options'        => $options,
                                             'attribute'      => $attribute_name,
                                             'product'        => $product,
-                                            'hvsfw_template' => 'archive-product'
+                                            'hvsfw_template' => 'archive-product',
                                         )
                                     );
                                 ?>
-                                <?php if ( end( $attribute_keys ) === $attribute_name ): ?>
+                                <?php if ( end( $attribute_keys ) === $attribute_name ) : ?>
                                     <div class="hvsfw-variations-reset">
                                         <?php
-                                            echo wp_kses_post( apply_filters( 'woocommerce_reset_variations_link', '<a class="reset_variations" href="#">' . esc_html__( 'Clear', 'woocommerce' ) . '</a>' ) );
+                                            echo wp_kses_post( apply_filters( 'woocommerce_reset_variations_link', '<a class="reset_variations" href="#">' . esc_html__( 'Clear', 'handy-variation-swatches' ) . '</a>' ) );
                                         ?>
                                     </div>
                                 <?php endif; ?>
@@ -202,18 +223,18 @@ final class Swatch {
      * Return the variation attributes html.
      *
      * @since 1.0.0
-     * 
-     * @param  array  $args  Contains the necessary arguments for variation attributes.
+     *
+     * @param  array $args Contains the necessary arguments for variation attributes.
      * $args = [
-     *     'product_id' => (integer) Contains the target product's id.
-     *     'attribute'  => (array)   Contains the attribute value from $this->get_attribute().
-     *     'swatch'     => (array)   Contains the current setting of the swatch.
-     *     'template'   => (string)  Contains the type of product page template.
+     *    'product_id' => (integer) Contains the target product's id.
+     *    'attribute'  => (array)   Contains the attribute value from $this->get_attribute().
+     *    'swatch'     => (array)   Contains the current setting of the swatch.
+     *    'template'   => (string)  Contains the type of product page template.
      * ]
      * @return string
      */
-    private function get_variation_attribute( $args = [] ) {
-        $parameters = [ 'product_id', 'attribute', 'swatch', 'template' ];
+    private function get_variation_attribute( $args = array() ) {
+        $parameters = array( 'product_id', 'attribute', 'swatch', 'template' );
         if ( Utility::has_array_unset( $args, $parameters ) ) {
             return '';
         }
@@ -234,7 +255,7 @@ final class Swatch {
 
         // Set is_default and style for button, color, image type.
         $is_default = 'no';
-        if ( in_array( $attribute_type, [ 'button', 'color', 'image' ] ) ) {
+        if ( in_array( $attribute_type, array( 'button', 'color', 'image' ), true ) ) {
             if ( isset( $style['style'] ) && $style['style'] === 'default' ) {
                 $is_default = 'yes';
                 $style      = $this->get_default_style( $attribute_type );
@@ -250,71 +271,69 @@ final class Swatch {
         <div class="hvsfw-attribute" data-attribute="<?php echo esc_attr( $attribute['slug'] ); ?>" data-type="<?php echo esc_attr( $attribute_type ); ?>">
             <?php
                 if ( ! empty( $attribute['options'] ) ) {
-                    foreach ( $attribute['options'] as $key => $option ) {
-                        // Implement limit.
-                        if ( $is_limited && ( $key + 1 ) > $attribute_limit ) {
-                            break;
+				foreach ( $attribute['options'] as $key => $option ) {
+					// Implement limit.
+					if ( $is_limited && ( $key + 1 ) > $attribute_limit ) {
+						break;
                         }
 
-                        // Set term.
-                        $term = ( isset( $swatch['term'][ $option['slug'] ] ) ? $swatch['term'][ $option['slug'] ] : [] );
-                        if ( ! empty( $term ) ) {
+					// Set term.
+					$term = ( isset( $swatch['term'][ $option['slug'] ] ) ? $swatch['term'][ $option['slug'] ] : array() );
+					if ( ! empty( $term ) ) {
 
-                            // Set term_type.
-                            $term_type = $attribute_type;
-                            if ( isset( $term['type'] ) && $term['type'] !== 'default' ) {
-                                $term_type = $term['type'];
-                            } else {
-                                if ( $attribute_type === 'assorted' ) {
-                                    $term_type = 'button';
+						// Set term_type.
+						$term_type = $attribute_type;
+						if ( isset( $term['type'] ) && $term['type'] !== 'default' ) {
+							$term_type = $term['type'];
+                            } elseif ( $attribute_type === 'assorted' ) {
+							$term_type = 'button';
+                            }
+
+						// Set is_default and style to assorted type.
+						if ( $attribute_type === 'assorted' ) {
+							$is_default = 'yes';
+							$style      = $this->get_default_style( $term_type );
+
+							if ( isset( $term['style']['style'] ) && $term['style']['style'] !== 'default' ) {
+								$is_default = 'no';
+								$style      = $term['style'];
                                 }
                             }
 
-                            // Set is_default and style to assorted type.
-                            if ( $attribute_type === 'assorted' ) {
-                                $is_default = 'yes';
-                                $style      = $this->get_default_style( $term_type );
+						// Set option style and is_default.
+						$option['style']      = $style;
+						$option['is_default'] = $is_default;
 
-                                if ( isset( $term['style']['style'] ) && $term['style']['style'] !== 'default' ) {
-                                    $is_default = 'no';
-                                    $style      = $term['style'];
-                                }
-                            }
-
-                            // Set option style and is_default.
-                            $option['style']      = $style;
-                            $option['is_default'] = $is_default;
-
-                            // Render term type.
-                            switch ( $term_type ) {
-                                case 'button':
-                                    echo $this->get_term_button([
-                                        'term'      => $term,
-                                        'option'    => $option,
-                                        'attribute' => $attribute
-                                    ]);
-                                    break;
-                                case 'color':
-                                    echo $this->get_term_color([
-                                        'term'      => $term,
-                                        'option'    => $option,
-                                        'attribute' => $attribute
-                                    ]);
-                                    break;
-                                case 'image':
-                                    echo $this->get_term_image([
-                                        'term'      => $term,
-                                        'option'    => $option,
-                                        'attribute' => $attribute
-                                    ]);
-                                    break;
+						// Render term type.
+						switch ( $term_type ) {
+							case 'button':
+								echo $this->get_term_button(array(
+									'term'      => $term,
+									'option'    => $option,
+									'attribute' => $attribute,
+								));
+								break;
+							case 'color':
+								echo $this->get_term_color(array(
+									'term'      => $term,
+									'option'    => $option,
+									'attribute' => $attribute,
+								));
+								break;
+							case 'image':
+								echo $this->get_term_image(array(
+									'term'      => $term,
+									'option'    => $option,
+									'attribute' => $attribute,
+								));
+								break;
                             }
                         }
                     }
 
-                    // Render more link.
-                    if ( $is_limited && ( count( $attribute['options'] ) > $attribute_limit ) ) {
-                        echo $this->get_more_link( $args['product_id'], count( $attribute['options'] ) );
+				// Render more link.
+				if ( $is_limited && ( count( $attribute['options'] ) > $attribute_limit ) ) {
+					echo $this->get_more_link( $args['product_id'], count( $attribute['options'] ) );
                     }
                 }
             ?>
@@ -328,17 +347,17 @@ final class Swatch {
      * Render the swatch button type.
      *
      * @since 1.0.0
-     * 
-     * @param  array  $args  Contains the necessary arguments for swatch button type requirements.
+     *
+     * @param  array $args Contains the necessary arguments for swatch button type requirements.
      * $args = [
-     *     'term'      => (array) Contains the term id, value, style, tooltip from saved swatch in post meta.
-     *     'option'    => (array) Contains the term name, slug, value, is_default and style.
-     *     'attribute' => (array) Contains the attribute value from $this->get_attribute().
+     *    'term'      => (array) Contains the term id, value, style, tooltip from saved swatch in post meta.
+     *    'option'    => (array) Contains the term name, slug, value, is_default and style.
+     *    'attribute' => (array) Contains the attribute value from $this->get_attribute().
      * ]
      * @return string
      */
-    private function get_term_button( $args = [] ) {
-        $parameters = [ 'term', 'option', 'attribute' ];
+    private function get_term_button( $args = array() ) {
+        $parameters = array( 'term', 'option', 'attribute' );
         if ( Utility::has_array_unset( $args, $parameters ) ) {
             return '';
         }
@@ -353,13 +372,13 @@ final class Swatch {
         }
 
         // Set tooltip.
-        $tooltip = $this->get_tooltip([
+        $tooltip = $this->get_tooltip(array(
             'term'  => $term,
-            'label' => $term['value']['button_label']
-        ]);
+            'label' => $term['value']['button_label'],
+        ));
 
         // Set CSS.
-        $css   = "";
+        $css   = '';
         $style = $option['style'];
         if ( $option['is_default'] === 'no' ) {
             $css .= Helper::minify_css("
@@ -378,7 +397,6 @@ final class Swatch {
                 border-width:     {$style['border_width']};
                 border-color:     {$style['border_color']};
             ");
-            
 
             if ( $style['shape'] === 'custom' ) {
                 $css .= Helper::minify_css("
@@ -388,26 +406,26 @@ final class Swatch {
         }
 
         // Set data-style attribute.
-        $data_style = htmlspecialchars( json_encode( [
-            'leave' => [
+        $data_style = htmlspecialchars( json_encode( array(
+            'leave' => array(
                 'color'            => $style['font_color'],
                 'background-color' => $style['background_color'],
-                'border-color'     => $style['border_color']
-            ],
-            'enter' => [
+                'border-color'     => $style['border_color'],
+            ),
+            'enter' => array(
                 'color'            => $style['font_hover_color'],
                 'background-color' => $style['background_hover_color'],
-                'border-color'     => $style['border_hover_color']
-            ],
-        ]));
+                'border-color'     => $style['border_hover_color'],
+            ),
+        )));
 
         ob_start();
         ?>
         <div class="hvsfw-term" data-type="button" data-enable="yes" data-state="default" data-attribute="<?php echo esc_attr( $attribute['slug'] ); ?>" data-value="<?php echo esc_attr( $option['value'] ); ?>" data-default="<?php echo esc_attr( $option['is_default'] ); ?>" data-shape="<?php echo esc_attr( $style['shape'] ); ?>" data-tooltip="<?php echo esc_attr( $tooltip['is_enabled'] ); ?>" data-style="<?php echo esc_attr( $data_style ); ?>" style="<?php echo esc_attr( $css ); ?>">
-            <?php 
+            <?php
                 echo esc_html( $term['value']['button_label'] );
                 if ( $tooltip['is_enabled'] === 'yes' && ! empty( $tooltip['html'] ) ) {
-                    echo $tooltip['html'];
+				echo $tooltip['html'];
                 }
             ?>
         </div>
@@ -420,17 +438,17 @@ final class Swatch {
      * Render the swatch color type.
      *
      * @since 1.0.0
-     * 
-     * @param  array  $args  Contains the necessary arguments for swatch color type requirements.
+     *
+     * @param  array $args Contains the necessary arguments for swatch color type requirements.
      * $args = [
-     *     'term'      => (array) Contains the term id, value, style, tooltip from saved swatch in post meta.
-     *     'option'    => (array) Contains the term name, slug, value, is_default and style.
-     *     'attribute' => (array) Contains the attribute value from $this->get_attribute().
+     *    'term'      => (array) Contains the term id, value, style, tooltip from saved swatch in post meta.
+     *    'option'    => (array) Contains the term name, slug, value, is_default and style.
+     *    'attribute' => (array) Contains the attribute value from $this->get_attribute().
      * ]
      * @return string
      */
-    private function get_term_color( $args = [] ) {
-        $parameters = [ 'term', 'option', 'attribute' ];
+    private function get_term_color( $args = array() ) {
+        $parameters = array( 'term', 'option', 'attribute' );
         if ( Utility::has_array_unset( $args, $parameters ) ) {
             return '';
         }
@@ -446,13 +464,13 @@ final class Swatch {
         $background_color = Utility::get_linear_color( $term['value']['color'] );
 
         // Set tooltip.
-        $tooltip = $this->get_tooltip([
+        $tooltip = $this->get_tooltip(array(
             'term'  => $term,
             'label' => $option['name'],
-        ]);
+        ));
 
         // Set CSS.
-        $css   = "";
+        $css   = '';
         $style = $option['style'];
         if ( $option['is_default'] === 'no' ) {
             $css .= Helper::minify_css("
@@ -476,21 +494,21 @@ final class Swatch {
         }
 
         // Set data-style attribute.
-        $data_style = htmlspecialchars( json_encode( [
-            'leave' => [
-                'border-color' => $style['border_color']
-            ],
-            'enter' => [
-                'border-color' => $style['border_hover_color']
-            ],
-        ]));
-        
+        $data_style = htmlspecialchars( json_encode( array(
+            'leave' => array(
+                'border-color' => $style['border_color'],
+            ),
+            'enter' => array(
+                'border-color' => $style['border_hover_color'],
+            ),
+        )));
+
         ob_start();
         ?>
         <div class="hvsfw-term" data-type="color" data-enable="yes" data-state="default" data-attribute="<?php echo esc_attr( $attribute['slug'] ); ?>" data-value="<?php echo esc_attr( $option['value'] ); ?>" data-default="<?php echo esc_attr( $option['is_default'] ); ?>" data-shape="<?php echo esc_attr( $style['shape'] ); ?>" data-tooltip="<?php echo esc_attr( $tooltip['is_enabled'] ); ?>" data-style="<?php echo esc_attr( $data_style ); ?>" style="<?php echo esc_attr( $css ); ?>">
             <?php
                 if ( $tooltip['is_enabled'] === 'yes' && ! empty( $tooltip['html'] ) ) {
-                    echo $tooltip['html'];
+				echo $tooltip['html'];
                 }
             ?>
             <div class="hvsfw-color" style="background: <?php echo esc_attr( $background_color ) ?>;"></div>
@@ -504,17 +522,17 @@ final class Swatch {
      * Render the swatch image type.
      *
      * @since 1.0.0
-     * 
-     * @param  array  $args  Contains the necessary arguments for swatch image type requirements.
+     *
+     * @param  array $args Contains the necessary arguments for swatch image type requirements.
      * $args = [
-     *     'term'      => (array) Contains the term id, value, style, tooltip from saved swatch in post meta.
-     *     'option'    => (array) Contains the term name, slug, value, is_default and style.
-     *     'attribute' => (array) Contains the attribute value from $this->get_attribute().
+     *    'term'      => (array) Contains the term id, value, style, tooltip from saved swatch in post meta.
+     *    'option'    => (array) Contains the term name, slug, value, is_default and style.
+     *    'attribute' => (array) Contains the attribute value from $this->get_attribute().
      * ]
      * @return string
      */
-    private function get_term_image( $args = [] ) {
-        $parameters = [ 'term', 'option', 'attribute' ];
+    private function get_term_image( $args = array() ) {
+        $parameters = array( 'term', 'option', 'attribute' );
         if ( Utility::has_array_unset( $args, $parameters ) ) {
             return '';
         }
@@ -531,13 +549,13 @@ final class Swatch {
         $image = Utility::get_swatch_image_by_attachment_id( $term['value']['image'], $term['value']['image_size'] );
 
         // Set tooltip.
-        $tooltip = $this->get_tooltip([
+        $tooltip = $this->get_tooltip(array(
             'term'  => $term,
             'label' => $option['name'],
-        ]);
-        
+        ));
+
         // Set CSS.
-        $css   = "";
+        $css   = '';
         $style = $option['style'];
         if ( $option['is_default'] === 'no' ) {
             $css .= Helper::minify_css("
@@ -561,21 +579,21 @@ final class Swatch {
         }
 
         // Set data-style attribute.
-        $data_style = htmlspecialchars( json_encode( [
-            'leave' => [
-                'border-color' => $style['border_color']
-            ],
-            'enter' => [
-                'border-color' => $style['border_hover_color']
-            ],
-        ]));
+        $data_style = htmlspecialchars( json_encode( array(
+            'leave' => array(
+                'border-color' => $style['border_color'],
+            ),
+            'enter' => array(
+                'border-color' => $style['border_hover_color'],
+            ),
+        )));
 
         ob_start();
         ?>
         <div class="hvsfw-term" data-type="image" data-enable="yes" data-state="default" data-attribute="<?php echo esc_attr( $attribute['slug'] ); ?>" data-value="<?php echo esc_attr( $option['value'] ); ?>" data-default="<?php echo esc_attr( $option['is_default'] ); ?>" data-shape="<?php echo esc_attr( $style['shape'] ); ?>" data-tooltip="<?php echo esc_attr( $tooltip['is_enabled'] ); ?>" data-style="<?php echo esc_attr( $data_style ); ?>" style="<?php echo esc_attr( $css ); ?>">
             <?php
                 if ( $tooltip['is_enabled'] === 'yes' && ! empty( $tooltip['html'] ) ) {
-                    echo $tooltip['html'];
+				echo $tooltip['html'];
                 }
             ?>
             <div class="hvsfw-image" style="background-image: url('<?php echo esc_url( $image['src'] ); ?>');"></div>
@@ -589,19 +607,19 @@ final class Swatch {
      * Return the tooltip component.
      *
      * @since 1.0.0
-     * 
-     * @param  array  $args  Contains the necessary arguments for tooltip component.
+     *
+     * @param  array $args Contains the necessary arguments for tooltip component.
      * $args = [
-     *     'term'  => (array)  Contains the term id, value, style, tooltip from saved swatch in post meta.
-     *     'label' => (string) Contains the tooltip default label.
+     *    'term'  => (array)  Contains the term id, value, style, tooltip from saved swatch in post meta.
+     *    'label' => (string) Contains the tooltip default label.
      * ]
      * @return array
      */
-    private function get_tooltip( $args = [] ) {
-        $output = [
+    private function get_tooltip( $args = array() ) {
+        $output = array(
             'is_enabled' => 'no',
-            'html'       => ''
-        ];
+            'html'       => '',
+        );
 
         if ( ! $this->settings['gn_enable_tooltip'] ) {
             return $output;
@@ -611,6 +629,7 @@ final class Swatch {
             return $output;
         }
 
+        // phpcs:ignore Universal.Operators.StrictComparisons.LooseNotEqual
         if ( $args['term']['type'] === 'default' && $args['term']['id'] != 0 ) {
             $args['term']['tooltip'] = Utility::get_swatch_tooltip( $args['term']['id'] );
         }
@@ -621,11 +640,12 @@ final class Swatch {
 
         $type    = 'text';
         $content = '';
-        if ( in_array( $args['term']['tooltip']['type'], [ 'text', 'html', 'image' ] ) ) {
+        if ( in_array( $args['term']['tooltip']['type'], array( 'text', 'html', 'image' ), true ) ) {
             $type    = $args['term']['tooltip']['type'];
             $content = $args['term']['tooltip']['content'];
         }
 
+        // phpcs:ignore Universal.Operators.StrictComparisons.LooseNotEqual
         if ( $args['term']['tooltip']['type'] === 'default' && $args['term']['id'] != 0 ) {
             $default_tooltip = Utility::get_swatch_tooltip( $args['term']['id'] );
             if ( $default_tooltip['type'] === 'none' ) {
@@ -657,11 +677,11 @@ final class Swatch {
         ?>
         <div class="hvsfw-tooltip" data-type="<?php echo esc_attr( $type ); ?>" data-visibility="hidden">
             <div class="hvsfw-tooltip__box">
-                <?php if ( $type === 'text' ): ?>
+                <?php if ( $type === 'text' ) : ?>
                     <?php echo esc_html( $content ); ?>
-                <?php elseif ( $type === 'html' ): ?>
+                <?php elseif ( $type === 'html' ) : ?>
                     <?php echo $content; ?>
-                <?php elseif ( $type === 'image' ): ?>
+                <?php elseif ( $type === 'image' ) : ?>
                     <div class="hvsfw-tooltip__image">
                         <img src="<?php echo esc_url( $image[0] ); ?>" alt="<?php echo esc_attr( $image_alt ); ?>" title="<?php echo esc_attr( $image_title ); ?>">
                     </div>
@@ -680,26 +700,28 @@ final class Swatch {
      * Return the variation attribute details.
      *
      * @since 1.0.0
-     * 
-     * @param  object  $product    Contains the wc_get_product object.
-     * @param  string  $attribute  Contains the attribute name or index.
+     *
+     * @param  object $product   Contains the wc_get_product object.
+     * @param  string $attribute Contains the attribute name or index.
      * @return array
      */
     private function get_attribute( $product, $attribute ) {
         if ( empty( $product ) || empty( $attribute ) ) {
-            return [];
+            return array();
         }
 
-        $attr                 = [];
+        $attr                 = array();
         $attr_slug            = str_replace( ' ', '-', strtolower( $attribute ) );
         $attributes           = Utility::get_attributes( $product );
         $variation_attributes = $product->get_variation_attributes();
 
         // Check if attribute exists.
+        // phpcs:disable WordPress.PHP.StrictInArray.MissingTrueStrict
         $in_var_attributes = ( ! in_array( $attribute, array_keys( $variation_attributes ) ) );
         $in_attributes     = ( ! in_array( $attr_slug, array_keys( $attributes ) ) );
+        // phpcs:enable
         if ( $in_var_attributes || $in_attributes ) {
-            return [];
+            return array();
         }
 
         // Set current attribute value.
@@ -710,27 +732,26 @@ final class Swatch {
         $attr['id']      = $current_attribute->get_id();
         $attr['name']    = $current_attribute->get_name();
         $attr['slug']    = $attr_slug;
-        $attr['options'] = [];
+        $attr['options'] = array();
         foreach ( $current_attribute->get_options() as $key => $option ) {
             if ( $attr['id'] !== 0 ) {
                 $term = get_term( $option );
                 if ( $term ) {
+                    // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
                     if ( in_array( $term->slug, $attribute_terms ) ) {
-                        array_push( $attr['options'], [
+                        array_push( $attr['options'], array(
                             'name'  => $term->name,
                             'slug'  => $term->slug,
-                            'value' => $term->slug
-                        ]);
+                            'value' => $term->slug,
+                        ));
                     }
                 }
-            } else {
-                if ( in_array( $option, $attribute_terms ) ) {
-                    array_push( $attr['options'], [
+            } elseif ( in_array( $option, $attribute_terms ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
+                    array_push( $attr['options'], array(
                         'name'  => $option,
                         'slug'  => Utility::get_converted_slug( $option ),
-                        'value' => $option
-                    ]);
-                }
+                        'value' => $option,
+                    ));
             }
         }
 
@@ -741,9 +762,9 @@ final class Swatch {
      * Return the more link html.
      *
      * @since 1.0.0
-     * 
-     * @param  integer  $product_id     Contains the target product's id.
-     * @param  integer  $total_options  Contains the total attribute options.
+     *
+     * @param  integer $product_id    Contains the target product's id.
+     * @param  integer $total_options Contains the total attribute options.
      * @return string
      */
     private function get_more_link( $product_id, $total_options ) {
@@ -753,7 +774,7 @@ final class Swatch {
 
         $text       = '';
         $label      = $this->settings['gs_ml_label'];
-        $difference = '('. ( $total_options - $this->settings['gn_sp_attribute_limit'] ) .')';
+        $difference = '(' . ( $total_options - $this->settings['gn_sp_attribute_limit'] ) . ')';
         switch ( $this->settings['gs_ml_format'] ) {
             case 'label':
                 $text = $label;
@@ -762,7 +783,7 @@ final class Swatch {
                 $text = $difference;
                 break;
             case 'label-number':
-                $text = $label .' '. $difference;
+                $text = $label . ' ' . $difference;
                 break;
         }
 
@@ -782,41 +803,41 @@ final class Swatch {
      * Return the default style of each swatch type from global settings.
      *
      * @since 1.0.0
-     * 
-     * @param  string  $type  Contains the swatch type |button|color|image.
+     *
+     * @param  string $type Contains the swatch type |button|color|image.
      * @return array
      */
     private function get_default_style( $type ) {
-        if ( ! in_array( $type, [ 'button', 'color', 'image' ] ) ) {
-            return [];
+        if ( ! in_array( $type, array( 'button', 'color', 'image' ), true ) ) {
+            return array();
         }
 
         $prefix = ( $type === 'button' ? 'bn' : ( $type === 'color' ? 'cr' : 'im' ) );
-        $schema = [
-            'shape'                  => [ 'shape',      'square'              ],
-            'size'                   => [ 'size',       '40px'                ],
-            'width'                  => [ 'wd',         '40px'                ],
-            'height'                 => [ 'ht',         '40px'                ],
-            'font_size'              => [ 'fs',         '14px'                ],
-            'font_weight'            => [ 'fw',         '500'                 ],
-            'font_color'             => [ 'txt_clr',    'rgba(0,0,0,1)'       ],
-            'font_hover_color'       => [ 'txt_hv_clr', 'rgba(0,113,242,1)'   ],
-            'background_color'       => [ 'bg_clr',     'rgba(255,255,255,1)' ],
-            'background_hover_color' => [ 'bg_hv_clr',  'rgba(255,255,255,1)' ],
-            'padding_top'            => [ 'pt',         '5px'                 ],
-            'padding_bottom'         => [ 'pb',         '5px'                 ],
-            'padding_left'           => [ 'pl',         '5px'                 ],
-            'padding_right'          => [ 'pr',         '5px'                 ],
-            'border_style'           => [ 'bs',         'solid'               ],
-            'border_width'           => [ 'bw',         '1px'                 ],
-            'border_color'           => [ 'b_clr',      'rgba(0,0,0,1)'       ],
-            'border_hover_color'     => [ 'b_hv_clr',   'rgba(0,113,242,1)'   ],
-            'border_radius'          => [ 'br',         '0px'                 ],
-        ];
+        $schema = array(
+            'shape'                  => array( 'shape', 'square' ),
+            'size'                   => array( 'size', '40px' ),
+            'width'                  => array( 'wd', '40px' ),
+            'height'                 => array( 'ht', '40px' ),
+            'font_size'              => array( 'fs', '14px' ),
+            'font_weight'            => array( 'fw', '500' ),
+            'font_color'             => array( 'txt_clr', 'rgba(0,0,0,1)' ),
+            'font_hover_color'       => array( 'txt_hv_clr', 'rgba(0,113,242,1)' ),
+            'background_color'       => array( 'bg_clr', 'rgba(255,255,255,1)' ),
+            'background_hover_color' => array( 'bg_hv_clr', 'rgba(255,255,255,1)' ),
+            'padding_top'            => array( 'pt', '5px' ),
+            'padding_bottom'         => array( 'pb', '5px' ),
+            'padding_left'           => array( 'pl', '5px' ),
+            'padding_right'          => array( 'pr', '5px' ),
+            'border_style'           => array( 'bs', 'solid' ),
+            'border_width'           => array( 'bw', '1px' ),
+            'border_color'           => array( 'b_clr', 'rgba(0,0,0,1)' ),
+            'border_hover_color'     => array( 'b_hv_clr', 'rgba(0,113,242,1)' ),
+            'border_radius'          => array( 'br', '0px' ),
+        );
 
-        $style = [];
+        $style = array();
         foreach ( $schema as $key => $value ) {
-            $index         = $prefix .'_'. $value[0];
+            $index         = $prefix . '_' . $value[0];
             $style[ $key ] = ( isset( $this->settings[ $index ] ) ? $this->settings[ $index ] : $value[1] );
         }
 
@@ -827,9 +848,9 @@ final class Swatch {
      * Modify the woocommerce add to cart button in archive or shop page.
      *
      * @since 1.0.0
-     * 
-     * @param  array   $args     Contains the current wp parse arguments.
-     * @param  object  $product  Contains the wc_product object.
+     *
+     * @param  array  $args    Contains the current wp parse arguments.
+     * @param  object $product Contains the wc_product object.
      * @return array
      */
     public function modify_add_to_cart_args( $args, $product ) {
@@ -847,10 +868,10 @@ final class Swatch {
      * Modify the woocommerce product's available variations.
      *
      * @since 1.0.0
-     * 
-     * @param  array   $fields     Contains the fields used in add to cart form variation.
-     * @param  object  $product    Contains the current target product.
-     * @param  object  $variation  Contains the current target product's available variations.
+     *
+     * @param  array  $fields    Contains the fields used in add to cart form variation.
+     * @param  object $product   Contains the current target product.
+     * @param  object $variation Contains the current target product's available variations.
      * @return array
      */
     public function modify_available_variations( $fields, $product, $variation ) {
@@ -867,91 +888,91 @@ final class Swatch {
      *
      * @since 1.0.0
      *
-     * @return json
+     * @return void
      */
     public function variation_add_to_cart() {
         if ( ! self::is_security_passed( $_POST ) ) {
-            wp_send_json_error([
-                'error' => 'SECURITY_ERROR'
-            ]);
+            wp_send_json_error(array(
+                'error' => 'SECURITY_ERROR',
+            ));
         }
 
-        if ( self::has_post_empty_data( $_POST, [ 'productId', 'variationId', 'quantity' ] ) ) {
-            wp_send_json_error([
-                'error' => 'MISSING_DATA_ERROR'
-            ]);
+        if ( self::has_post_empty_data( $_POST, array( 'productId', 'variationId', 'quantity' ) ) ) {
+            wp_send_json_error(array(
+                'error' => 'MISSING_DATA_ERROR',
+            ));
         }
 
         $product_id           = apply_filters( 'woocommerce_add_to_cart_product_id', absint( $_POST['productId'] ) );
         $quantity             = ( absint( $_POST['quantity'] ) <= 0 ? 1 : absint( $_POST['quantity'] ) );
         $variation_id         = absint( $_POST['variationId'] );
-        $variation_attributes = [];
+        $variation_attributes = array();
 
         // Validate product.
         $product = wc_get_product( $product_id );
         if ( ! $product ) {
-            wc_add_notice( 
-                __( 'The product you are trying to add to the cart is not found.', HVSFW_PLUGIN_DOMAIN ), 
-                'error' 
+            wc_add_notice(
+                __( 'The product you are trying to add to the cart is not found.', 'handy-variation-swatches' ),
+                'error'
             );
 
-            wp_send_json_success([
+            wp_send_json_success(array(
                 'response' => 'FAILED_ADDING_TO_CART',
-                'notice'   => wc_print_notices( true )
-            ]);
+                'notice'   => wc_print_notices( true ),
+            ));
         }
 
         // Validate product status.
         if ( get_post_status( $product_id ) !== 'publish' ) {
-            wc_add_notice( 
-                __( 'The product you are trying to add is not yet publish.', HVSFW_PLUGIN_DOMAIN ), 
-                'error' 
+            wc_add_notice(
+                __( 'The product you are trying to add is not yet publish.', 'handy-variation-swatches' ),
+                'error'
             );
 
-            wp_send_json_success([
+            wp_send_json_success(array(
                 'response' => 'FAILED_ADDING_TO_CART',
-                'notice'   => wc_print_notices( true )
-            ]);
+                'notice'   => wc_print_notices( true ),
+            ));
         }
 
         // Validate product type.
         if ( ! $product->is_type( 'variable' ) ) {
-            wc_add_notice( 
-                __( 'The product you are trying to add is not a variable product type.', HVSFW_PLUGIN_DOMAIN ), 
-                'error' 
+            wc_add_notice(
+                __( 'The product you are trying to add is not a variable product type.', 'handy-variation-swatches' ),
+                'error'
             );
 
-            wp_send_json_success([
+            wp_send_json_success(array(
                 'response' => 'FAILED_ADDING_TO_CART',
-                'notice'   => wc_print_notices( true )
-            ]);
+                'notice'   => wc_print_notices( true ),
+            ));
         }
 
         // Validate product variation.
         if ( ! Helper::is_valid_variation_id( $variation_id, $product ) ) {
-            wc_add_notice( 
-                __( 'The product variation you are trying to add to the cart is not found.', HVSFW_PLUGIN_DOMAIN ), 
-                'error' 
+            wc_add_notice(
+                __( 'The product variation you are trying to add to the cart is not found.', 'handy-variation-swatches' ),
+                'error'
             );
 
-            wp_send_json_success([
+            wp_send_json_success(array(
                 'response' => 'FAILED_ADDING_TO_CART',
-                'notice'   => wc_print_notices( true )
-            ]);
+                'notice'   => wc_print_notices( true ),
+            ));
         }
 
         // Get product variation.
         $variation = wc_get_product( $variation_id );
         if ( ! $variation ) {
-            wc_add_notice( 
-                __( 'The product variation you are trying to add to the cart is not found.', HVSFW_PLUGIN_DOMAIN ), 
-                'error' 
+            wc_add_notice(
+                __( 'The product variation you are trying to add to the cart is not found.', 'handy-variation-swatches' ),
+                'error'
             );
-            
-            wp_send_json_success([
+
+            wp_send_json_success(array(
                 'response' => 'FAILED_ADDING_TO_CART',
-                'notice'   => wc_print_notices( true )
-            ]);
+                'notice'   => wc_print_notices( true ),
+            ));
         }
 
         // Get product variation attributes.
@@ -963,19 +984,19 @@ final class Swatch {
         if ( $passed_validation && $is_added_to_cart ) {
             $product_thumbnail = Helper::get_product_small_thumbnail( 'variable', $product, $variation );
             Helper::custom_add_to_cart_message_success( $variation->get_name() );
-            wp_send_json_success([
+            wp_send_json_success(array(
                 'response'          => 'SUCCESSFULLY_ADDED_TO_CART',
                 'notice'            => wc_print_notices( true ),
                 'product_name'      => $variation->get_name(),
                 'product_thumbnail' => $product_thumbnail,
                 'cart_hash'         => WC()->cart->get_cart_hash(),
-                'fragments'         => apply_filters( 'woocommerce_add_to_cart_fragments', [] )
-            ]);
+                'fragments'         => apply_filters( 'woocommerce_add_to_cart_fragments', array() ),
+            ));
         } else {
-            wp_send_json_success([
+            wp_send_json_success(array(
                 'response' => 'FAILED_ADDING_TO_CART',
-                'notice'   => wc_print_notices( true )
-            ]);
+                'notice'   => wc_print_notices( true ),
+            ));
         }
     }
 }

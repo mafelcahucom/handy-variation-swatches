@@ -1,13 +1,15 @@
 <?php
 /**
- * Views > Admin > Field > Color Picker Field.
+ * App > Views > Admin > Field > Color Picker Field.
  *
  * @since   1.0.0
+ *
  * @version 1.0.0
- * @author  Mafel John Cahucom 
+ * @author  Mafel John Cahucom
+ * @package handy-variation-swatches
  */
 
-defined( 'ABSPATH' ) || exit; 
+defined( 'ABSPATH' ) || exit;
 
 /**
  * $args = [
@@ -17,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *     'label'       => (string) Contains the label of the color-picker field.
  *     'description' => (string) Contains the description of the color-picker field.
  *]
- **/
+ */
 
 $name        = ( isset( $args['name'] ) ? $args['name'] : '' );
 $group       = ( isset( $args['group'] ) ? $args['group'] : '' );
@@ -35,7 +37,7 @@ if ( empty( $name ) || empty( $group ) ) {
 <div id="hd-form-field-<?php echo esc_attr( $name ); ?>" class="hd-form-field" data-has-error="0">
     <div class="hd-form-field--color-picker-field">
         <input type="hidden" id="<?php echo esc_attr( $name ) ?>" name="<?php echo esc_attr( $name ); ?>" data-input-group="<?php echo esc_attr( $group ); ?>" value="<?php echo esc_attr( $value ); ?>">
-        <?php if ( ! empty( $label ) ): ?>
+        <?php if ( ! empty( $label ) ) : ?>
             <label class="hd-form-field__label hd-mb-5" for="<?php echo esc_attr( $name ); ?>">
                 <?php echo esc_html( $label ); ?>
             </label>
@@ -46,13 +48,13 @@ if ( empty( $name ) || empty( $group ) ) {
                 <?php echo esc_html( $hexa ); ?>
             </span>
         </div>
-        <?php if ( ! empty( $description ) ): ?>
+        <?php if ( ! empty( $description ) ) : ?>
             <p class="hd-form-field__description">
                 <?php echo esc_html( $description ); ?>
             </p>
         <?php endif; ?>
         <p class="hd-form-field__error">
-            <?php echo __( 'Error Message', HVSFW_PLUGIN_DOMAIN ); ?>
+            <?php echo __( 'Error Message', 'handy-variation-swatches' ); ?>
         </p>
     </div>
 </div>

@@ -1,13 +1,15 @@
 <?php
 /**
- * Views > Admin > Field > Textarea Field.
+ * App > Views > Admin > Field > Textarea Field.
  *
  * @since   1.0.0
+ *
  * @version 1.0.0
- * @author  Mafel John Cahucom 
+ * @author  Mafel John Cahucom
+ * @package handy-variation-swatches
  */
 
-defined( 'ABSPATH' ) || exit; 
+defined( 'ABSPATH' ) || exit;
 
 /**
  * $args = [
@@ -18,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  *     'description' => (string) Contains the description of the textarea field.
  *     'placeholder' => (string) Contains the placeholder of the textarea field.
  * ]
- **/
+ */
 
 $name        = ( isset( $args['name'] ) ? $args['name'] : '' );
 $group       = ( isset( $args['group'] ) ? $args['group'] : '' );
@@ -34,19 +36,19 @@ if ( empty( $name ) || empty( $group ) ) {
 
 <div id="hd-form-field-<?php echo esc_attr( $name ); ?>" class="hd-form-field" data-has-error="0">
     <div class="hd-form-field--textarea-field">
-        <?php if ( ! empty( $label ) ): ?>
+        <?php if ( ! empty( $label ) ) : ?>
             <label class="hd-form-field__label hd-mb-5" for="<?php echo esc_attr( $name ); ?>">
                 <?php echo esc_html( $label ); ?>
             </label>
         <?php endif; ?>
         <textarea class="hd-textarea-field" id="<?php echo esc_attr( $name ); ?>" name="<?php echo esc_attr( $name ); ?>" data-input-group="<?php echo esc_attr( $group ); ?>" placeholder="<?php echo esc_attr( $placeholder ); ?>"><?php echo $value; ?></textarea>
-        <?php if ( ! empty( $description ) ): ?>
+        <?php if ( ! empty( $description ) ) : ?>
             <p class="hd-form-field__description">
                 <?php echo esc_html( $description ); ?>
             </p>
         <?php endif; ?>
         <p class="hd-form-field__error">
-            <?php echo __( 'Error Message', HVSFW_PLUGIN_DOMAIN ); ?>
+            <?php echo __( 'Error Message', 'handy-variation-swatches' ); ?>
         </p>
     </div>
 </div>

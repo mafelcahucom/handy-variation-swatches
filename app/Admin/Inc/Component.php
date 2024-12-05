@@ -1,4 +1,14 @@
 <?php
+/**
+ * App > Admin > Inc > Component.
+ *
+ * @since   1.0.0
+ *
+ * @version 1.0.0
+ * @author  Mafel John Cahucom
+ * @package handy-variation-swatches
+ */
+
 namespace HVSFW\Admin\Inc;
 
 use HVSFW\Inc\Traits\Singleton;
@@ -7,17 +17,17 @@ use HVSFW\Admin\Inc\Helper;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Admin Component.
+ * The `Component` class contains the all available
+ * reusable components that can be used in admin side
+ * or back-end.
  *
- * @since 	1.0.0
- * @version 1.0.0
- * @author  Mafel John Cahucom
+ * @since 1.0.0
  */
 final class Component {
 
 	/**
 	 * Inherit Singleton.
-     * 
+     *
      * @since 1.0.0
 	 */
 	use Singleton;
@@ -33,15 +43,15 @@ final class Component {
      * Return the logo.
      *
      * @since 1.0.0
-     * 
-     * @return HTMLElement
+     *
+     * @return string
      */
     public static function get_logo() {
         return sprintf(
             '<img src="%s" class="hd-logo" alt="%s" title="%s">',
-            Helper::get_asset_src( 'images/logo.svg' ),
-            __( 'Handy Variation Swatches', HVSFW_PLUGIN_DOMAIN ),
-            __( 'Handy Variation Swatches', HVSFW_PLUGIN_DOMAIN )
+            Helper::get_resource_src( 'images/logo.svg' ),
+            __( 'Handy Variation Swatches', 'handy-variation-swatches' ),
+            __( 'Handy Variation Swatches', 'handy-variation-swatches' )
         );
     }
 
@@ -49,8 +59,8 @@ final class Component {
      * Return the header component.
      *
      * @since 1.0.0
-     * 
-     * @return HTMLElement
+     *
+     * @return string
      */
     public static function get_header() {
         return Helper::render_view( 'header' );
@@ -60,8 +70,8 @@ final class Component {
      * Return the footer component.
      *
      * @since 1.0.0
-     * 
-     * @return HTMLElement
+     *
+     * @return string
      */
     public static function get_footer() {
         return Helper::render_view( 'footer' );
@@ -71,16 +81,16 @@ final class Component {
      * Return the navigation list component.
      *
      * @since 1.0.0
-     * 
-     * @param  array  $data  Contains the necessary parameters for creating navigation list.
+     *
+     * @param  array $args Contains the necessary arguments for creating navigation list.
      * $args = [
-     *     'label' => (string) Contains the label of the link.
-     *     'slug'  => (string) Contains the url slug.
-     *     'icon'  => (string) Contains the name of icon.
+     *    'label' => (string) Contains the label of the link.
+     *    'slug'  => (string) Contains the url slug.
+     *    'icon'  => (string) Contains the name of icon.
      * ]
-     * @return HTMLElement
+     * @return string
      */
-    public static function get_navigation( $args = [] ) {
+    public static function get_navigation( $args = array() ) {
         if ( empty( $args ) ) {
             return;
         }
@@ -88,18 +98,18 @@ final class Component {
         foreach ( $args as $key => $value ) {
             // Set complete url.
             if ( ! empty( $value['slug'] ) ) {
-                $args[$key]['url'] = Helper::get_root_url() .'&tab='. $value['slug'];
+                $args[ $key ]['url'] = Helper::get_root_url() . '&tab=' . $value['slug'];
             }
 
             // Set state based on $_GET['tag'] & slug.
-            $args[$key]['state'] = 'default';
+            $args[ $key ]['state'] = 'default';
             if ( isset( $_GET['tab'] ) ) {
-                $args[$key]['state'] = ( $_GET['tab'] == $value['slug'] ? 'active' : 'default' );
+                $args[ $key ]['state'] = ( $_GET['tab'] == $value['slug'] ? 'active' : 'default' );
             }
 
             // Set icon.
             if ( ! empty( $value['icon'] ) ) {
-                $args[$key]['icon'] = Helper::get_icon( $value['icon'], 'hd-svg' );
+                $args[ $key ]['icon'] = Helper::get_icon( $value['icon'], 'hd-svg' );
             }
         }
 
@@ -110,17 +120,17 @@ final class Component {
      * Return the message component.
      *
      * @since 1.0.0
-     * 
-     * @param  array  $data  Contains the necessary parameters for creating message component.
+     *
+     * @param  array $args Contains the necessary arguments for creating message component.
      * $args = [
-     *     'title'   => (string) Contains the title of the message.
-     *     'content' => (string) Contains the content of the message.
-     *     'button'  => (array)  Contains the button [ 'label', 'url' ].
-     *     'image'   => (string) Contains the image source url.
+     *    'title'   => (string) Contains the title of the message.
+     *    'content' => (string) Contains the content of the message.
+     *    'button'  => (array)  Contains the button [ 'label', 'url' ].
+     *    'image'   => (string) Contains the image source url.
      * ]
-     * @return HTMLElement
+     * @return string
      */
-    public static function get_message( $args = [] ) {
+    public static function get_message( $args = array() ) {
         return Helper::render_view( 'component/message', $args );
     }
 
@@ -129,14 +139,14 @@ final class Component {
      *
      * @since 1.0.0
      *
-     * @param  array  $data  Contains all the arguments for creating tab component.
+     * @param  array $args Contains the necessary arguments for creating tab component.
      * $args = [
-     *     'class' => (string) Contains the additional class.   
-     *     'tabs'  => (array)  Contains the title and panel of each tab.
+     *    'class' => (string) Contains the additional class.
+     *    'tabs'  => (array)  Contains the title and panel of each tab.
      * ]
-     * @return HTMLElement
+     * @return string
      **/
-    public static function get_tab_navigation( $args = [] ) {
+    public static function get_tab_navigation( $args = array() ) {
         if ( ! isset( $args['tabs'] ) ) {
             return;
         }
@@ -146,19 +156,19 @@ final class Component {
 
     /**
      * Return the tab panel with rendered fields.
-     * 
+     *
      * @since 1.0.0
      *
-     * @param  array  $args  Contains all the arguments for creating tab panel component.
+     * @param  array $args Contains the necessary arguments for creating tab panel component.
      * $args = [
-     *      'id'         => (string) Contains the id of tab panel.
-     *      'class'      => (string) Contains the additional class.
-     *      'state'      => (string) Contains the state of the tab panel |default|active.
-     *      'components' => (array)  Contains the fields to be rendered inside tab panel. 
+     *     'id'         => (string) Contains the id of tab panel.
+     *     'class'      => (string) Contains the additional class.
+     *     'state'      => (string) Contains the state of the tab panel |default|active.
+     *     'components' => (array)  Contains the fields to be rendered inside tab panel.
      * ]
-     * @return HTMLElement
+     * @return string
      */
-    public static function get_tab_panel( $args = [] ) {
+    public static function get_tab_panel( $args = array() ) {
         if ( ! isset( $args['id'] ) || ! isset( $args['components'] ) || empty( $args['components'] ) ) {
             return;
         }
@@ -170,18 +180,18 @@ final class Component {
      * Return the button component.
      *
      * @since 1.0.0
-     * 
-     * @param  array  $args  Contains the necessary parameters for creating button.
+     *
+     * @param  array $args Contains the necessary arguments for creating button.
      * $args = [
-     *     'id'    => (string) Contains the id of the button.
-     *     'class' => (string) Contains the additional class.
-     *     'attr'  => (array)  Contains the additional attributes.
-     *     'state' => (string) Contains the current state of the button.
-     *     'label' => (string) Contains the label of the button. In cirle label will be used in aria-label.
+     *    'id'    => (string) Contains the id of the button.
+     *    'class' => (string) Contains the additional class.
+     *    'attr'  => (array)  Contains the additional attributes.
+     *    'state' => (string) Contains the current state of the button.
+     *    'label' => (string) Contains the label of the button. In cirle label will be used in aria-label.
      * ]
-     * @return HTMLElement
+     * @return string
      */
-    public static function get_button( $args = [] ) {
+    public static function get_button( $args = array() ) {
         return Helper::render_view( 'component/button', $args );
     }
 
@@ -190,42 +200,42 @@ final class Component {
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Contains the necessary parameters for creating button.
+     * @param  array $args Contains the necessary arguments for creating button.
      * $args = [
-     *     'title'      => (string) Contains the title of the card.
-     *     'class'      => (string) Contains the additional class.
-     *     'components' => (array)  Contains the components to be render.
+     *    'title'      => (string) Contains the title of the card.
+     *    'class'      => (string) Contains the additional class.
+     *    'components' => (array)  Contains the components to be render.
      * ]
-     * @return HTMLElement
-    **/
-    public static function get_card( $args = [] ) {
+     * @return string
+     **/
+    public static function get_card( $args = array() ) {
         return Helper::render_view( 'component/card', $args );
     }
 
     /**
      * Return the row component.
-     * 
+     *
      * @since 1.0.0
      *
-     * @param  array  $args  Contains the necessary parameters for creating row.
+     * @param  array $args Contains the necessary arguments for creating row.
      * $args = [
-     *     'type'        => (string) Contains the type of row |block|grid.
-     *     'label'       => (string) Contains the label of the row.
-     *     'description' => (string) Contains the description of the row.
-     *     'fields'      => (array)  Contains the fields to be rendered inside row.
+     *    'type'        => (string) Contains the type of row |block|grid.
+     *    'label'       => (string) Contains the label of the row.
+     *    'description' => (string) Contains the description of the row.
+     *    'fields'      => (array)  Contains the fields to be rendered inside row.
      * ]
-     * @return HTMLElement
+     * @return string
      */
-    public static function get_row( $args = [] ) {
+    public static function get_row( $args = array() ) {
         return Helper::render_view( 'component/row', $args );
     }
 
     /**
      * Return the setting placeholder component.
-     * 
+     *
      * @since 1.0.0
      *
-     * @return HTMLElement
+     * @return string
      */
     public static function get_placeholder() {
         return Helper::render_view( 'component/placeholder' );
@@ -235,19 +245,19 @@ final class Component {
      * Return the screen loader component.
      *
      * @since 1.0.0
-     * 
-     * @return HTMLElement
+     *
+     * @return string
      */
     public static function get_prompt_loader() {
         return Helper::render_view( 'component/prompt-loader' );
     }
-    
+
     /**
      * Reurn the prompt dialog component.
      *
      * @since 1.0.0
-     * 
-     * @return HTMLElement
+     *
+     * @return string
      */
     public static function get_prompt_dialog() {
         return Helper::render_view( 'component/prompt-dialog' );

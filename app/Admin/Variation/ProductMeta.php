@@ -1,4 +1,14 @@
 <?php
+/**
+ * App > Admin > Variation > Product Meta.
+ *
+ * @since   1.0.0
+ *
+ * @version 1.0.0
+ * @author  Mafel John Cahucom
+ * @package handy-variation-swatches
+ */
+
 namespace HVSFW\Admin\Variation;
 
 use HVSFW\Inc\Traits\Singleton;
@@ -11,24 +21,23 @@ use HVSFW\Admin\Variation\ProductMetaView;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Product Swatch Meta Box.
+ * The `ProductMeta` class contains the all swatch
+ * product meta data.
  *
- * @since   1.0.0
- * @version 1.0.0
- * @author  Mafel John Cahucom
+ * @since 1.0.0
  */
 final class ProductMeta {
 
     /**
      * Inherit Singleton.
-     * 
+     *
      * @since 1.0.0
      */
     use Singleton;
 
     /**
      * Inherit Security.
-     * 
+     *
      * @since 1.0.0
      */
     use Security;
@@ -39,31 +48,43 @@ final class ProductMeta {
      * @since 1.0.0
      */
     protected function __construct() {
-        // Register styles and scripts.
-        add_action( 'admin_enqueue_scripts', [ $this, 'register_styles' ] );
-        add_action( 'admin_enqueue_scripts', [ $this, 'register_scripts' ] );
+        /**
+         * Register styles and scripts.
+         */
+        add_action( 'admin_enqueue_scripts', array( $this, 'register_styles' ) );
+        add_action( 'admin_enqueue_scripts', array( $this, 'register_scripts' ) );
 
-         // Add swatch setting product tab.
-        add_filter( 'woocommerce_product_data_tabs', [ $this, 'custom_product_tab' ] );
+        /**
+         * Add swatch setting product tab.
+         */
+        add_filter( 'woocommerce_product_data_tabs', array( $this, 'custom_product_tab' ) );
 
-        // Add swatch setting product panel.
-        add_filter( 'woocommerce_product_data_panels', [ $this, 'custom_product_panel' ] );
+        /**
+         * Add swatch setting product panel.
+         */
+        add_filter( 'woocommerce_product_data_panels', array( $this, 'custom_product_panel' ) );
 
-        // Save swatch settings event.
-        add_action( 'wp_ajax_hvsfw_save_swatch_settings', [ $this, 'save_swatch_settings' ] );
+        /**
+         * Save swatch settings event.
+         */
+        add_action( 'wp_ajax_hvsfw_save_swatch_settings', array( $this, 'save_swatch_settings' ) );
 
-        // Update swatch settings event.
-        add_action( 'wp_ajax_hvsfw_update_swatch_settings', [ $this, 'update_swatch_settings' ] );
+        /**
+         * Update swatch settings event.
+         */
+        add_action( 'wp_ajax_hvsfw_update_swatch_settings', array( $this, 'update_swatch_settings' ) );
 
-        // Reset swatch settings event.
-        add_action( 'wp_ajax_hvsfw_reset_swatch_settings', [ $this, 'reset_swatch_settings' ] );
+        /**
+         * Reset swatch settings event.
+         */
+        add_action( 'wp_ajax_hvsfw_reset_swatch_settings', array( $this, 'reset_swatch_settings' ) );
     }
 
     /**
      * Checks if the page is in post product edit page.
      *
      * @since 1.0.0
-     * 
+     *
      * @return boolean
      */
     private function is_correct_page() {
@@ -73,10 +94,11 @@ final class ProductMeta {
 
     /**
      * Register all styles.
-     * 
+     *
      * @since 1.0.0
      *
-     * @param string  $hook_suffix  Contains the hook suffix for the current admin page.
+     * @param  string $hook_suffix Contains the hook suffix for the current admin page.
+     * @return void
      */
     public function register_styles( $hook_suffix ) {
         if ( $hook_suffix !== 'post.php' && ! $this->is_correct_page() ) {
@@ -85,61 +107,64 @@ final class ProductMeta {
 
         wp_enqueue_style( 'wp-color-picker' );
 
-        wp_register_style( 'hvsfw-product', Helper::get_asset_src( 'css/hvsfw-product.min.css' ), [], '1.0.0', 'all' );
+        $asset        = include HVSFW_PLUGIN_PATH . 'public/admin/styles/hvsfw-product.asset.php';
+        $asset['src'] = Helper::get_public_src( 'styles/hvsfw-product.css' );
+        wp_register_style( 'hvsfw-product', $asset['src'], $asset['dependencies'], $asset['version'], 'all' );
         wp_enqueue_style( 'hvsfw-product' );
     }
 
     /**
      * Register all scripts.
-     * 
+     *
      * @since 1.0.0
      *
-     * @param string  $hook_suffix  Contains the hook suffix for the current admin page. 
+     * @param  string $hook_suffix Contains the hook suffix for the current admin page.
+     * @return void
      */
     public function register_scripts( $hook_suffix ) {
         if ( $hook_suffix !== 'post.php' && ! $this->is_correct_page() ) {
             return;
         }
 
-        $dependency = [ 'jquery', 'wp-color-picker' ];
-
         if ( ! did_action( 'wp_enqueue_media' ) ) {
             wp_enqueue_media();
         }
 
-        wp_register_script( 'hvsfw-product', Helper::get_asset_src( 'js/hvsfw-product.min.js' ), $dependency, '1.0.0', true );
+        $asset                 = include HVSFW_PLUGIN_PATH . 'public/admin/scripts/hvsfw-product.asset.php';
+        $asset['src']          = Helper::get_public_src( 'scripts/hvsfw-product.js' );
+        $asset['dependencies'] = array( 'jquery', 'wp-color-picker' );
+        wp_register_script( 'hvsfw-product', $asset['src'], $asset['dependencies'], $asset['version'], true );
         wp_enqueue_script( 'hvsfw-product' );
 
-        // Localize variables.
-        wp_localize_script( 'hvsfw-product', 'hvsfwLocal', [
+        wp_localize_script( 'hvsfw-product', 'hvsfwLocal', array(
             'url'       => admin_url( 'admin-ajax.php' ),
-            'variation' => [
-                'product' => [
-                    'nonce' => [
+            'variation' => array(
+                'product' => array(
+                    'nonce' => array(
                         'saveSwatchSettings'   => wp_create_nonce( 'hvsfw_save_swatch_settings' ),
                         'updateSwatchSettings' => wp_create_nonce( 'hvsfw_update_swatch_settings' ),
                         'resetSwatchSettings'  => wp_create_nonce( 'hvsfw_reset_swatch_settings' ),
-                    ]
-                ]
-            ]
-        ]);
+                    ),
+                ),
+            ),
+        ));
     }
 
     /**
      * Add product swatches tab.
      *
      * @since 1.0.0
-     * 
-     * @param  array  $tabs  Contains the all the current registered tabs.
+     *
+     * @param  array $tabs Contains the all the current registered tabs.
      * @return array
      */
     public function custom_product_tab( $tabs ) {
-        $tabs['hvsfw_swatch_tab'] = [
+        $tabs['hvsfw_swatch_tab'] = array(
             'label'    => 'Swatches',
             'target'   => 'hvsfw_swatch_panel',
-            'class'    => [ 'show_if_variable' ],
+            'class'    => array( 'show_if_variable' ),
             'priority' => 100,
-        ];
+        );
 
         return $tabs;
     }
@@ -148,11 +173,12 @@ final class ProductMeta {
      * Add product swatches panel
      *
      * @since 1.0.0
+     *
+     * @return void
      */
     public function custom_product_panel() {
         global $post;
 
-        // Render swatch panel.
         ProductMetaView::swatches_panel( $post->ID );
     }
 
@@ -160,123 +186,123 @@ final class ProductMeta {
      * Save swatch settings in post meta via AJAX.
      *
      * @since 1.0.0
-     * 
-     * @return json
+     *
+     * @return void
      */
     public function save_swatch_settings() {
         if ( ! self::is_security_passed( $_POST ) ) {
-            wp_send_json_error([
-                'error' => 'SECURITY_ERROR'
-            ]);
+            wp_send_json_error(array(
+                'error' => 'SECURITY_ERROR',
+            ));
         }
 
-        if ( self::has_post_empty_data( $_POST, [ 'formData' ] ) ) {
-            wp_send_json_error([
-                'error' => 'MISSING_DATA_ERROR'
-            ]);
+        if ( self::has_post_empty_data( $_POST, array( 'formData' ) ) ) {
+            wp_send_json_error(array(
+                'error' => 'MISSING_DATA_ERROR',
+            ));
         }
 
         $data       = $this->parse_query_string( $_POST['formData'] );
         $no_post_id = ( ! isset( $data['post_ID'] ) || empty( $data['post_ID'] ) );
         $no_value   = ( ! isset( $data['_hvsfw_value'] ) || empty( $data['_hvsfw_value'] ) );
         if ( $no_post_id || $no_value ) {
-            wp_send_json_error([
+            wp_send_json_error(array(
                 'error' => 'MISSING_DATA_ERROR',
-            ]);
+            ));
         }
 
         $validated = $this->validate_swatches( $data['_hvsfw_value'] );
         if ( empty( $validated ) ) {
-            wp_send_json_error([
-                'error' => 'MISSING_DATA_ERROR'
-            ]);
+            wp_send_json_error(array(
+                'error' => 'MISSING_DATA_ERROR',
+            ));
         }
 
         $product = wc_get_product( $data['post_ID'] );
         if ( empty( $product ) ) {
-            wp_send_json_error([
-                'error' => 'INVALID_PRODUCT_ID'
-            ]);
+            wp_send_json_error(array(
+                'error' => 'INVALID_PRODUCT_ID',
+            ));
         }
 
         if ( $product->get_type() !== 'variable' ) {
-            wp_send_json_error([
+            wp_send_json_error(array(
                 'error' => 'NOT_VARIABLE_PRODUCT',
-            ]);
+            ));
         }
 
         update_post_meta( $data['post_ID'], '_hvsfw_swatches', $validated );
 
-        wp_send_json_success([
-            'response' => 'SUCCESSFULLY_SAVED'
-        ]);
+        wp_send_json_success(array(
+            'response' => 'SUCCESSFULLY_SAVED',
+        ));
     }
 
     /**
      * Update swatch settings in post meta via AJAX.
      *
      * @since 1.0.0
-     * 
-     * @return json
+     *
+     * @return void
      */
     public function update_swatch_settings() {
         if ( ! self::is_security_passed( $_POST ) ) {
-            wp_send_json_error([
-                'error' => 'SECURITY_ERROR'
-            ]);
+            wp_send_json_error(array(
+                'error' => 'SECURITY_ERROR',
+            ));
         }
 
-        if ( self::has_post_empty_data( $_POST, [ 'postId' ] ) ) {
-            wp_send_json_error([
-                'error' => 'MISSING_DATA_ERROR'
-            ]);
+        if ( self::has_post_empty_data( $_POST, array( 'postId' ) ) ) {
+            wp_send_json_error(array(
+                'error' => 'MISSING_DATA_ERROR',
+            ));
         }
 
         ob_start();
         ProductMetaView::swatch_attributes( $_POST['postId'] );
         $content = ob_get_clean();
 
-        wp_send_json_success([
+        wp_send_json_success(array(
             'response' => 'SUCCESSFULLY_UPDATED',
-            'content'  => $content
-        ]);
+            'content'  => $content,
+        ));
     }
 
     /**
      * Reset swatch settings in post meta via AJAX.
      *
      * @since 1.0.0
-     * 
-     * @return json
+     *
+     * @return void
      */
     public function reset_swatch_settings() {
         if ( ! self::is_security_passed( $_POST ) ) {
-            wp_send_json_error([
-                'error' => 'SECURITY_ERROR'
-            ]);
+            wp_send_json_error(array(
+                'error' => 'SECURITY_ERROR',
+            ));
         }
 
-        if ( self::has_post_empty_data( $_POST, [ 'postId' ] ) ) {
-            wp_send_json_error([
-                'error' => 'MISSING_DATA_ERROR'
-            ]);
+        if ( self::has_post_empty_data( $_POST, array( 'postId' ) ) ) {
+            wp_send_json_error(array(
+                'error' => 'MISSING_DATA_ERROR',
+            ));
         }
 
-        update_post_meta( $_POST['postId'], '_hvsfw_swatches', [] );
+        update_post_meta( $_POST['postId'], '_hvsfw_swatches', array() );
 
-        wp_send_json_success([
-            'response' => 'SUCCESSFULLY_SAVED'
-        ]);
+        wp_send_json_success(array(
+            'response' => 'SUCCESSFULLY_SAVED',
+        ));
     }
-    
+
     /**
      * Parse string query into an associative array.
      *
      * @since 1.0.0
-     * 
-     * @param  string  $query_string   Contains the query string to be parse.
-     * @param  string  $arg_separator  Contains the query arguments separator.
-     * @param  string  $dec_type       Contains the decoding type.
+     *
+     * @param  string $query_string  Contains the query string to be parse.
+     * @param  string $arg_separator Contains the query arguments separator.
+     * @param  string $dec_type      Contains the decoding type.
      * @return array
      */
     private function parse_query_string( $query_string, $arg_separator = '&', $dec_type = PHP_QUERY_RFC1738 ) {
@@ -298,12 +324,11 @@ final class ProductMeta {
                     break;
             }
 
-
             if ( preg_match_all( '/\[([^\]]*)\]/m', $param_name, $matches ) ) {
                 $param_name = substr( $param_name, 0, strpos( $param_name, '[' ) );
                 $keys       = array_merge( array( $param_name ), $matches[1] );
             } else {
-                $keys       = array( $param_name );
+                $keys = array( $param_name );
             }
 
             $target = &$result;
@@ -331,7 +356,7 @@ final class ProductMeta {
             if ( is_array( $target ) ) {
                 $target[] = $param_value;
             } else {
-                $target   = $param_value;
+                $target = $param_value;
             }
         }
 
@@ -342,26 +367,26 @@ final class ProductMeta {
      * Return validated and sanitized value in each swatches.
      *
      * @since 1.0.0
-     * 
-     * @param  array  $swatches  Contains the swatches value.
+     *
+     * @param  array $swatches Contains the swatches value.
      * @return array
      */
     private function validate_swatches( $swatches ) {
         if ( empty( $swatches ) ) {
-            return [];
+            return array();
         }
 
-        $validated = []; // Stores the validated swatch.
+        $validated = array(); // Stores the validated swatch.
         foreach ( $swatches as $attr => $swatch ) {
 
             // Store attribute type.
             $validated[ $attr ]['type'] = 'select';
             if ( isset( $swatch['type'] ) ) {
-                $validated[ $attr ]['type'] = Validator::validate_select([
+                $validated[ $attr ]['type'] = Validator::validate_select(array(
                     'value'   => $swatch['type'],
                     'default' => 'select',
-                    'choices' => [ 'default', 'select', 'button', 'color', 'image', 'assorted' ]
-                ]);
+                    'choices' => array( 'default', 'select', 'button', 'color', 'image', 'assorted' ),
+                ));
             }
 
             $attribute_type = $validated[ $attr ]['type'];
@@ -369,24 +394,24 @@ final class ProductMeta {
             // Store attribute custom.
             $validated[ $attr ]['custom'] = 'yes';
             if ( isset( $swatch['custom'] ) ) {
-                $validated[ $attr ]['custom'] = Validator::validate_select([
+                $validated[ $attr ]['custom'] = Validator::validate_select(array(
                     'value'   => $swatch['custom'],
                     'default' => 'yes',
-                    'choices' => [ 'yes', 'no' ]
-                ]);
+                    'choices' => array( 'yes', 'no' ),
+                ));
             }
 
             // Store global style.
-            $validated[ $attr ]['style'] = [];
-            if ( in_array( $attribute_type, [ 'button', 'color', 'image' ] ) ) {
-                $validated[ $attr ]['style'] = SwatchHelper::validate_swatch_setting_value([
+            $validated[ $attr ]['style'] = array();
+            if ( in_array( $attribute_type, array( 'button', 'color', 'image' ), true ) ) {
+                $validated[ $attr ]['style'] = SwatchHelper::validate_swatch_setting_value(array(
                     'type'    => $attribute_type,
-                    'setting' => $swatch['style']
-                ]);
+                    'setting' => $swatch['style'],
+                ));
             }
 
             // Iterate term.
-            $validated[ $attr ]['term'] = [];
+            $validated[ $attr ]['term'] = array();
             if ( isset( $swatch['term'] ) && ! empty( $swatch['term'] ) ) {
                 foreach ( $swatch['term'] as $key => $term ) {
 
@@ -398,20 +423,20 @@ final class ProductMeta {
 
                     // Store type and style.
                     $validated[ $attr ]['term'][ $key ]['type']  = $attribute_type;
-                    $validated[ $attr ]['term'][ $key ]['style'] = [];
+                    $validated[ $attr ]['term'][ $key ]['style'] = array();
                     if ( $attribute_type === 'assorted' ) {
                         // Type.
-                        $validated[ $attr ]['term'][ $key ]['type'] = Validator::validate_select([
+                        $validated[ $attr ]['term'][ $key ]['type'] = Validator::validate_select(array(
                             'value'   => $term['type'],
                             'default' => 'button',
-                            'choices' => [ 'button', 'color', 'image' ]
-                        ]);
+                            'choices' => array( 'button', 'color', 'image' ),
+                        ));
 
                         // Style.
-                        $validated[ $attr ]['term'][ $key ]['style'] = SwatchHelper::validate_swatch_setting_value([
+                        $validated[ $attr ]['term'][ $key ]['style'] = SwatchHelper::validate_swatch_setting_value(array(
                             'type'    => $validated[ $attr ]['term'][ $key ]['type'],
-                            'setting' => $term['style']
-                        ]);
+                            'setting' => $term['style'],
+                        ));
                     }
 
                     $term_type = $validated[ $attr ]['term'][ $key ]['type'];
@@ -432,10 +457,10 @@ final class ProductMeta {
                         if ( $term_type === 'color' ) {
                             if ( isset( $term_value['color'] ) && ! empty( $term_value['color'] ) && is_array( $term_value['color'] ) ) {
                                 foreach ( $term_value['color'] as $color ) {
-                                    $validated[ $attr ]['term'][ $key ]['value']['color'][] = Validator::validate_color([
+                                    $validated[ $attr ]['term'][ $key ]['value']['color'][] = Validator::validate_color(array(
                                         'value'   => $color,
-                                        'default' => '#ffffff'
-                                    ]);
+                                        'default' => '#ffffff',
+                                    ));
                                 }
                             }
                         }
@@ -450,11 +475,11 @@ final class ProductMeta {
 
                             $validated[ $attr ]['term'][ $key ]['value']['image_size'] = 'thumbnail';
                             if ( isset( $term_value['image_size'] ) ) {
-                                $validated[ $attr ]['term'][ $key ]['value']['image_size'] = Validator::validate_select([
+                                $validated[ $attr ]['term'][ $key ]['value']['image_size'] = Validator::validate_select(array(
                                     'value'   => $term_value['image_size'],
                                     'default' => 'thumbnail',
-                                    'choices' => array_column( Helper::get_image_sizes(), 'value' )
-                                ]);
+                                    'choices' => array_column( Helper::get_image_sizes(), 'value' ),
+                                ));
                             }
                         }
                     }
@@ -467,17 +492,17 @@ final class ProductMeta {
                         $validated[ $attr ]['term'][ $key ]['tooltip']['type'] = 'none';
                         if ( isset( $term_tooltip['type'] ) ) {
                             // Set tooltip type choices.
-                            $tooltip_choices = [ 'none', 'default', 'text', 'html', 'image' ];
+                            $tooltip_choices = array( 'none', 'default', 'text', 'html', 'image' );
                             if ( $validated[ $attr ]['custom'] === 'yes' ) {
                                 // Remove default in tooltip choices.
                                 unset( $tooltip_choices[1] );
                             }
 
-                            $validated[ $attr ]['term'][ $key ]['tooltip']['type'] = Validator::validate_select([
+                            $validated[ $attr ]['term'][ $key ]['tooltip']['type'] = Validator::validate_select(array(
                                 'value'   => $term_tooltip['type'],
                                 'default' => 'none',
-                                'choices' => $tooltip_choices
-                            ]);
+                                'choices' => $tooltip_choices,
+                            ));
                         }
 
                         $tooltip_type    = $validated[ $attr ]['term'][ $key ]['tooltip']['type'];

@@ -1,4 +1,14 @@
 <?php
+/**
+ * App > Client > Widgets > Widgets.
+ *
+ * @since   1.0.0
+ *
+ * @version 1.0.0
+ * @author  Mafel John Cahucom
+ * @package handy-variation-swatches
+ */
+
 namespace HVSFW\Client\Widgets;
 
 use HVSFW\Inc\Traits\Singleton;
@@ -7,17 +17,16 @@ use HVSFW\Client\Widgets\VariationFilter\VariationFilter;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Widgets.
+ * The `Widgets` class contains the all related widgets
+ * for variation swatches.
  *
- * @since 	1.0.0
- * @version 1.0.0
- * @author  Mafel John Cahucom
+ * @since 1.0.0
  */
 final class Widgets {
 
 	/**
 	 * Inherit Singleton.
-     * 
+     *
      * @since 1.0.0
 	 */
 	use Singleton;
@@ -28,7 +37,9 @@ final class Widgets {
      * @since 1.0.0
      */
     protected function __construct() {
-        // Set main settings.
+        /**
+         * Set main settings.
+         */
         $settings = get_option( '_hvsfw_main_settings' );
 
         /**

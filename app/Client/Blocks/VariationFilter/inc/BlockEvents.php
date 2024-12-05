@@ -1,4 +1,14 @@
 <?php
+/**
+ * App > Client > Blocks > Variation Filter > Inc > Block Render.
+ *
+ * @since   1.0.0
+ *
+ * @version 1.0.0
+ * @author  Mafel John Cahucom
+ * @package handy-variation-swatches
+ */
+
 namespace HVSFW\Client\Blocks\VariationFilter\Inc;
 
 use HVSFW\Inc\Traits\Singleton;
@@ -8,24 +18,22 @@ use HVSFW\Inc\Utility;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Block Events.
+ * The `BlockEvents` class contains the block events.
  *
- * @since 	1.0.0
- * @version 1.0.0
- * @author  Mafel John Cahucom
+ * @since 1.0.0
  */
 final class BlockEvents {
 
 	/**
 	 * Inherit Singleton.
-     * 
+     *
      * @since 1.0.0
 	 */
 	use Singleton;
 
     /**
      * Inherit Security.
-     * 
+     *
      * @since 1.0.0
      */
     use Security;
@@ -36,27 +44,29 @@ final class BlockEvents {
      * @since 1.0.0
      */
     protected function __construct() {
-        // Return available product attribtues.
-        add_action( 'wp_ajax_hvsfw_vf_get_product_attributes', [ $this, 'get_product_attributes' ] );
+        /**
+         * Return available product attribtues.
+         */
+        add_action( 'wp_ajax_hvsfw_vf_get_product_attributes', array( $this, 'get_product_attributes' ) );
     }
 
     /**
      * Return the available product attributes.
-     * 
+     *
      * @since 1.0.0
      *
-     * @return json
+     * @return void
      */
     public function get_product_attributes() {
         if ( ! self::is_security_passed( $_POST ) ) {
-			wp_send_json_error([
-				'error' => 'SECURITY_ERROR'
-			]);
+			wp_send_json_error(array(
+				'error' => 'SECURITY_ERROR',
+			));
 		}
 
-        wp_send_json_success([
+        wp_send_json_success(array(
             'response'   => 'SUCCESS',
-            'attributes' => Utility::get_available_attributes()
-        ]);
+            'attributes' => Utility::get_available_attributes(),
+        ));
     }
 }

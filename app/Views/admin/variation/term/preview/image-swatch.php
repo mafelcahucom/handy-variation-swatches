@@ -1,21 +1,23 @@
 <?php
 /**
- * Views > Admin > Variation > Term > Preview > Image Swatch.
+ * App > Views > Admin > Variation > Term > Preview > Image Swatch.
  *
  * @since   1.0.0
+ *
  * @version 1.0.0
- * @author  Mafel John Cahucom 
+ * @author  Mafel John Cahucom
+ * @package handy-variation-swatches
  */
 
 use HVSFW\Inc\Utility;
 
 defined( 'ABSPATH' ) || exit;
 
-/** 
+/**
  * $args = [
  *     'term_id' => (integer) Contains the term ID of the current term editing.
  * ]
- **/
+ */
 
 if ( ! isset( $args['term_id'] ) ) {
     return;

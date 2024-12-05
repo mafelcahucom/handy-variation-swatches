@@ -1,0 +1,592 @@
+// Fields
+.hd-form-field {
+
+	&__label {
+		display: block;
+		margin-bottom: 4px !important;
+	}
+
+	&__description {
+		margin-top: 8px !important;
+	}
+
+	&__error {
+		display: none;
+		color: $color-red-1;
+		margin-top: 5px !important;
+		font-size: 13px !important;
+		line-height: 16px !important;
+	}
+
+	&__pagination {
+		cursor: pointer;
+		color: $color-black-4;
+		text-decoration: underline;
+
+		&:hover,
+		&:focus {
+			color: $color-black-1;
+
+			@include transition;
+		}
+	}
+
+	&[data-has-error="1"] {
+
+		.hd-form-field__error {
+			display: block;
+			animation: fade-in 320ms cubic-bezier(0.39, 0.575, 0.565, 1) both;
+		}
+	}
+}
+
+.hd-app {
+
+	select,
+	textarea,
+	input[type="text"],
+	input[type="number"] {
+		position: relative;
+		padding: 9px 12px;
+		width: 100%;
+		height: 40px;
+		color: $color-black-2;
+		font-size: 14px;
+		line-height: 22px;
+		border: 1px solid $color-gray-5;
+		border-radius: $radius-2;
+		box-shadow: none;
+
+		&::placeholder {
+			color: $color-black-3;
+		}
+
+		&:focus {
+			border-color: $color-blue-1;
+			box-shadow: 0 0 0 0.25rem rgba(0, 83, 177, 0.3);
+		}
+	}
+
+	input[type="checkbox"] {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: 0;
+		width: 26px;
+		height: 26px;
+		border-color: $color-gray-5;
+		border-radius: $radius-2;
+		box-shadow: none;
+
+		&:checked {
+			background-color: $color-blue-1;
+			border-color: $color-blue-1;
+
+			&::before {
+				margin: 0;
+				width: 23px;
+				height: 23px;
+				filter: brightness(0) invert(1);
+			}
+		}
+	}
+
+	select {
+		max-width: 100%;
+		background-size: unset;
+		background-position-x: calc(100% - 12px);
+		padding-right: 32px;
+	}
+
+	textarea {
+		height: 200px;
+	}
+}
+
+.hd-color-picker-field {
+	position: relative;
+	display: flex;
+	align-items: center;
+	padding: 0 8px;
+	height: 40px;
+	color: $color-black-2;
+	border: 1px solid $color-gray-5;
+	border-radius: $radius-2;
+
+	&:hover {
+		border-color: $color-blue-1;
+		box-shadow: 0 0 0 0.25rem rgba(0, 83, 177, 0.3);
+	}
+
+	&__btn {
+		margin-right: 10px;
+		width: 26px;
+		height: 26px;
+		border: 1px solid $color-gray-5;
+		border-radius: $radius-2;
+	}
+}
+
+.hd-icon-picker-field {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 8px;
+
+	&__item {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 40px;
+		height: 40px;
+		cursor: pointer;
+		fill: $color-black-1;
+		color: $color-black-1;
+		background-color: $color-gray-1;
+		border: 1px solid $color-gray-5;
+		border-radius: $radius-2;
+
+		* {
+			pointer-events: none;
+		}
+
+		svg {
+			display: block;
+			width: 18px;
+			height: 17px;
+		}
+
+		&[data-visibility="hidden"] {
+			display: none;
+		}
+
+		&[data-state="default"] {
+
+			&:hover,
+			&:focus {
+				background-color: $color-gray-2;
+
+				@include transition;
+			}
+		}
+
+		&[data-state="active"] {
+			fill: $color-white-1;
+			color: $color-white-1;
+			background-color: $color-blue-1;
+			border-color: $color-blue-1;
+		}
+	}
+}
+
+.hd-loader-picker-field {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+
+	&__item {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 40px;
+		height: 40px;
+		cursor: pointer;
+		fill: $color-black-1;
+		color: $color-black-1;
+		background-color: $color-gray-1;
+		border: 1px solid $color-gray-5;
+		border-radius: $radius-2;
+
+		* {
+			pointer-events: none;
+		}
+
+		&[data-visibility="hidden"] {
+			display: none;
+		}
+
+		&[data-state="default"] {
+
+			&:hover,
+			&:focus {
+				background-color: $color-gray-2;
+
+				@include transition;
+			}
+		}
+
+		&[data-state="active"] {
+			background-color: $color-blue-1;
+			border-color: $color-blue-1;
+
+			.hd-spinner-1 {
+				border-color: $color-white-1;
+				border-bottom-color: transparent;
+			}
+
+			.hd-spinner-2 {
+
+				&::before {
+					border-color: $color-white-1;
+				}
+			}
+
+			.hd-spinner-3 {
+
+				&::before {
+					border-color: $color-white-1;
+				}
+
+				&::after {
+					border-color: $color-black-1;
+				}
+			}
+
+			.hd-spinner-4,
+			.hd-spinner-5 {
+				border-color: $color-white-1;
+
+				&::after {
+					background: $color-black-1;
+				}
+			}
+
+			.hd-spinner-6 {
+				border-top-color: $color-white-1;
+			}
+
+			.hd-spinner-7 {
+
+				&::after {
+					border-bottom-color: $color-white-1;
+				}
+			}
+
+			.hd-spinner-8 {
+				border-color: $color-white-1 transparent;
+			}
+
+			.hd-spinner-9 {
+				background: $color-white-1;
+
+				&::after {
+					border-top-color: $color-black-1;
+				}
+			}
+
+			.hd-pulse-1 {
+				background: $color-white-1;
+			}
+
+			.hd-pulse-2,
+			.hd-pulse-3,
+			.hd-pulse-4 {
+
+				&::before,
+				&::after {
+					background: $color-white-1;
+				}
+			}
+		}
+	}
+
+	&__loader {
+		width: 18px;
+		height: 18px;
+	}
+}
+
+.hd-switch-field {
+	display: flex;
+
+	&__input {
+		display: none !important;
+	}
+
+	&__btn {
+		padding: 6px 14px;
+		width: 95px;
+		height: 40px;
+		font-weight: 600 !important;
+		background-color: $color-gray-4;
+		border: 0;
+		transition: all 0.1s ease-in-out;
+
+		&[data-type="on"] {
+			border-top-right-radius: $radius-2;
+			border-bottom-right-radius: $radius-2;
+
+			&[data-state="default"] {
+				background-color: $color-gray-4;
+
+				&:hover,
+				&:focus {
+					background-color: $color-gray-5;
+
+					@include transition;
+				}
+			}
+
+			&[data-state="active"] {
+				color: $color-white-1;
+				background-color: $color-blue-1;
+			}
+		}
+
+		&[data-type="off"] {
+			border-top-left-radius: $radius-2;
+			border-bottom-left-radius: $radius-2;
+
+			&[data-state="default"] {
+				background-color: $color-gray-4;
+
+				&:hover,
+				&:focus {
+					background-color: $color-gray-5;
+
+					@include transition;
+				}
+			}
+
+			&[data-state="active"] {
+				color: $color-white-1;
+				background-color: $color-black-5;
+			}
+		}
+	}
+}
+
+.hd-checkbox-field {
+	display: flex;
+	align-items: center;
+	gap: 15px;
+	padding: 0 8px;
+	height: 40px;
+	color: $color-black-2;
+	border: 1px solid $color-gray-5;
+	border-radius: $radius-2;
+
+	&:hover {
+		border-color: $color-blue-1;
+		box-shadow: 0 0 0 0.25rem rgba(0, 83, 177, 0.3);
+	}
+
+	&[data-state="active"] {
+		border-color: $color-blue-1;
+	}
+}
+
+.hd-file-field {
+	display: flex;
+	align-items: center;
+	gap: 15px;
+	margin-bottom: 15px !important;
+	padding: 0 8px;
+	height: 40px;
+	color: $color-black-2;
+	border: 1px solid $color-gray-5;
+	border-radius: $radius-2;
+
+	&:hover {
+		border-color: $color-blue-1;
+		box-shadow: 0 0 0 0.25rem rgba(0, 83, 177, 0.3);
+	}
+
+	&__input {
+		display: none;
+	}
+
+	&__icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 26px;
+		height: 26px;
+		color: $color-white-1;
+		background-color: $color-black-1;
+		border-radius: $radius-2;
+
+		svg {
+			width: 18px;
+			height: 18px;
+		}
+	}
+
+	&__label {
+		width: 500px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+}
+
+.hd-sortable-field {
+
+	&__item {
+		display: flex;
+		align-items: center;
+		padding: 0 12px;
+		margin-bottom: 10px;
+		width: 100%;
+		height: 40px;
+		cursor: grab;
+		color: $color-black-2;
+		background-color: $color-white-1;
+		border: 1px solid $color-gray-5;
+		border-radius: $radius-2;
+
+		&:hover,
+		&:focus {
+			background-color: $color-gray-4;
+			border-color: $color-blue-1;
+			box-shadow: 0 0 0 0.25rem rgba(0, 83, 177, 0.3);
+
+			@include transition;
+		}
+	}
+
+	&__handle {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-right: 10px;
+		width: 28px;
+		height: 28px;
+		fill: $color-black-1;
+		border-radius: $radius-2;
+
+		svg {
+			display: block;
+			width: 18px;
+			height: auto;
+		}
+	}
+}
+
+.hd-form-field--tagging-field {
+
+	.selectize-input {
+		display: flex;
+		flex-wrap: wrap;
+		position: relative;
+		padding: 9px 12px;
+		width: 100%;
+		min-height: 40px;
+		background-color: $color-white-1;
+		border: 1px solid $color-gray-5;
+		border-radius: $radius-2;
+		box-shadow: none;
+
+		&.focus,
+		&:hover {
+			border-color: $color-blue-1;
+			box-shadow: 0 0 0 0.25rem rgba(0, 83, 177, 0.3);
+		}
+	}
+
+	.selectize-control.multi .selectize-input > div {
+		padding: 5px 50px 5px 13px;
+		font-size: 12px;
+		line-height: 18px;
+		color: $color-black-2;
+		background-color: $color-gray-1;
+		border-radius: $radius-2;
+		border: 0;
+	}
+
+	.selectize-control.plugin-remove_button [data-value] .remove {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0;
+		width: 20px;
+		background-color: $color-gray-4;
+		border-top-right-radius: $radius-2;
+		border-bottom-right-radius: $radius-2;
+		border-left: 0;
+	}
+
+	.selectize-dropdown-content .active {
+		color: $color-white-1;
+		background-color: $color-blue-1;
+	}
+}
+
+.hd-note-field {
+	display: flex;
+	gap: 10px;
+	width: 100%;
+	fill: $color-black-1;
+	color: $color-black-1;
+
+	&__icon {
+
+		svg {
+			width: 30px;
+			height: 30px;
+		}
+	}
+
+	&__title {
+		font-weight: 600;
+	}
+
+	a {
+		color: $color-blue-1;
+		text-decoration: underline;
+
+		&:hover,
+		&:focus {
+			color: $color-blue-2;
+
+			@include transition;
+		}
+	}
+
+	code {
+		font-family: "Lexend Deca", sans-serif;
+		font-size: 12px;
+		font-weight: 600;
+		line-height: 18px;
+		background-color: $color-gray-1;
+		white-space: normal;
+		border-radius: $radius-2;
+	}
+
+	&--alert {
+		padding: 10px 14px;
+		background-color: $color-blue-3;
+		border: 1px solid $color-blue-1;
+		border-radius: $radius-2;
+
+		code {
+			background-color: #D5E8FF;
+		}
+	}
+}
+
+@media ( max-width: 1050px ) {
+
+	.hd-file-field__label {
+		width: 140px;
+	}
+}
+
+@include media-sm {
+
+	.hd-app {
+
+		select,
+		textarea,
+		input[type="text"],
+		input[type="number"],
+		.hd-color-picker-field,
+		.hd-icon-picker-field,
+		.hd-image-picker-field,
+		.hd-loader-picker-field,
+		.hd-file-field {
+			width: 100%;
+		}
+	}
+}

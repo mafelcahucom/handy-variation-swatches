@@ -1,13 +1,15 @@
 <?php
 /**
- * Views > Admin > Component > Row.
+ * App > Views > Admin > Component > Row.
  *
  * @since   1.0.0
+ *
  * @version 1.0.0
- * @author  Mafel John Cahucom 
+ * @author  Mafel John Cahucom
+ * @package handy-variation-swatches
  */
 
-defined( 'ABSPATH' ) || exit; 
+defined( 'ABSPATH' ) || exit;
 
 /**
  * $args = [
@@ -16,23 +18,23 @@ defined( 'ABSPATH' ) || exit;
  *     'description' => (string) Contains the description of the row.
  *     'fields'      => (array)  Contains the fields to be rendered.
  * ]
-**/
+*/
 
 $type         = ( isset( $args['type'] ) ? $args['type'] : '' );
 $label        = ( isset( $args['label'] ) ? $args['label'] : '' );
 $description  = ( isset( $args['description'] ) ? $args['description'] : '' );
-$fields       = ( isset( $args['fields'] ) ? $args['fields'] : [] );
+$fields       = ( isset( $args['fields'] ) ? $args['fields'] : array() );
 $total_fields = ( is_array( $fields ) ? count( $fields ) : 0 );
 
-if ( ! in_array( $type, [ 'block', 'grid' ] ) || $total_fields === 0 ) {
+if ( ! in_array( $type, array( 'block', 'grid' ), true ) || $total_fields === 0 ) {
     return;
 }
 ?>
 
 <div class="hd-row hd-row--<?php echo esc_attr( $type ); ?>">
-    <?php if ( ! empty( $label ) || ! empty( $description ) ): ?>
+    <?php if ( ! empty( $label ) || ! empty( $description ) ) : ?>
         <div class="hd-row__title">
-            <?php if ( ! empty( $label ) ): ?>
+            <?php if ( ! empty( $label ) ) : ?>
                 <label class="hd-row__label">
                     <?php echo esc_html( $label ); ?>
                 </label>
@@ -41,13 +43,13 @@ if ( ! in_array( $type, [ 'block', 'grid' ] ) || $total_fields === 0 ) {
     <?php endif; ?>
     <div class="hd-row__content">
         <div class="hd-row__content--<?php echo ( $total_fields > 1 ? 'multiple' : 'single' ); ?>">
-            <?php foreach ( $fields as $field ): ?>
+            <?php foreach ( $fields as $field ) : ?>
                 <div class="hd-row__field">
                     <?php echo $field; ?>
                 </div>
             <?php endforeach; ?>
         </div>
-        <?php if ( ! empty( $description ) ): ?>
+        <?php if ( ! empty( $description ) ) : ?>
             <p class="hd-row__description">
                 <?php echo esc_html( $description ); ?>
             </p>

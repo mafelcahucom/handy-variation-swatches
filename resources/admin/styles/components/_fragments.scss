@@ -1,0 +1,120 @@
+// Fragments
+.hd {
+
+	// Message
+	&-message {
+		padding: 30px;
+		display: flex;
+		color: $color-white-1;
+		background-color: $color-blue-1;
+		border-radius: $radius-1;
+		box-shadow: $shadow-1;
+
+		img {
+			min-width: 100px;
+			max-width: 100px;
+			margin-right: 30px;
+		}
+	}
+
+	// Loader
+	&-loader {
+		height: 20px;
+
+		&::before {
+			content: "";
+			width: 20px;
+			height: 20px;
+			border: 3px solid $color-white-1;
+			border-bottom-color: transparent;
+			border-radius: 50%;
+			display: inline-block;
+			box-sizing: border-box;
+			animation: rotation 1s linear infinite;
+		}
+
+		&--black {
+
+			&::before {
+				border-color: rgba(0, 0, 0, 0.2);
+				border-bottom-color: $color-black-1;
+			}
+		}
+	}
+
+	// Shimmer
+	&-shimmer {
+
+		&--white {
+			background: linear-gradient(to right, #F3F4F5 5%, #EEE 20%, #F3F4F5 35%);
+			animation: shimmer 2s linear 0s infinite normal forwards;
+		}
+
+		&--blue {
+			background: linear-gradient(to right, #81C0FF 5%, #BADAFF 20%, #81C0FF 35%);
+			animation: shimmer 4s linear 0s infinite normal forwards;
+		}
+
+		&-xs {
+			height: 5px;
+		}
+
+		&-sm {
+			height: 10px;
+		}
+
+		&-md {
+			height: 15px;
+		}
+
+		&-lg {
+			height: 20px;
+		}
+
+		&-50 {
+			width: 100%;
+			max-width: 50px;
+		}
+
+		&-100 {
+			width: 100%;
+			max-width: 100px;
+		}
+
+		&-200 {
+			width: 100%;
+			max-width: 200px;
+		}
+
+		&-300 {
+			width: 100%;
+			max-width: 300px;
+		}
+
+		&-400 {
+			width: 100%;
+			max-width: 400px;
+		}
+
+		&-500 {
+			width: 100%;
+			max-width: 500px;
+		}
+	}
+
+	@include media-sm {
+
+		&-message {
+			flex-direction: column;
+			align-items: center;
+			text-align: center;
+
+			img {
+				margin-right: 0;
+				margin-bottom: 20px;
+				max-width: 80px;
+				min-width: 80px;
+			}
+		}
+	}
+}

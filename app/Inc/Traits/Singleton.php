@@ -1,14 +1,24 @@
 <?php
+/**
+ * App > Inc > Traits > Singleton.
+ *
+ * @since   1.0.0
+ *
+ * @version 1.0.0
+ * @author  Mafel John Cahucom
+ * @package handy-variation-swatches
+ */
+
 namespace HVSFW\Inc\Traits;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Singleton.
+ * The `Singleton` class defines the `get_instance` method that
+ * serves as an alternative to constructor and lets clients
+ * access the same instance of this class over and over.
  *
- * @since   1.0.0
- * @version 1.0.0
- * @author  Mafel John Cahucom
+ * @since 1.0.0
  */
 trait Singleton {
 
@@ -18,14 +28,14 @@ trait Singleton {
      * This is meant to be overridden in the classes which implement
      * this trait. This is ideal for doing stuff that you only want to
      * do once, such as hooking into actions and filters, etc.
-     * 
+     *
      * @since 1.0.0
      */
     protected function __construct() {}
 
     /**
      * Prevent object cloning.
-     * 
+     *
      * @since 1.0.0
      */
     final protected function __clone() {}
@@ -44,7 +54,7 @@ trait Singleton {
          *
          * @var array
          */
-        static $instance = [];
+        static $instance = array();
 
         /**
          * If this trait is implemented in a class which has multiple

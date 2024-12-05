@@ -1,30 +1,32 @@
 <?php
 /**
- * Views > Admin > Variation > Field > Color Picker Field.
+ * App > Views > Admin > Variation > Field > Color Picker Field.
  *
  * @since   1.0.0
+ *
  * @version 1.0.0
- * @author  Mafel John Cahucom 
+ * @author  Mafel John Cahucom
+ * @package handy-variation-swatches
  */
 
 use HVSFW\Inc\Utility;
 
 defined( 'ABSPATH' ) || exit;
 
-/** 
+/**
  * $args = [
  *     'id'		 => (string)  Contains the id of the image input.
  *     'name'	 => (string)  Contains the name of the image input.
  *     'term_id' => (integer) Contains the id of the term.
  *     'default' => (array)   Contains the default colors.
  * ]
- **/
+ */
 
 if ( ! isset( $args['id'] ) || ! isset( $args['name'] ) ) {
 	return;
 }
 
-$colors = [ '#ffffff' ];
+$colors = array( '#ffffff' );
 
 if ( isset( $args['default'] ) ) {
 	$colors = $args['default'];
@@ -37,20 +39,20 @@ if ( isset( $args['term_id'] ) ) {
 
 <div id="<?php echo esc_attr( $args['id'] ); ?>" class="hvsfw-color-picker" data-count="<?php echo count( $colors ); ?>">
 	<div class="hvsfw-color-picker__list">
-		<?php foreach ( $colors as $color ): ?>
+		<?php foreach ( $colors as $color ) : ?>
 			<div class="hvsfw-color-picker__item">
 				<div class="hvsfw-col__left">
 					<input type="hidden" name="<?php echo esc_attr( $args['name'] ); ?>" class="hvsfw-color-picker__input" value="<?php echo esc_attr( $color ); ?>">
 				</div>
 				<div class="hvsfw-col__right">
 					<button type="button" class="hvsfw-js-color-picker-delete-btn hvsfw-color-picker__delete-btn button">
-						<?php echo __( 'Delete', HVSFW_PLUGIN_DOMAIN ); ?>
+						<?php echo __( 'Delete', 'handy-variation-swatches' ); ?>
 					</button>
 				</div>
 			</div>
 		<?php endforeach; ?>
 	</div>
 	<button type="button" class="hvsfw-js-color-picker-add-btn button">
-		<?php echo __( 'Add More', HVSFW_PLUGIN_DOMAIN ); ?>
+		<?php echo __( 'Add More', 'handy-variation-swatches' ); ?>
 	</button>
 </div>

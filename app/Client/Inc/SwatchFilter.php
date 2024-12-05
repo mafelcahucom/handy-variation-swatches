@@ -1,4 +1,14 @@
 <?php
+/**
+ * App > Client > Inc > Swatch Filter.
+ *
+ * @since   1.0.0
+ *
+ * @version 1.0.0
+ * @author  Mafel John Cahucom
+ * @package handy-variation-swatches
+ */
+
 namespace HVSFW\Client\Inc;
 
 use HVSFW\Inc\Traits\Singleton;
@@ -8,17 +18,16 @@ use HVSFW\Client\Inc\Helper;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Swatch Filter Components.
+ * The `SwatchFilter` class contains the swatch components
+ * and swatch field filter.
  *
- * @since   1.0.0
- * @version 1.0.0
- * @author  Mafel John Cahucom
+ * @since 1.0.0
  */
 final class SwatchFilter {
 
     /**
 	 * Inherit Singleton.
-     * 
+     *
      * @since 1.0.0
 	 */
 	use Singleton;
@@ -35,24 +44,24 @@ final class SwatchFilter {
      *
      * @since 1.0.0
      *
-     * @param  array  $args  Contains the all data for creating title component.
+     * @param  array $args Contains the necessary arguments for creating title component.
      * $args = [
-     *     'text'  => (string) Contains the title text or content.
-     *     'style' => (string) Contains the inline style.
+     *    'text'  => (string) Contains the title text or content.
+     *    'style' => (string) Contains the inline style.
      * ]
-     * @return HTMLElement
+     * @return string
      */
-    public static function get_title_component( $args = [] ) {
+    public static function get_title_component( $args = array() ) {
         if ( ! isset( $args['text'] ) ) {
             return '';
         }
-        
+
         $text  = $args['text'];
         $style = ( isset( $args['style'] ) ? $args['style'] : '' );
 
         ob_start();
         ?>
-        <?php if ( $text !== '' ): ?>
+        <?php if ( $text !== '' ) : ?>
             <label class="hvsfw-vf-title" style="<?php echo esc_attr( $style ); ?>">
                 <?php echo esc_html( $text ); ?>
             </label>
@@ -64,48 +73,48 @@ final class SwatchFilter {
 
     /**
      * Return the filter swatch list version component.
-     * 
+     *
      * @since 1.0.0
      *
-     * @param  array  $args  Contains the all data for creating swatch list component.
+     * @param  array $args Contains the necessary arguments for creating swatch list component.
      * $args = [
-     *      'attribute'  => (object)  Contains the target variation attribute.
-     *      'query_type' => (string)  Contains the filter query type 'and, or'.
-     *      'show_count' => (boolean) Contains the flag to display product count.
-     *      'styles'     => (array)   Contains the inline styles.
+     *     'attribute'  => (object)  Contains the target variation attribute.
+     *     'query_type' => (string)  Contains the filter query type 'and, or'.
+     *     'show_count' => (boolean) Contains the flag to display product count.
+     *     'styles'     => (array)   Contains the inline styles.
      * ]
-     * @return HTMLElement
+     * @return string
      */
-    public static function get_swatch_list_component( $args = [] ) {
+    public static function get_swatch_list_component( $args = array() ) {
         if ( ! isset( $args['attribute'] ) ) {
             return '';
         }
-        
+
         $attribute  = $args['attribute'];
         $query_type = ( isset( $args['query_type'] ) ? $args['query_type'] : 'and' );
         $show_count = ( isset( $args['show_count'] ) ? $args['show_count'] : false );
-        $styles     = [
+        $styles     = array(
             'li'       => ( isset( $args['styles']['li'] ) ? $args['styles']['li'] : '' ),
             'a'        => ( isset( $args['styles']['a'] ) ? $args['styles']['a'] : '' ),
             'a:active' => ( isset( $args['styles']['a:active'] ) ? $args['styles']['a:active'] : '' ),
-        ];
+        );
 
-        $terms = [];
+        $terms = array();
         foreach ( $attribute['terms'] as $key => $term ) {
             $terms[ $key ]['label']   = $term->name . ( $show_count ? " ({$term->count})" : '' );
             $terms[ $key ]['style_a'] = ( self::is_filter_found( $term ) ? $styles['a:active'] : $styles['a'] );
-            $terms[ $key ]['url']     = self::get_filter_url([
+            $terms[ $key ]['url']     = self::get_filter_url(array(
                 'term'        => $term,
                 'query_type'  => $query_type,
-                'is_multiple' => true
-            ]);
+                'is_multiple' => true,
+            ));
         }
 
         ob_start();
         ?>
         <div class="hvsfw-vf-swatch-list">
             <ul class="hvsfw-vf-swatch-list__ul">
-                <?php foreach ( $terms as $term ): ?>
+                <?php foreach ( $terms as $term ) : ?>
                     <li class="hvsfw-vf-swatch-list__li" style="<?php echo esc_attr( $styles['li'] ); ?>">
                         <div class="hvsfw-vf-swatch-list__a hvsfw-vf-link" data-url="<?php echo esc_url( $term['url'] ); ?>" style="<?php echo esc_attr( $term['style_a'] ) ?>">
                             <?php echo esc_html( $term['label'] ); ?>
@@ -121,19 +130,19 @@ final class SwatchFilter {
 
     /**
      * Return the filter swatch select version component.
-     * 
+     *
      * @since 1.0.0
      *
-     * @param  array  $args  Contains the all data for creating swatch select component.
+     * @param  array $args Contains the necessary arguments for creating swatch select component.
      * $args = [
-     *      'attribute'  => (object)  Contains the target variation attribute.
-     *      'query_type' => (string)  Contains the filter query type 'and, or'.
-     *      'show_count' => (boolean) Contains the  flag to display product count.
-     *      'styles'     => (array)   Contains the inline styles.
+     *     'attribute'  => (object)  Contains the target variation attribute.
+     *     'query_type' => (string)  Contains the filter query type 'and, or'.
+     *     'show_count' => (boolean) Contains the  flag to display product count.
+     *     'styles'     => (array)   Contains the inline styles.
      * ]
-     * @return HTMLElement
+     * @return string
      */
-    public static function get_swatch_select_component( $args = [] ) {
+    public static function get_swatch_select_component( $args = array() ) {
         if ( ! isset( $args['attribute'] ) ) {
             return '';
         }
@@ -141,23 +150,23 @@ final class SwatchFilter {
         $attribute  = $args['attribute'];
         $query_type = ( isset( $args['query_type'] ) ? $args['query_type'] : 'and' );
         $show_count = ( isset( $args['show_count'] ) ? $args['show_count'] : false );
-        $styles     = [
+        $styles     = array(
             'parent' => ( isset( $args['styles']['parent'] ) ? $args['styles']['parent'] : '' ),
             'select' => ( isset( $args['styles']['select'] ) ? $args['styles']['select'] : '' ),
             'button' => ( isset( $args['styles']['button'] ) ? $args['styles']['button'] : '' ),
-        ];
+        );
 
         $placeholder = "Select {$attribute['attribute_label']}";
         $clear_url   = '';
         $state       = 'default';
-        $terms       = [];
+        $terms       = array();
         foreach ( $attribute['terms'] as $key => $term ) {
             $terms[ $key ]['label'] = $term->name . ( $show_count ? " ({$term->count})" : '' );
-            $terms[ $key ]['url']   = self::get_filter_url([
+            $terms[ $key ]['url']   = self::get_filter_url(array(
                 'term'        => $term,
                 'query_type'  => $query_type,
-                'is_multiple' => false
-            ]);
+                'is_multiple' => false,
+            ));
 
             $terms[ $key ]['selected'] = '';
             if ( self::is_filter_found( $term ) ) {
@@ -171,12 +180,12 @@ final class SwatchFilter {
         ?>
         <div class="hvsfw-vf-swatch-select" data-state="<?php echo $state; ?>" style="<?php echo esc_attr( $styles['parent'] ); ?>">
             <select class="hvsfw-vf-swatch-select__select" style="<?php echo esc_attr( $styles['select'] ); ?>">
-                <?php if ( $state !== 'active' ): ?>
+                <?php if ( $state !== 'active' ) : ?>
                     <option>
                         <?php echo esc_html( $placeholder ); ?>
                     </option>
                 <?php endif; ?>
-                <?php foreach ( $terms as $term ): ?>
+                <?php foreach ( $terms as $term ) : ?>
                     <option value="<?php echo esc_url( $term['url'] ); ?>" <?php echo $term['selected']; ?>>
                         <?php echo esc_attr( $term['label'] ); ?>
                     </option>
@@ -193,19 +202,19 @@ final class SwatchFilter {
 
     /**
      * Return the filter swatch button version component.
-     * 
+     *
      * @since 1.0.0
      *
-     * @param  array  $args  Contains the all data for creating swatch button component.
+     * @param  array $args Contains the necessary arguments for creating swatch button component.
      * $args = [
-     *      'attribute'  => (object)  Contains the target variation attribute.
-     *      'query_type' => (string)  Contains the filter query type 'and, or'.
-     *      'show_count' => (boolean) Contains the flag to display product count.
-     *      'styles'     => (array)   Contains the inline styles.
+     *     'attribute'  => (object)  Contains the target variation attribute.
+     *     'query_type' => (string)  Contains the filter query type 'and, or'.
+     *     'show_count' => (boolean) Contains the flag to display product count.
+     *     'styles'     => (array)   Contains the inline styles.
      * ]
-     * @return HTMLElement
+     * @return string
      */
-    public static function get_swatch_button_component( $args = [] ) {
+    public static function get_swatch_button_component( $args = array() ) {
         if ( ! isset( $args['attribute'] ) ) {
             return '';
         }
@@ -213,27 +222,27 @@ final class SwatchFilter {
         $attribute  = $args['attribute'];
         $query_type = ( isset( $args['query_type'] ) ? $args['query_type'] : 'and' );
         $show_count = ( isset( $args['show_count'] ) ? $args['show_count'] : false );
-        $styles     = [
+        $styles     = array(
             'parent'     => ( isset( $args['styles']['parent'] ) ? $args['styles']['parent'] : '' ),
             'box'        => ( isset( $args['styles']['box'] ) ? $args['styles']['box'] : '' ),
             'box:active' => ( isset( $args['styles']['box:active'] ) ? $args['styles']['box:active'] : '' ),
-        ];
+        );
 
-        $terms = [];
+        $terms = array();
         foreach ( $attribute['terms'] as $key => $term ) {
             $terms[ $key ]['label']     = $term->name . ( $show_count ? " ({$term->count})" : '' );
             $terms[ $key ]['style_box'] = ( self::is_filter_found( $term ) ? $styles['box:active'] : $styles['box'] );
-            $terms[ $key ]['url']       = self::get_filter_url([
+            $terms[ $key ]['url']       = self::get_filter_url(array(
                 'term'        => $term,
                 'query_type'  => $query_type,
-                'is_multiple' => true
-            ]);
+                'is_multiple' => true,
+            ));
         }
 
         ob_start();
         ?>
         <div class="hvsfw-vf-swatch-button" style="<?php echo esc_attr( $styles['parent'] ); ?>">
-            <?php foreach ( $terms as $term ): ?>
+            <?php foreach ( $terms as $term ) : ?>
                 <div class="hvsfw-vf-swatch-button__box hvsfw-vf-link" data-url="<?php echo esc_url( $term['url'] ); ?>" style="<?php echo esc_attr( $term['style_box'] ); ?>">
                     <?php echo esc_html( $term['label'] ); ?>
                 </div>
@@ -246,45 +255,45 @@ final class SwatchFilter {
 
     /**
      * Return the filter swatch color version component.
-     * 
+     *
      * @since 1.0.0
      *
-     * @param  array  $args  Contains the all data for creating swatch color component.
+     * @param  array $args Contains the necessary arguments for creating swatch color component.
      * $args = [
-     *      'attribute'  => (object) Contains the target variation attribute.
-     *      'query_type' => (string) Contains the filter query type 'and, or'.
-     *      'styles'     => (array)  Contains the inline styles.
+     *     'attribute'  => (object) Contains the target variation attribute.
+     *     'query_type' => (string) Contains the filter query type 'and, or'.
+     *     'styles'     => (array)  Contains the inline styles.
      * ]
-     * @return HTMLElement
+     * @return string
      */
-    public static function get_swatch_color_component( $args = [] ) {
+    public static function get_swatch_color_component( $args = array() ) {
         if ( ! isset( $args['attribute'] ) ) {
             return '';
         }
 
         $attribute  = $args['attribute'];
         $query_type = ( isset( $args['query_type'] ) ? $args['query_type'] : 'and' );
-        $styles     = [
+        $styles     = array(
             'parent'     => ( isset( $args['styles']['parent'] ) ? $args['styles']['parent'] : '' ),
             'box'        => ( isset( $args['styles']['box'] ) ? $args['styles']['box'] : '' ),
             'box:active' => ( isset( $args['styles']['box:active'] ) ? $args['styles']['box:active'] : '' ),
-        ];
+        );
 
-        $terms = [];
+        $terms = array();
         foreach ( $attribute['terms'] as $key => $term ) {
             $terms[ $key ]['color']     = Utility::get_linear_color( $term->meta );
             $terms[ $key ]['style_box'] = ( self::is_filter_found( $term ) ? $styles['box:active'] : $styles['box'] );
-            $terms[ $key ]['url']       = self::get_filter_url([
+            $terms[ $key ]['url']       = self::get_filter_url(array(
                 'term'        => $term,
                 'query_type'  => $query_type,
-                'is_multiple' => true
-            ]);
+                'is_multiple' => true,
+            ));
         }
 
         ob_start();
         ?>
         <div class="hvsfw-vf-swatch-color" style="<?php echo esc_attr( $styles['parent'] ); ?>">
-            <?php foreach ( $terms as $term ): ?>
+            <?php foreach ( $terms as $term ) : ?>
                 <div class="hvsfw-vf-swatch-color__box hvsfw-vf-link" data-url="<?php echo esc_url( $term['url'] ); ?>" style="<?php echo esc_attr( $term['style_box'] ); ?>">
                     <div class="hvsfw-vf-swatch-color__color" style="background: <?php echo esc_attr( $term['color'] ); ?>"></div>
                 </div>
@@ -297,45 +306,45 @@ final class SwatchFilter {
 
     /**
      * Return the filter swatch image version component.
-     * 
+     *
      * @since 1.0.0
      *
-     * @param  array  $args  Contains the all data for creating image color component.
+     * @param  array $args Contains the necessary arguments for creating image color component.
      * $args = [
-     *      'attribute'  => (object) Contains the target variation attribute.
-     *      'query_type' => (string) Contains the filter query type 'and, or'.
-     *      'styles'     => (array)  Contains the inline styles.
+     *     'attribute'  => (object) Contains the target variation attribute.
+     *     'query_type' => (string) Contains the filter query type 'and, or'.
+     *     'styles'     => (array)  Contains the inline styles.
      * ]
-     * @return HTMLElement
+     * @return string
      */
-    public static function get_swatch_image_component( $args = [] ) {
+    public static function get_swatch_image_component( $args = array() ) {
         if ( ! isset( $args['attribute'] ) ) {
             return '';
         }
 
         $attribute  = $args['attribute'];
         $query_type = ( isset( $args['query_type'] ) ? $args['query_type'] : 'and' );
-        $styles     = [
+        $styles     = array(
             'parent'     => ( isset( $args['styles']['parent'] ) ? $args['styles']['parent'] : '' ),
             'box'        => ( isset( $args['styles']['box'] ) ? $args['styles']['box'] : '' ),
             'box:active' => ( isset( $args['styles']['box:active'] ) ? $args['styles']['box:active'] : '' ),
-        ];
+        );
 
-        $terms = [];
+        $terms = array();
         foreach ( $attribute['terms'] as $key => $term ) {
             $terms[ $key ]['image']     = $term->meta['src'];
             $terms[ $key ]['style_box'] = ( self::is_filter_found( $term ) ? $styles['box:active'] : $styles['box'] );
-            $terms[ $key ]['url']       = self::get_filter_url([
+            $terms[ $key ]['url']       = self::get_filter_url(array(
                 'term'        => $term,
                 'query_type'  => $query_type,
-                'is_multiple' => true
-            ]);
+                'is_multiple' => true,
+            ));
         }
 
         ob_start();
         ?>
         <div class="hvsfw-vf-swatch-image" style="<?php echo esc_attr( $styles['parent'] ); ?>">
-            <?php foreach ( $terms as $term ): ?>
+            <?php foreach ( $terms as $term ) : ?>
                 <div class="hvsfw-vf-swatch-image__box hvsfw-vf-link" data-url="<?php echo esc_url( $term['url'] ); ?>" style="<?php echo esc_attr( $term['style_box'] ); ?>">
                     <div class="hvsfw-vf-swatch-image__image" style="background-image: url('<?php echo esc_url( $term['image'] ); ?>')"></div>
                 </div>
@@ -348,40 +357,41 @@ final class SwatchFilter {
 
     /**
      * Return the filter url by attribute term.
-     * 
+     *
      * @since 1.0.0
      *
-     * @param  array  $args  Contains the all data for generating filter url.
+     * @param  array $args Contains the necessary arguments for generating filter url.
      * $args = [
-     *      'term'        => (object)  Contains the attribute term.
-     *      'query_type'  => (string)  Contains the filter query type 'and, or'.
-     *      'is_multiple' => (boolean) Contains the flag if parameter accepts multiple value.
+     *     'term'        => (object)  Contains the attribute term.
+     *     'query_type'  => (string)  Contains the filter query type 'and, or'.
+     *     'is_multiple' => (boolean) Contains the flag if parameter accepts multiple value.
      * ]
      * @return string
      */
-    private static function get_filter_url( $args = [] ) {
+    private static function get_filter_url( $args = array() ) {
         $url = self::get_current_url();
         if ( ! isset( $args['term'] ) || ! $args['term'] ) {
             return $url;
         }
-        
+
         $term          = $args['term'];
         $query_type    = ( isset( $args['query_type'] ) ? $args['query_type'] : 'and' );
         $is_multiple   = ( isset( $args['is_multiple'] ) ? $args['is_multiple'] : true );
         $query_vars    = $_GET;
         $taxonomy_name = substr( $term->taxonomy, 3 );
-        $filter        = [
+        $filter        = array(
             'name'  => "filter_attr_{$taxonomy_name}",
-            'value' => $term->slug
-        ];
-        $type          = [
+            'value' => $term->slug,
+        );
+        $type          = array(
             'name'  => "query_type_attr_{$taxonomy_name}",
-            'value' => $query_type
-        ];
+            'value' => $query_type,
+        );
 
         if ( $is_multiple === true ) {
             if ( self::is_filter_found( $term ) ) {
                 $exploded = explode( ',', $query_vars[ $filter['name'] ] );
+                // phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.Found, Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure, WordPress.PHP.StrictInArray.MissingTrueStrict
                 if ( ( $key = array_search( $filter['value'], $exploded ) ) !== false ) {
                     unset( $exploded[ $key ] );
                 }
@@ -393,7 +403,7 @@ final class SwatchFilter {
                     $query_vars[ $filter['name'] ] = $imploded;
                 }
             } else {
-                $values = [];
+                $values = array();
                 if ( isset( $query_vars[ $filter['name'] ] ) ) {
                     $values = explode( ',', $query_vars[ $filter['name'] ] );
                 }
@@ -415,21 +425,21 @@ final class SwatchFilter {
                 unset( $query_vars[ $type['name'] ] );
             }
         }
-    
+
         $url = self::get_current_page_base_url();
         if ( ! empty( $query_vars ) ) {
-            $url = urldecode( self::get_current_page_base_url() .'?'. http_build_query( $query_vars ) );
+            $url = urldecode( self::get_current_page_base_url() . '?' . http_build_query( $query_vars ) );
         }
-        
+
         return $url;
     }
 
     /**
      * Return the filter empty url by attribute term.
-     * 
+     *
      * @since 1.0.0
      *
-     * @param  object  $term  Contains the attribute term.
+     * @param  object $term Contains the attribute term.
      * @return string
      */
     private static function get_filter_empty_url( $term ) {
@@ -453,7 +463,7 @@ final class SwatchFilter {
 
         $url = self::get_current_page_base_url();
         if ( ! empty( $query_vars ) ) {
-            $url = urldecode( self::get_current_page_base_url() .'?'. http_build_query( $query_vars ) );
+            $url = urldecode( self::get_current_page_base_url() . '?' . http_build_query( $query_vars ) );
         }
 
         return $url;
@@ -461,7 +471,7 @@ final class SwatchFilter {
 
     /**
      * Return the current url.
-     * 
+     *
      * @since 1.0.0
      *
      * @return string
@@ -470,13 +480,13 @@ final class SwatchFilter {
         $url  = ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://' );
         $url .= $_SERVER['HTTP_HOST'];
         $url .= $_SERVER['REQUEST_URI'];
-        
+
         return $url;
     }
 
     /**
      * Return the current page base url.
-     * 
+     *
      * @since 1.0.0
      *
      * @return string
@@ -487,10 +497,10 @@ final class SwatchFilter {
 
     /**
      * Checks if the filter parameter and it's value found in url.
-     * 
+     *
      * @since 1.0.0
      *
-     * @param  object  $term  Contains the attribute term.
+     * @param  object $term Contains the attribute term.
      * @return boolean
      */
     private static function is_filter_found( $term ) {
@@ -498,14 +508,16 @@ final class SwatchFilter {
             return false;
         }
 
-        $filter = [
+        $filter = array(
             'name'  => 'filter_attr_' . substr( $term->taxonomy, 3 ),
-            'value' => $term->slug
-        ];
+            'value' => $term->slug,
+        );
 
         if ( isset( $_GET[ $filter['name'] ] ) ) {
             $current_value = $_GET[ $filter['name'] ];
+            // phpcs:ignore Universal.Operators.StrictComparisons.LooseNotEqual
             if ( $current_value != '' ) {
+                // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
                 return in_array( $filter['value'], explode( ',', $current_value ) );
             }
         }

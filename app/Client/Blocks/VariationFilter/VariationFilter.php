@@ -1,4 +1,14 @@
 <?php
+/**
+ * App > Client > Blocks > Variation Filter > Variation Filter.
+ *
+ * @since   1.0.0
+ *
+ * @version 1.0.0
+ * @author  Mafel John Cahucom
+ * @package handy-variation-swatches
+ */
+
 namespace HVSFW\Client\Blocks\VariationFilter;
 
 use HVSFW\Inc\Traits\Singleton;
@@ -7,17 +17,16 @@ use HVSFW\Client\Blocks\VariationFilter\Inc\BlockEvents;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Register Variation Filter Block.
+ * The `VariationFilter` class contains the main variation
+ * filter class.
  *
- * @since 	1.0.0
- * @version 1.0.0
- * @author  Mafel John Cahucom
+ * @since 1.0.0
  */
 final class VariationFilter {
 
 	/**
 	 * Inherit Singleton.
-	 * 
+	 *
 	 * @since 1.0.0
 	 */
 	use Singleton;
@@ -32,10 +41,14 @@ final class VariationFilter {
 			return;
 		}
 
-		// Register Block.
-		add_action( 'init', [ $this, 'register_block' ] );
+		/**
+		 * Register block.
+		 */
+		add_action( 'init', array( $this, 'register_block' ) );
 
-		// Register Block Events.
+		/**
+		 * Register block events.
+		 */
 		BlockEvents::get_instance();
     }
 
@@ -45,6 +58,8 @@ final class VariationFilter {
  	 * through the block editor in the corresponding context.
 
 	 * @since 1.0.0
+	 *
+	 * @return void
 	 */
 	public function register_block() {
 		if ( function_exists( 'register_block_type' ) ) {
@@ -57,15 +72,17 @@ final class VariationFilter {
 
 	/**
 	 * Localize data in the editor.js.
-	 * 
+	 *
 	 * @since 1.0.0
+	 *
+	 * @return void
 	 */
 	public function localize_data() {
-		wp_localize_script( 'create-block-variation-filter-editor-script', 'hvsfwVfData', [
+		wp_localize_script( 'create-block-variation-filter-editor-script', 'hvsfwVfData', array(
 			'url'   => admin_url( 'admin-ajax.php' ),
-			'nonce' => [
-				'getProductAttributes' => wp_create_nonce( 'hvsfw_vf_get_product_attributes' )
-			]
-		]);
+			'nonce' => array(
+				'getProductAttributes' => wp_create_nonce( 'hvsfw_vf_get_product_attributes' ),
+			),
+		));
 	}
 }

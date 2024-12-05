@@ -1,18 +1,36 @@
 {
-    "name": "mafeljohncahucom/handy-variation-swatches",
-    "description": "Handy Variation Swatches is a very helpful WooCommerce plugin that will let the store owners to replace the default dropdown variation with more detailed and engaging variation (button, color, and image) swatches.",
-    "type": "wordpress-plugin",
-    "license": "GPL",
-    "authors": [
-        {
-            "name": "Mafel John Cahucom",
-            "email": "mafeljohn.timkang.cahucom070596@gmail.com"
-        }
-    ],
-    "require": {},
-    "autoload": {
-    	"psr-4": {
-    		"HVSFW\\" : "app/"
-    	}
-    }
+	"name": "mafeljohncahucom/handy-variation-swatches",
+	"description": "Handy Variation Swatches is a very helpful WooCommerce plugin that will let the store owners to replace the default dropdown variation with more detailed and engaging variation (button, color, and image) swatches.",
+	"type": "wordpress-plugin",
+	"license": "GPL-3.0-or-later",
+	"authors": [
+		{
+			"name": "Mafel John Cahucom",
+			"email": "mafeljohn.timkang.cahucom070596@gmail.com",
+			"role": "Developer"
+		}
+	],
+	"support": {
+		"source": "https://www.github.com",
+		"docs": "https://www.github.com/read.md"
+	},
+	"require": {
+		"php": ">=8.0.0"
+	},
+	"require-dev": {
+		"wp-coding-standards/wpcs": "^3.0",
+		"phpcompatibility/phpcompatibility-wp": "^2.1.5",
+		"phpunit/phpunit": "11"
+	},
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
+	},
+	"autoload": {
+		"psr-4": {
+			"HVSFW\\" : "app/"
+		}
+	}
 }
+

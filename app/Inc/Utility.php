@@ -1,4 +1,14 @@
 <?php
+/**
+ * App > Inc > Utility.
+ *
+ * @since   1.0.0
+ *
+ * @version 1.0.0
+ * @author  Mafel John Cahucom
+ * @package handy-variation-swatches
+ */
+
 namespace HVSFW\Inc;
 
 use HVSFW\Inc\Traits\Singleton;
@@ -6,17 +16,16 @@ use HVSFW\Inc\Traits\Singleton;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Global Utility.
+ * The `Utility` class contains all the global utities
+ * that can be used in client and admin side.
  *
- * @since 	1.0.0
- * @version 1.0.0
- * @author  Mafel John Cahucom
+ * @since 1.0.0
  */
 final class Utility {
 
 	/**
 	 * Inherit Singleton.
-     * 
+     *
      * @since 1.0.0
 	 */
 	use Singleton;
@@ -30,10 +39,11 @@ final class Utility {
 
     /**
      * Logs data in debug.txt.
-     * 
+     *
      * @since 1.0.0
      *
-     * @param mixed  $log  Contains the data to be log.
+     * @param  mixed $log Contains the data to be log.
+     * @return void
      */
     public static function log( $log ) {
         if ( true === WP_DEBUG ) {
@@ -49,20 +59,20 @@ final class Utility {
      * Returns the base url of client dist folder.
      *
      * @since 1.0.0
-     * 
-     * @param  string  $file  Contains the target filename.
+     *
+     * @param  string $file Contains the target filename.
      * @return string
      */
     public static function get_client_asset_src( $file ) {
-        return HVSFW_PLUGIN_URL . 'assets/client/dist/' . $file;
+        return HVSFW_PLUGIN_URL . 'resources/client/' . $file;
     }
 
     /**
      * Return the product placeholder image source.
      *
      * @since 1.0.0
-     * 
-     * @param  string  $size  Contains the registered image sizes.
+     *
+     * @param  string $size Contains the registered image sizes.
      * @return string
      */
     public static function get_product_thumbnail_placeholder_src( $size = 'full' ) {
@@ -79,26 +89,26 @@ final class Utility {
      *
      * @since 1.0.0
      *
-     * @param integer  $product_id  Contains the target product id.
+     * @param integer $product_id Contains the target product id.
      * @return array
      */
     public static function get_product_swatches( $product_id ) {
         if ( empty( $product_id ) ) {
-            return []; 
+            return array();
         }
 
         $value = get_post_meta( $product_id, '_hvsfw_swatches', true );
-        return ( ! empty( $value ) && is_array( $value ) ? $value : [] );
+        return ( ! empty( $value ) && is_array( $value ) ? $value : array() );
     }
 
     /**
-     * Return the swatch settings from _hvsfw_swatch_attribute_setting 
+     * Return the swatch settings from _hvsfw_swatch_attribute_setting
      * option by attribute id and field name.
      *
      * @since 1.0.0
-     * 
-     * @param  integer  $attribute_id  Contains the attribute id.
-     * @param  string   $field         Contains the field to be return.
+     *
+     * @param  integer $attribute_id Contains the attribute id.
+     * @param  string  $field        Contains the field to be return.
      * @return mixed
      */
     public static function get_swatch_settings( $attribute_id, $field = '' ) {
@@ -118,15 +128,15 @@ final class Utility {
      * Return the tooltip swatch value by term id.
      *
      * @since 1.0.0
-     * 
-     * @param  integer  $term_id  Contains the target term id.
-     * @return 
+     *
+     * @param  integer $term_id Contains the target term id.
+     * @return mixed
      */
     public static function get_swatch_tooltip( $term_id ) {
-        $default = [
+        $default = array(
             'type'    => 'none',
-            'content' => ''
-        ];
+            'content' => '',
+        );
 
         if ( empty( $term_id ) ) {
             return $default;
@@ -140,12 +150,12 @@ final class Utility {
      * Return the color swatch value by term id.
      *
      * @since 1.0.0
-     * 
-     * @param  integer  $term_id  Contains the target term id.
+     *
+     * @param  integer $term_id Contains the target term id.
      * @return array
      */
     public static function get_swatch_color( $term_id ) {
-        $default = [ '#ffffff' ];
+        $default = array( '#ffffff' );
         if ( empty( $term_id ) ) {
             return $default;
         }
@@ -158,8 +168,8 @@ final class Utility {
      * Return the image swatch value by term id.
      *
      * @since 1.0.0
-     * 
-     * @param  integer  $term_id  Contains the target term id.
+     *
+     * @param  integer $term_id Contains the target term id.
      * @return integer
      */
     public static function get_swatch_image( $term_id ) {
@@ -175,8 +185,8 @@ final class Utility {
      * Return the image swatch size value by term id.
      *
      * @since 1.0.0
-     * 
-     * @param  integer  $term_id  Contains the target term id.
+     *
+     * @param  integer $term_id Contains the target term id.
      * @return string
      */
     public static function get_swatch_image_size( $term_id ) {
@@ -193,17 +203,17 @@ final class Utility {
      * Return the swatch image source and details by attachment id.
      *
      * @since 1.0.0
-     * 
-     * @param  integer  $attachment_id  Contains the attachment id.
-     * @param  string   $size           Contains the attachment image size.
+     *
+     * @param  integer $attachment_id Contains the attachment id.
+     * @param  string  $size          Contains the attachment image size.
      * @return array
      */
     public static function get_swatch_image_by_attachment_id( $attachment_id, $size = 'full' ) {
-        $image = [
+        $image = array(
             'src'   => self::get_product_thumbnail_placeholder_src(),
-            'alt'   => __( 'WooCommerce Placeholder', HVSFW_PLUGIN_DOMAIN ),
-            'title' => __( 'WooCommerce Placeholder', HVSFW_PLUGIN_DOMAIN )
-        ];
+            'alt'   => __( 'WooCommerce Placeholder', 'handy-variation-swatches' ),
+            'title' => __( 'WooCommerce Placeholder', 'handy-variation-swatches' ),
+        );
 
         if ( empty( $attachment_id ) ) {
             return $image;
@@ -217,28 +227,28 @@ final class Utility {
         $alt   = get_post_meta( $attachment_id, '_wp_attachment_image_alt', true );
         $title = get_the_title( $attachment_id );
 
-        return [
+        return array(
             'src'   => $source[0],
             'alt'   => $alt,
-            'title' => $title
-        ];
+            'title' => $title,
+        );
     }
 
     /**
      * Return the swatch image source and details by term id.
      *
      * @since 1.0.0
-     * 
-     * @param  integer  $term_id  Contains the target term id.
-     * @param  string   $size     Contains the attachment image size.
+     *
+     * @param  integer $term_id Contains the target term id.
+     * @param  string  $size    Contains the attachment image size.
      * @return array
      */
     public static function get_swatch_image_by_term_id( $term_id, $size = 'full' ) {
-        $image = [
+        $image = array(
             'src'   => self::get_product_thumbnail_placeholder_src(),
-            'alt'   => __( 'WooCommerce Placeholder', HVSFW_PLUGIN_DOMAIN ),
-            'title' => __( 'WooCommerce Placeholder', HVSFW_PLUGIN_DOMAIN )
-        ];
+            'alt'   => __( 'WooCommerce Placeholder', 'handy-variation-swatches' ),
+            'title' => __( 'WooCommerce Placeholder', 'handy-variation-swatches' ),
+        );
 
         $attachment_id = get_term_meta( $term_id, '_hvsfw_value', true );
         if ( empty( $attachment_id ) ) {
@@ -252,9 +262,9 @@ final class Utility {
      * Return the linear gradient color or stripe color.
      *
      * @since 1.0.0
-     * 
-     * @param  array   $colors  Contains the the list of colors.
-     * @param  string  $angle   Contains the total angle or rotation of the background.
+     *
+     * @param  array  $colors Contains the the list of colors.
+     * @param  string $angle  Contains the total angle or rotation of the background.
      * @return string
      */
     public static function get_linear_color( $colors, $angle = '-45deg' ) {
@@ -267,6 +277,7 @@ final class Utility {
         $length = ( 100 / $count );
 
         foreach ( $colors as $key => $color ) {
+            // phpcs:ignore Squiz.Operators.IncrementDecrementUsage.Found
             $key   = ( $key + 1 );
             $end   = ( $length * $key );
             $start = ( $end - $length );
@@ -283,7 +294,7 @@ final class Utility {
      *
      * @since 1.0.0
      *
-     * @param  object  $product  Contains the product object.
+     * @param  object $product Contains the product object.
      * @return array
      */
     public static function get_attributes( $product ) {
@@ -302,8 +313,8 @@ final class Utility {
      * Return the product attribute type by attribute id.
      *
      * @since 1.0.0
-     * 
-     * @param  integer  $attribute_id  Contains the ID of the attribute.
+     *
+     * @param  integer $attribute_id Contains the ID of the attribute.
      * @return string
      */
     public static function get_attribute_type_by_id( $attribute_id ) {
@@ -312,7 +323,8 @@ final class Utility {
         }
 
         global $wpdb;
-        $table  = $wpdb->prefix . 'woocommerce_attribute_taxonomies';
+        $table = $wpdb->prefix . 'woocommerce_attribute_taxonomies';
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $result = $wpdb->get_var( $wpdb->prepare(
             "
             SELECT
@@ -324,6 +336,7 @@ final class Utility {
             ",
             $attribute_id
         ));
+        // phpcs:enable
 
         return ( $result !== null ? $result : '' );
     }
@@ -332,20 +345,22 @@ final class Utility {
 	 * Return the registered attributes in wp_woocommerce_attribute_taxonomies.
 	 *
 	 * @since 1.0.0
-	 * 
+	 *
 	 * @return array
 	 */
 	public static function get_available_attributes() {
 		global $wpdb;
-		$table  	= $wpdb->prefix . 'woocommerce_attribute_taxonomies';
+		$table = $wpdb->prefix . 'woocommerce_attribute_taxonomies';
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$attributes = $wpdb->get_results( "SELECT * FROM $table", 'ARRAY_A' );
 
 		if ( count( $attributes ) > 0 ) {
 			foreach ( $attributes as $key => $attribute ) {
-				$taxonomy_name				 = 'pa_' . $attribute['attribute_name'];
-				$attributes[ $key ]['terms'] = get_terms( $taxonomy_name, [
-					'hide_empty' => 1
-				]);
+				$taxonomy_name = 'pa_' . $attribute['attribute_name'];
+                // phpcs:ignore WordPress.WP.DeprecatedParameters.Get_termsParam2Found
+				$attributes[ $key ]['terms'] = get_terms( $taxonomy_name, array(
+					'hide_empty' => 1,
+				));
 
 				if ( count( $attributes[ $key ]['terms'] ) > 0 ) {
 					foreach ( $attributes[ $key ]['terms'] as $sub_key => $term ) {
@@ -359,7 +374,7 @@ final class Utility {
 							$image_size = self::get_swatch_image_size( $term->term_id );
 							$meta_data 	= self::get_swatch_image_by_attachment_id( $image_id, $image_size );
 						}
-						
+
 						$attributes[ $key ]['terms'][ $sub_key ]->meta = $meta_data;
 					}
 				}
@@ -369,20 +384,20 @@ final class Utility {
 				return ! empty( $attribute['terms'] );
 			});
 		}
-		
-		return ( $attributes !== null ? $attributes : [] );
+
+		return ( $attributes !== null ? $attributes : array() );
 	}
 
 	/**
 	 * Return a certain attribute by attribute name from get_available_attributes().
-	 * 
+	 *
 	 * @since 1.0.0
 	 *
-	 * @param  string  $attribute_name  Contains the name of target attribute.
+	 * @param  string $attribute_name Contains the name of target attribute.
 	 * @return array
 	 */
 	public static function get_attribute( $attribute_name ) {
-		$attribute = [];
+		$attribute = array();
 		if ( empty( $attribute_name ) ) {
 			return $attribute;
 		}
@@ -394,42 +409,42 @@ final class Utility {
 			}));
 		}
 
-		return ( ! empty( $attribute ) ? $attribute[0] : [] );
+		return ( ! empty( $attribute ) ? $attribute[0] : array() );
 	}
 
     /**
      * Return a converted slug string.
      *
      * @since 1.0.0
-     * 
-     * @param  string  $string  Contains the string to be converted to slug.
+     *
+     * @param  string $data Contains the string to be converted to slug.
      * @return string
      */
-    public static function get_converted_slug( $string ) {
-        if ( empty( $string ) ) {
+    public static function get_converted_slug( $data ) {
+        if ( empty( $data ) ) {
             return;
         }
 
-        return strtolower( trim( preg_replace( '/[^A-Za-z0-9-]+/', '-', $string ) ) );
+        return strtolower( trim( preg_replace( '/[^A-Za-z0-9-]+/', '-', $data ) ) );
     }
 
     /**
      * Check if the an array has unset keys.
      *
      * @since 1.0.0
-     * 
-     * @param  array  $array  Contains the array to be check.
-     * @param  array  $keys   Contains the array keys use as reference.
+     *
+     * @param  array $data Contains the array to be check.
+     * @param  array $keys Contains the array keys use as reference.
      * @return boolean
      */
-    public static function has_array_unset( $array, $keys ) {
-        if ( empty( $array ) || empty( $keys ) ) {
+    public static function has_array_unset( $data, $keys ) {
+        if ( empty( $data ) || empty( $keys ) ) {
             return;
         }
-  
+
         $has_unset = false;
         foreach ( $keys as $key ) {
-            if ( ! isset( $array[ $key ] ) ) {
+            if ( ! isset( $data[ $key ] ) ) {
                 $has_unset = true;
                 break;
             }

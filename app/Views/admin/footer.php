@@ -1,38 +1,40 @@
 <?php
 /**
- * Admin Footer Template.
+ * App > Views > Admin > Footer.
  *
  * @since   1.0.0
+ *
  * @version 1.0.0
- * @author  Mafel John Cahucom 
+ * @author  Mafel John Cahucom
+ * @package handy-variation-swatches
  */
 
 use HVSFW\Admin\Inc\Helper;
 
-defined( 'ABSPATH' ) || exit; 
+defined( 'ABSPATH' ) || exit;
 ?>
 
         <!-- end: footer -->
         <div class="hd-footer">
             <p>
                 <span>
-                    <?php echo __( 'Handcrafted by', HVSFW_PLUGIN_DOMAIN ); ?>
+                    <?php echo __( 'Handcrafted by', 'handy-variation-swatches' ); ?>
                 </span>
                 <a class="hd-fw-600" href="#" target="_blank">
-                    <?php echo __( 'Mafel John Cahucom', HVSFW_PLUGIN_DOMAIN ); ?>
+                    <?php echo __( 'Mafel John Cahucom', 'handy-variation-swatches' ); ?>
                 </a>
             </p>
             <div class="hd-sitemap">
                 <a href="#" target="_blank">
-                    <?php echo __( 'Documentation', HVSFW_PLUGIN_DOMAIN ); ?>
+                    <?php echo __( 'Documentation', 'handy-variation-swatches' ); ?>
                 </a>
                 <span class="hd-sitemap__separator">/</span>
                 <a href="#" target="_blank">
-                    <?php echo __( 'Plugins', HVSFW_PLUGIN_DOMAIN ); ?>
+                    <?php echo __( 'Plugins', 'handy-variation-swatches' ); ?>
                 </a>
                 <span class="hd-sitemap__separator">/</span>
                 <a href="#" target="_blank">
-                    <?php echo __( 'Developer', HVSFW_PLUGIN_DOMAIN ); ?>
+                    <?php echo __( 'Developer', 'handy-variation-swatches' ); ?>
                 </a>
             </div>
             <ul class="hd-social-media">

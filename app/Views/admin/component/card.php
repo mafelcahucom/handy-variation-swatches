@@ -1,15 +1,17 @@
 <?php
 /**
- * Views > Admin > Component > Card.
+ * App > Views > Admin > Component > Card.
  *
  * @since   1.0.0
+ *
  * @version 1.0.0
- * @author  Mafel John Cahucom 
+ * @author  Mafel John Cahucom
+ * @package handy-variation-swatches
  */
 
 use HVSFW\Admin\Inc\Helper;
 
-defined( 'ABSPATH' ) || exit; 
+defined( 'ABSPATH' ) || exit;
 
 /**
  * $args = [
@@ -17,11 +19,11 @@ defined( 'ABSPATH' ) || exit;
  *     'class'      => (string) Contains the additional class.
  *     'components' => (string) Contains the components to be render inside the card.
  * ]
-**/
+*/
 
 $title      = ( isset( $args['title'] ) ? $args['title'] : '' );
 $class      = ( isset( $args['class'] ) ? $args['class'] : '' );
-$components = ( isset( $args['components'] ) ? $args['components'] : [] );
+$components = ( isset( $args['components'] ) ? $args['components'] : array() );
 ?>
 
 <div class="hd-card <?php echo esc_attr( $class ); ?>" data-state="opened">
@@ -36,8 +38,8 @@ $components = ( isset( $args['components'] ) ? $args['components'] : [] );
     <div class="hd-card__body">
         <div class="hd-card__content">
             <?php
-                foreach ( $components as $component ):
-                    echo $component;
+                foreach ( $components as $component ) :
+				echo $component;
                 endforeach;
             ?>
         </div>

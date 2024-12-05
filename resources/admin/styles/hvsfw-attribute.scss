@@ -1,0 +1,86 @@
+.hvsfw {
+
+	// Field.
+	&-field {
+
+		.hvsfw-field__two-col {
+			display: flex;
+
+			.hvsfw-field__col {
+				width: 50%;
+
+				&:first-child {
+					margin-right: 5px;
+				}
+
+				&:last-child {
+					margin-left: 5px;
+				}
+			}
+
+			.wp-picker-container,
+			.wp-picker-container .wp-color-result.button {
+				margin: 0;
+				width: 100%;
+			}
+		}
+
+		&__add {
+
+			&[data-visible="no"] {
+				display: none;
+			}
+
+			input,
+			select {
+				width: 100%;
+				min-width: 100%;
+			}
+		}
+
+		&__edit {
+
+			&[data-visible="no"] {
+				display: none;
+			}
+
+			.hvsfw-field__two-col {
+				width: 400px;
+
+				input,
+				select {
+					width: 100% !important;
+					min-width: 100% !important;
+				}
+
+				@media ( max-width: 782px ) {
+					width: 100%;
+				}
+			}
+		}
+
+		.wp-picker-holder {
+			position: absolute;
+		}
+
+		.button.wp-picker-clear {
+			display: none;
+		}
+	}
+}
+
+// Form Field.
+div.form-field {
+
+	select,
+	input[type="text"],
+	input[type="number"] {
+		width: 100%;
+		min-width: 100%;
+	}
+}
+
+// Form Table.
+.woocommerce table.form-table select {
+	height: 30px;
+}

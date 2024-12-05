@@ -1,4 +1,14 @@
 <?php
+/**
+ * App > Inc > Installer.
+ *
+ * @since   1.0.0
+ *
+ * @version 1.0.0
+ * @author  Mafel John Cahucom
+ * @package handy-variation-swatches
+ */
+
 namespace HVSFW\Inc;
 
 use HVSFW\Inc\Traits\Singleton;
@@ -7,17 +17,16 @@ use HVSFW\Api\SettingApi;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Installer.
+ * The `Installer` class contains helper methods for
+ * setting plugin's status, version and settings.
  *
- * @since 	1.0.0
- * @version 1.0.0
- * @author  Mafel John Cahucom
+ * @since 1.0.0
  */
 final class Installer {
 
     /**
      * Inherit Singleton.
-     * 
+     *
      * @since 1.0.0
      */
     use Singleton;
@@ -33,6 +42,8 @@ final class Installer {
      * Plugin Activation.
      *
      * @since 1.0.0
+     *
+     * @return void
      */
 	public static function activate() {
         flush_rewrite_rules();
@@ -45,6 +56,8 @@ final class Installer {
      * Plugin Deactivation.
      *
      * @since 1.0.0
+     *
+     * @return void
      */
     public static function deactivate() {
         flush_rewrite_rules();
@@ -52,8 +65,10 @@ final class Installer {
 
     /**
      * Sets the value or version of the plugin in options.
-     * 
+     *
      * @since 1.0.0
+     *
+     * @return void
      */
     public static function set_plugin_version() {
         update_option( '_hvsfw_plugin_version', HVSFW_PLUGIN_VERSION );
@@ -63,6 +78,8 @@ final class Installer {
      * Sets the default value of option _hvsfw_main_settings.
      *
      * @since 1.0.0
+     *
+     * @return void
      */
     public static function set_option_main_settings() {
         if ( empty( get_option( '_hvsfw_main_settings' ) ) ) {
