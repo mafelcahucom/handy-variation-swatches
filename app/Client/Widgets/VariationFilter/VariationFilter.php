@@ -54,7 +54,7 @@ class VariationFilter extends WP_Widget {
 		$name 	  = 'Handy Variation Filter';
 		$options  = array(
 			'classname'	  => 'hvsfw-variation-filter-widget',
-			'description' => __( 'Show a list of variation swatches on the shop page to filter the products.', 'handy-variation-swatches' ),
+			'description' => 'Show a list of variation swatches on the shop page to filter the products.',
 			'customize_selective_refresh' => true,
 		);
 		$controls = array(
