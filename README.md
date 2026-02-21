@@ -12,8 +12,8 @@ Welcome to the Handy Variation Swatches For WooCommerce GitHub repository! Explo
 
 A powerful WooCommerce plugin that replaces dull dropdowns with vibrant color swatches, stylish buttons, and image-based options making product selection clearer, faster, and more visually engaging for your customers.
 
--[Read Official Documentation](https://www.gethandytools.site/plugin/handy-variation-swatches-for-woocommerce/)
--[Try Live Demo Shop](https://www.handytoolsdemo.shop)
+- [Read Official Documentation](https://www.gethandytools.site/plugin/handy-variation-swatches-for-woocommerce/)
+- [Try Live Demo Shop](https://www.handytoolsdemo.shop)
 
 ## Why You Should Use It?
 
@@ -60,14 +60,26 @@ Explore the comprehensive list of features and compelling reasons to choose Hand
 - Built-in Settings Exporter
 - Built-in Settings Importer
 
+# Documentation
+
+For detailed setup instructions, feature guides, and best practices, please refer to the [official plugin documentation](https://www.gethandytools.site/plugin/handy-variation-swatches-for-woocommerce/).
+
 ## Installation
 
-### 2. Manual Installation via FTP
+### Manual Installation via FTP
 - Download the plugin package to your computer.
 - Extract the downloaded file (if it is in .zip format).
 - Using your preferred FTP client, upload the extracted plugin folder to the `/wp-content/plugins/` directory of your WordPress installation.
 - Log in to your WordPress dashboard.
 - Go to Plugins → Installed Plugins and click Activate next to the plugin name.
+
+### Manual Installation via WordPress Admin (Upload Method)
+- Download the plugin archive (.zip file).
+- Log in to your WordPress dashboard.
+- Navigate to Plugins → Add New.
+- Click the Upload Plugin button at the top of the page.
+- Select the downloaded .zip file and click Install Now.
+- After installation completes, click Activate to enable the plugin.
 
 ## Developer
 
