@@ -32,6 +32,8 @@ Explore the comprehensive list of features and compelling reasons to choose Hand
 
 ## Core Features
 
+Explore the comprehensive list of features and compelling reasons to choose Handy Variation Swatches for your WooCommerce store.
+
 - Supports Button Variation Swatch
 - Supports Color Variation Swatch
 - Supports Image Variation Swatch
