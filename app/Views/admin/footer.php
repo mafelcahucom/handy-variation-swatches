@@ -20,40 +20,23 @@ defined( 'ABSPATH' ) || exit;
                 <span>
                     <?php echo __( 'Handcrafted by', 'handy-variation-swatches' ); ?>
                 </span>
-                <a class="hd-fw-600" href="#" target="_blank">
+                <a class="hd-fw-600" href="https://www.mafeljohncahucom.site" target="_blank">
                     <?php echo __( 'Mafel John Cahucom', 'handy-variation-swatches' ); ?>
                 </a>
             </p>
             <div class="hd-sitemap">
-                <a href="#" target="_blank">
+                <a href="https://www.gethandytools.site/plugin/handy-variation-swatches-for-woocommerce/" target="_blank">
                     <?php echo __( 'Documentation', 'handy-variation-swatches' ); ?>
                 </a>
                 <span class="hd-sitemap__separator">/</span>
-                <a href="#" target="_blank">
-                    <?php echo __( 'Plugins', 'handy-variation-swatches' ); ?>
+                <a href="https://github.com/mafelcahucom/handy-variation-swatches" target="_blank">
+                    <?php echo __( 'GitHub', 'handy-variation-swatches' ); ?>
                 </a>
                 <span class="hd-sitemap__separator">/</span>
-                <a href="#" target="_blank">
-                    <?php echo __( 'Developer', 'handy-variation-swatches' ); ?>
+                <a href="https://www.gethandytools.site" target="_blank">
+                    <?php echo __( 'Plugins', 'handy-variation-swatches' ); ?>
                 </a>
             </div>
-            <ul class="hd-social-media">
-                <li>
-                    <a href="#" target="_blank">
-                        <?php echo Helper::get_icon( 'facebook', 'hd-svg' ); ?>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" target="_blank">
-                        <?php echo Helper::get_icon( 'github', 'hd-svg' ); ?>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" target="_blank">
-                        <?php echo Helper::get_icon( 'browser', 'hd-svg' ); ?>
-                    </a>
-                </li>
-            </ul>
         </div>
         <!-- end: footer -->
 
