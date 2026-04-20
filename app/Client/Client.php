@@ -84,7 +84,6 @@ final class Client {
             Style::class,
             Swatch::class,
             Widgets::class,
-            Blocks::class,
         ));
     }
 
